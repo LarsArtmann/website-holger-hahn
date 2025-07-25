@@ -757,6 +757,47 @@ body {
   font-family: 'Inter', sans-serif;
 }
 
+/* CRITICAL FIX: Remove ALL rounded corners and shadows for flat Thinkmill design */
+*, *::before, *::after {
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+
+/* Override all Tailwind CSS rounded and shadow classes */
+.rounded-lg, .rounded-xl, .rounded-2xl, .rounded-full,
+.shadow-sm, .shadow-lg, .shadow-xl, .shadow-2xl,
+.hover\:shadow-xl:hover, .group-hover\:shadow-xl {
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+
+/* Remove transforms that create elevation effects */
+.hover\:scale-105:hover, .group-hover\:scale-110 {
+  transform: none !important;
+}
+
+/* Ensure backdrop effects are removed */
+.backdrop-blur-sm {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+/* Force all form elements to be flat */
+input[type='text'], input[type='email'], input[type='password'], 
+input[type='number'], input[type='search'], input[type='tel'], 
+input[type='url'], input[type='date'], textarea, select,
+[type='checkbox'], [type='radio'] {
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+
+/* Remove focus rings and replace with flat borders */
+input:focus, textarea:focus, select:focus,
+[type='checkbox']:focus, [type='radio']:focus {
+  box-shadow: none !important;
+  border-radius: 0 !important;
+}
+
 .absolute {
   position: absolute;
 }

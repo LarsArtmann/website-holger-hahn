@@ -56,10 +56,8 @@ func (l *ConsoleLoggingService) logWithLevel(level, message string, err error, f
 	}
 
 	// Add additional fields
-	if fields != nil {
-		for k, v := range fields {
-			logEntry[k] = v
-		}
+	for k, v := range fields {
+		logEntry[k] = v
 	}
 
 	// Convert to JSON for structured logging

@@ -12,7 +12,9 @@ import (
 func generateID() string {
 	timestamp := time.Now().Unix()
 	randomBytes := make([]byte, 4)
-	rand.Read(randomBytes)
+	if _, err := rand.Read(randomBytes); err != nil {
+		return fmt.Sprintf("%d-error", timestamp)
+	}
 	return fmt.Sprintf("%d-%x", timestamp, randomBytes)
 }
 

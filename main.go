@@ -77,7 +77,10 @@ func main() {
 	r.GET("/", func(c *gin.Context) {
 		component := templates.Index()
 		c.Header("Content-Type", "text/html")
-		component.Render(c.Request.Context(), c.Writer)
+		if err := component.Render(c.Request.Context(), c.Writer); err != nil {
+			c.JSON(500, gin.H{"error": "Failed to render template"})
+			return
+		}
 	})
 
 	// Contact form API endpoint

@@ -1,0 +1,346 @@
+/* CRITICAL FIX: Remove ALL rounded corners and shadows for flat Thinkmill design */
+*, *::before, *::after {
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  transform: none !important;
+}
+
+/* Override ALL Tailwind CSS rounded and shadow classes */
+.rounded, .rounded-sm, .rounded-md, .rounded-lg, .rounded-xl, .rounded-2xl, .rounded-3xl, .rounded-full,
+.shadow, .shadow-sm, .shadow-md, .shadow-lg, .shadow-xl, .shadow-2xl, .shadow-inner, .shadow-none,
+.hover\:shadow-sm:hover, .hover\:shadow-md:hover, .hover\:shadow-lg:hover, .hover\:shadow-xl:hover,
+.hover\:shadow-2xl:hover, .hover\:shadow-none:hover,
+.focus\:shadow-sm:focus, .focus\:shadow-md:focus, .focus\:shadow-lg:focus, .focus\:shadow-xl:focus,
+.group:hover .group-hover\:shadow-sm, .group:hover .group-hover\:shadow-md,
+.group:hover .group-hover\:shadow-lg, .group:hover .group-hover\:shadow-xl,
+.group:hover .group-hover\:shadow-2xl {
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  transform: none !important;
+}
+
+/* Specific component overrides */
+.modern-card, .btn, .button, .modern-button-primary, .modern-button-secondary, .modern-input,
+.glass-effect, input, textarea, select, button, [role="button"],
+.bg-white, .bg-gray-50, .bg-blue-100, .bg-green-100, .bg-purple-100, .bg-yellow-100, .bg-red-100, .bg-indigo-100 {
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  transform: none !important;
+}
+
+/* Remove ALL hover effects that create elevation */
+*:hover, *:focus, *:active, .hover\:shadow-xl:hover, .group:hover .group-hover\:shadow-xl,
+.modern-card:hover, .modern-button-primary:hover, .modern-button-secondary:hover {
+  transform: none !important;
+  box-shadow: none !important;
+  border-radius: 0 !important;
+}
+
+/* Force flat design on form elements */
+input[type="text"], input[type="email"], input[type="password"], input[type="search"],
+input[type="tel"], input[type="url"], input[type="number"], input[type="datetime-local"],
+input[type="month"], input[type="time"], input[type="week"], input[type="date"],
+textarea, select, [type='checkbox'], [type='radio'] {
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+
+/* Modern 2025 Color Palette & Theme System */
+
+:root {
+  /* 2025 Modern Color Palette */
+  
+  /* Primary Brand Colors */
+  --primary-50: #f0f9ff;
+  --primary-100: #e0f2fe;
+  --primary-200: #bae6fd;
+  --primary-300: #7dd3fc;
+  --primary-400: #38bdf8;
+  --primary-500: #0ea5e9;
+  --primary-600: #0284c7;
+  --primary-700: #0369a1;
+  --primary-800: #075985;
+  --primary-900: #0c4a6e;
+  --primary-950: #082f49;
+
+  /* Warm Neutral Palette (Honeyed tones) */
+  --warm-50: #fefaf7;
+  --warm-100: #fdf4ed;
+  --warm-200: #fae8d4;
+  --warm-300: #f6d7b3;
+  --warm-400: #f0c088;
+  --warm-500: #ea9f5c;
+  --warm-600: #d97f3d;
+  --warm-700: #b56528;
+  --warm-800: #925125;
+  --warm-900: #784423;
+  --warm-950: #412311;
+
+  /* Sophisticated Dark Palette */
+  --dark-50: #f8fafc;
+  --dark-100: #f1f5f9;
+  --dark-200: #e2e8f0;
+  --dark-300: #cbd5e1;
+  --dark-400: #94a3b8;
+  --dark-500: #64748b;
+  --dark-600: #475569;
+  --dark-700: #334155;
+  --dark-800: #1e293b;
+  --dark-900: #0f172a;
+  --dark-950: #020617;
+
+  /* Electric Accent Colors */
+  --electric-blue: #3b82f6;
+  --electric-cyan: #06b6d4;
+  --electric-violet: #8b5cf6;
+  --electric-emerald: #10b981;
+
+  /* Metallic Accents */
+  --metallic-gold: #d4af37;
+  --metallic-silver: #c0c0c0;
+  --metallic-copper: #cd7f32;
+  --metallic-platinum: #e5e4e2;
+
+  /* Semantic Colors */
+  --success: var(--electric-emerald);
+  --warning: var(--warm-500);
+  --error: #ef4444;
+  --info: var(--electric-cyan);
+
+  /* Light Theme Variables */
+  --bg-primary: var(--warm-50);
+  --bg-secondary: #ffffff;
+  --bg-tertiary: var(--warm-100);
+  --text-primary: var(--dark-900);
+  --text-secondary: var(--dark-700);
+  --text-tertiary: var(--dark-500);
+  --border-primary: var(--warm-200);
+  --border-secondary: var(--dark-200);
+  --accent-primary: var(--electric-blue);
+  --accent-secondary: var(--electric-cyan);
+  --surface-elevated: #ffffff;
+  --shadow-color: var(--dark-900);
+}
+
+/* Dark Mode Theme */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg-primary: var(--dark-950);
+    --bg-secondary: var(--dark-900);
+    --bg-tertiary: var(--dark-800);
+    --text-primary: var(--warm-50);
+    --text-secondary: var(--warm-100);
+    --text-tertiary: var(--warm-300);
+    --border-primary: var(--dark-700);
+    --border-secondary: var(--dark-600);
+    --accent-primary: var(--electric-cyan);
+    --accent-secondary: var(--electric-violet);
+    --surface-elevated: var(--dark-800);
+    --shadow-color: rgba(0, 0, 0, 0.8);
+  }
+}
+
+/* Dark mode class for explicit toggling */
+.dark {
+  --bg-primary: var(--dark-950);
+  --bg-secondary: var(--dark-900);
+  --bg-tertiary: var(--dark-800);
+  --text-primary: var(--warm-50);
+  --text-secondary: var(--warm-100);
+  --text-tertiary: var(--warm-300);
+  --border-primary: var(--dark-700);
+  --border-secondary: var(--dark-600);
+  --accent-primary: var(--electric-cyan);
+  --accent-secondary: var(--electric-violet);
+  --surface-elevated: var(--dark-800);
+  --shadow-color: rgba(0, 0, 0, 0.8);
+}
+
+/* Modern Typography Enhancements */
+body {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  font-feature-settings: 'liga' 1, 'kern' 1;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Modern Component Styles */
+.modern-card {
+  background-color: var(--surface-elevated);
+  border: 1px solid var(--border-primary);
+  border-radius: 1rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.modern-card:hover {
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  transform: translateY(-2px);
+}
+
+.modern-button-primary {
+  background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.75rem;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 14px 0 rgba(59, 130, 246, 0.25);
+}
+
+.modern-button-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 25px 0 rgba(59, 130, 246, 0.35);
+}
+
+.modern-button-secondary {
+  background-color: var(--bg-tertiary);
+  color: var(--text-primary);
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.75rem;
+  font-weight: 600;
+  border: 1px solid var(--border-secondary);
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.modern-button-secondary:hover {
+  background-color: var(--surface-elevated);
+  transform: translateY(-1px);
+}
+
+/* Modern Input Styles */
+.modern-input {
+  background-color: var(--surface-elevated);
+  border: 1px solid var(--border-primary);
+  border-radius: 0.75rem;
+  padding: 0.75rem 1rem;
+  color: var(--text-primary);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.modern-input:focus {
+  outline: none;
+  border-color: var(--accent-primary);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+/* Critical Fix: Ensure form inputs and textareas are always visible */
+input[type="text"],
+input[type="email"],
+textarea,
+.modern-input,
+textarea.modern-input {
+  background-color: white !important;
+  color: var(--text-primary) !important;
+  border: 1px solid var(--border-primary) !important;
+}
+
+/* Ensure focus states work properly */
+input[type="text"]:focus,
+input[type="email"]:focus,
+textarea:focus {
+  background-color: white !important;
+  color: var(--text-primary) !important;
+}
+
+/* Glass Morphism Effect */
+.glass-effect {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Metallic Gradient Text */
+.metallic-text {
+  background: linear-gradient(135deg, var(--metallic-gold), var(--metallic-silver), var(--metallic-gold));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-weight: 700;
+}
+
+/* Modern Animations */
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+
+.floating {
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+
+.shimmer {
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+  background-size: 200% 100%;
+  animation: shimmer 2s ease-in-out infinite;
+}
+
+/* Modern Focus Indicators */
+.focus-visible {
+  outline: 2px solid var(--accent-primary);
+  outline-offset: 2px;
+}
+
+/* Modern Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-tertiary);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border-secondary);
+  border-radius: 0;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accent-primary);
+}
+
+/* High Contrast Mode Support */
+@media (prefers-contrast: high) {
+  :root {
+    --bg-primary: #000000;
+    --bg-secondary: #ffffff;
+    --text-primary: #ffffff;
+    --text-secondary: #000000;
+    --accent-primary: #00ffff;
+    --border-primary: #ffffff;
+  }
+}
+
+/* Reduced Motion Support */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Modern Color Utility Classes */
+.bg-modern-primary { background-color: var(--bg-primary); }
+.bg-modern-secondary { background-color: var(--bg-secondary); }
+.bg-modern-tertiary { background-color: var(--bg-tertiary); }
+.text-modern-primary { color: var(--text-primary); }
+.text-modern-secondary { color: var(--text-secondary); }
+.text-modern-tertiary { color: var(--text-tertiary); }
+.border-modern-primary { border-color: var(--border-primary); }
+.border-modern-secondary { border-color: var(--border-secondary); }
+.accent-modern-primary { color: var(--accent-primary); }
+.bg-accent-modern-primary { background-color: var(--accent-primary); }
+.accent-modern-secondary { color: var(--accent-secondary); }
+.bg-accent-modern-secondary { background-color: var(--accent-secondary); }

@@ -78,7 +78,10 @@ func (h *PortfolioHandlers) HomeHandler(c *gin.Context) {
 	// TODO: Create IndexWithData template that accepts portfolioData
 	component := templates.Index()
 	c.Header("Content-Type", "text/html")
-	component.Render(c.Request.Context(), c.Writer)
+	if err := component.Render(c.Request.Context(), c.Writer); err != nil {
+		c.JSON(500, gin.H{"error": "Failed to render template"})
+		return
+	}
 }
 
 // HealthHandler provides a health check endpoint
@@ -100,12 +103,9 @@ func (h *PortfolioHandlers) TechnologiesHandler(c *gin.Context) {
 	if category != "" {
 		filter.Category = &category
 	}
-	if level != "" {
-		// Convert string to domain.Level type
-		// Note: In a real application, you'd want proper validation here
-		// For now, we'll skip this complex conversion
-		// filter.Level = &domain.Level(level) // Would need proper validation
-	}
+	// TODO: Implement level filtering when level != ""
+	// Currently level filtering is not implemented
+	_ = level // Acknowledge the parameter to avoid unused variable warning
 	
 	technologies, err := h.technologyService.ListTechnologies(ctx, filter)
 	if err != nil {

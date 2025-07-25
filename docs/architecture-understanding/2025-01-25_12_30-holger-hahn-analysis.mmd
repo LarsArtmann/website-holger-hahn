@@ -1,0 +1,100 @@
+```mermaid
+graph TB
+    %% Current Holger Hahn Website Architecture
+    
+    subgraph "Entry Points (DUPLICATED)"
+        Main[main.go]
+        CmdServer[cmd/server/main.go]
+    end
+    
+    subgraph "HTTP Layer"
+        GinRouter[Gin HTTP Router]
+        StaticFiles[Static File Server]
+        
+        subgraph "Handlers (internal/handler)"
+            PortfolioHandlers[PortfolioHandlers]
+            ContactHandler[ContactHandler - Ghost System]
+        end
+    end
+    
+    subgraph "Application Services (internal/service)"
+        TechService[TechnologyService]
+        ExpService[ExperienceService] 
+        PortfolioService[PortfolioService]
+        ContactService[ContactService]
+        Utils[Service Utils - generateID, errors]
+    end
+    
+    subgraph "Domain Layer (internal/domain)"
+        TechModel[Technology Models]
+        ExpModel[Experience Models]
+        ContactModel[Contact Models]
+        Repositories[Repository Interfaces]
+        DomainErrors[Domain Errors]
+    end
+    
+    subgraph "Infrastructure (internal/infrastructure)"
+        MemoryRepos[Memory Repositories - DUPLICATED]
+        ConsoleLogging[Console Logging Service]
+        SMTPEmail[SMTP Email Service - Ghost]
+    end
+    
+    subgraph "Dependency Injection (internal/container)"
+        DIContainer[samber/do Container - DUPLICATED]
+        MemoryContainer[Memory Container Setup - DUPLICATED]
+    end
+    
+    subgraph "Templates & Assets"
+        TemplFiles[Templ Templates]
+        CSS[CSS Files - Multiple Systems]
+        JavaScript[Static JS]
+    end
+    
+    subgraph "Configuration"
+        Config[Viper Configuration - DUPLICATED]
+        EnvVars[Environment Variables]
+    end
+    
+    %% Connections
+    Main --> GinRouter
+    CmdServer --> GinRouter
+    GinRouter --> PortfolioHandlers
+    GinRouter --> ContactHandler
+    GinRouter --> StaticFiles
+    
+    PortfolioHandlers --> TechService
+    PortfolioHandlers --> ExpService
+    PortfolioHandlers --> PortfolioService
+    ContactHandler --> ContactService
+    
+    TechService --> TechModel
+    ExpService --> ExpModel
+    ContactService --> ContactModel
+    
+    TechService --> MemoryRepos
+    ExpService --> MemoryRepos
+    ContactService --> MemoryRepos
+    
+    DIContainer --> TechService
+    DIContainer --> ExpService
+    DIContainer --> PortfolioService
+    DIContainer --> ContactService
+    DIContainer --> MemoryRepos
+    DIContainer --> ConsoleLogging
+    
+    PortfolioHandlers --> TemplFiles
+    StaticFiles --> CSS
+    StaticFiles --> JavaScript
+    
+    Config --> DIContainer
+    EnvVars --> Config
+    
+    %% Styling
+    classDef duplicate fill:#ff9999,stroke:#ff0000,stroke-width:3px
+    classDef ghost fill:#ffcccc,stroke:#ff6666,stroke-width:2px
+    classDef core fill:#99ccff,stroke:#0066cc,stroke-width:2px
+    
+    class Main,CmdServer,MemoryRepos,DIContainer,MemoryContainer,Config duplicate
+    class ContactHandler,SMTPEmail ghost
+    class GinRouter,PortfolioHandlers,TechService core
+```

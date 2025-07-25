@@ -1,0 +1,145 @@
+```mermaid
+graph TB
+    %% Improved Holger Hahn Website Architecture - DDD/CQRS/Event Sourcing
+    
+    subgraph "Presentation Layer"
+        HTTPServer[Single HTTP Server Entry]
+        APIRoutes[REST API Routes]
+        WebRoutes[Web Page Routes]
+        StaticAssets[Static Asset Server]
+        
+        subgraph "HTTP Handlers"
+            QueryHandlers[Query Handlers - Read Side]
+            CommandHandlers[Command Handlers - Write Side]
+            WebHandlers[Web Page Handlers]
+        end
+    end
+    
+    subgraph "Application Layer"
+        subgraph "Command Side (Write)"
+            CommandBus[Command Bus]
+            CommandHandlerSvc[Command Handlers]
+            EventStore[Event Store]
+            EventPublisher[Event Publisher]
+        end
+        
+        subgraph "Query Side (Read)"
+            QueryBus[Query Bus]  
+            QueryHandlerSvc[Query Handlers]
+            ReadModels[Read Model Projections]
+            ViewRepository[View Repository]
+        end
+        
+        subgraph "Cross-Cutting"
+            Validation[Input Validation]
+            Authorization[Authorization]
+            Logging[Structured Logging]
+        end
+    end
+    
+    subgraph "Domain Layer"
+        subgraph "Technology Bounded Context"
+            TechAggregate[Technology Aggregate]
+            TechEvents[Technology Events]
+            TechCommands[Technology Commands]
+        end
+        
+        subgraph "Experience Bounded Context"
+            ExpAggregate[Experience Aggregate]
+            ExpEvents[Experience Events]
+            ExpCommands[Experience Commands]
+        end
+        
+        subgraph "Contact Bounded Context"
+            ContactAggregate[Contact Aggregate]
+            ContactEvents[Contact Events] 
+            ContactCommands[Contact Commands]
+        end
+        
+        DomainEvents[Domain Event Base]
+        AggregateRoot[Aggregate Root Base]
+    end
+    
+    subgraph "Infrastructure Layer"
+        subgraph "Persistence"
+            EventStoreImpl[Event Store Implementation]
+            ReadModelStore[Read Model Database]
+            ProjectionEngine[Event Projection Engine]
+        end
+        
+        subgraph "External Services"
+            EmailService[Email Service]
+            NotificationService[Notification Service]
+        end
+        
+        subgraph "System"
+            ConfigManager[Configuration Management]
+            HealthChecks[Health Check System]
+            Metrics[Metrics Collection]
+        end
+    end
+    
+    subgraph "Templates & UI"
+        TemplateEngine[Templ Template Engine]
+        TailwindCSS[TailwindCSS - Single System]
+        Components[Reusable Components]
+    end
+    
+    %% Command Flow
+    HTTPServer --> CommandHandlers
+    CommandHandlers --> CommandBus
+    CommandBus --> CommandHandlerSvc
+    CommandHandlerSvc --> TechAggregate
+    CommandHandlerSvc --> ExpAggregate  
+    CommandHandlerSvc --> ContactAggregate
+    
+    TechAggregate --> TechEvents
+    ExpAggregate --> ExpEvents
+    ContactAggregate --> ContactEvents
+    
+    TechEvents --> EventStore
+    ExpEvents --> EventStore
+    ContactEvents --> EventStore
+    
+    EventStore --> EventPublisher
+    EventPublisher --> ProjectionEngine
+    ProjectionEngine --> ReadModels
+    ReadModels --> ViewRepository
+    
+    %% Query Flow
+    HTTPServer --> QueryHandlers
+    QueryHandlers --> QueryBus
+    QueryBus --> QueryHandlerSvc
+    QueryHandlerSvc --> ViewRepository
+    
+    %% Web Flow
+    HTTPServer --> WebHandlers
+    WebHandlers --> ViewRepository
+    WebHandlers --> TemplateEngine
+    TemplateEngine --> Components
+    Components --> TailwindCSS
+    
+    %% Infrastructure Connections
+    EventStoreImpl --> EventStore
+    ReadModelStore --> ViewRepository
+    ConfigManager --> HTTPServer
+    
+    %% Cross-cutting
+    Validation --> CommandHandlers
+    Validation --> QueryHandlers
+    Authorization --> CommandHandlers
+    Authorization --> QueryHandlers
+    Logging --> CommandHandlerSvc
+    Logging --> QueryHandlerSvc
+    
+    %% Styling
+    classDef command fill:#ff9999,stroke:#cc0000,stroke-width:2px
+    classDef query fill:#99ff99,stroke:#00cc00,stroke-width:2px
+    classDef domain fill:#9999ff,stroke:#0000cc,stroke-width:2px
+    classDef infrastructure fill:#ffcc99,stroke:#cc6600,stroke-width:2px
+    
+    class CommandBus,CommandHandlers,CommandHandlerSvc,EventStore,EventPublisher command
+    class QueryBus,QueryHandlers,QueryHandlerSvc,ReadModels,ViewRepository query
+    class TechAggregate,ExpAggregate,ContactAggregate,DomainEvents,AggregateRoot domain
+    class EventStoreImpl,ReadModelStore,ProjectionEngine,EmailService infrastructure
+```

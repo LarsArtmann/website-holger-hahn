@@ -27,7 +27,20 @@
       "mcp__filesystem__get_file_info",
       "mcp__filesystem__read_multiple_files",
       "Bash(./build)",
-      "mcp__puppeteer__puppeteer_click"
+      "mcp__puppeteer__puppeteer_click",
+      "WebFetch(domain:ethereum.org)",
+      "WebFetch(domain:www.flaticon.com)",
+      "WebFetch(domain:commons.wikimedia.org)",
+      "WebFetch(domain:upload.wikimedia.org)",
+      "Bash(python3:*)",
+      "Bash(./run.sh)",
+      "WebFetch(domain:pmd.github.io)",
+      "WebFetch(domain:simian.quandarypeak.com)",
+      "Bash(dupl:*)",
+      "Bash(pmd cpd:*)",
+      "Bash($GOPATH/bin/dupl:*)",
+      "Bash(~/go/bin/dupl:*)",
+      "Bash(time:*)"
     ]
   },
   "enableAllProjectMcpServers": true,

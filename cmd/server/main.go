@@ -16,7 +16,11 @@ import (
 func main() {
 	// Initialize DI container
 	di := container.New()
-	defer di.Shutdown()
+	defer func() {
+		if err := di.Shutdown(); err != nil {
+			log.Printf("Error shutting down DI container: %v", err)
+		}
+	}()
 
 	// Get configuration
 	cfg := container.MustGet[*config.Config](di)
@@ -71,7 +75,10 @@ func setupRoutes(r *gin.Engine, handlers *handler.PortfolioHandlers) {
 	r.GET("/", func(c *gin.Context) {
 		component := templates.Index()
 		c.Header("Content-Type", "text/html")
-		component.Render(c.Request.Context(), c.Writer)
+		if err := component.Render(c.Request.Context(), c.Writer); err != nil {
+			c.JSON(500, gin.H{"error": "Failed to render template"})
+			return
+		}
 	})
 
 	// API routes for dynamic data
