@@ -1,0 +1,25 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(./node_modules/.bin/tailwindcss:*)",
+      "WebFetch(domain:firebase.google.com)",
+      "Bash(firebase:*)",
+      "mcp__sequential-thinking__sequentialthinking",
+      "mcp__filesystem__list_directory",
+      "mcp__filesystem__read_file",
+      "mcp__filesystem__edit_file",
+      "mcp__filesystem__search_files",
+      "mcp__filesystem__write_file"
+    ]
+  },
+  "enableAllProjectMcpServers": true,
+  "enabledMcpjsonServers": [
+    "github",
+    "filesystem",
+    "puppeteer",
+    "kubernetes",
+    "memory",
+    "sequential-thinking",
+    "everything"
+  ]
+}
