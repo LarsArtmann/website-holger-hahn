@@ -58,7 +58,7 @@ body {
 
 /* Clean Button System - Following Thinkmill's approach */
 .btn-primary, .modern-button-primary {
-  background-color: var(--accent-red);
+  background-color: var(--primary-blue);
   color: var(--white);
   padding: 12px 24px;
   font-weight: 600;
@@ -71,7 +71,7 @@ body {
 }
 
 .btn-primary:hover, .modern-button-primary:hover {
-  background-color: #b91c1c;
+  background-color: var(--primary-blue-dark);
 }
 
 .btn-secondary, .modern-button-secondary {
