@@ -79,8 +79,12 @@ templ Hero() {
 				</div>
 				<div class="mt-12 lg:mt-0 flex justify-center">
 					<div class="relative">
-						<img src="/static/images/Holger-Hahn.webp" alt="Holger M. Hahn - Digital Assets Solutions Architect" 
-							 class="w-80 h-80 object-cover rounded-2xl shadow-2xl"/>
+						<picture>
+							<source media="(max-width: 640px)" srcset="/static/images/Holger-Hahn-small.webp" />
+							<source media="(max-width: 1024px)" srcset="/static/images/Holger-Hahn-medium.webp" />
+							<img src="/static/images/Holger-Hahn.webp" alt="Holger M. Hahn - Digital Assets Solutions Architect" 
+								 class="w-64 h-64 sm:w-72 sm:h-72 lg:w-80 lg:h-80 object-cover rounded-2xl shadow-2xl transition-all duration-300"/>
+						</picture>
 						<div class="absolute -bottom-4 -right-4 bg-blue-600 text-white px-4 py-2 rounded-lg shadow-lg">
 							<div class="text-sm font-semibold">15+ Years</div>
 							<div class="text-xs">Experience</div>
