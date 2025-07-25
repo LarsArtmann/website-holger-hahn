@@ -5,7 +5,7 @@
   "scripts": {
     "build-css": "npx tailwindcss -i ./static/css/input.css -o ./static/css/styles.css",
     "watch-css": "npx tailwindcss -i ./static/css/input.css -o ./static/css/styles.css --watch",
-    "build": "bun run build-css && templ generate && go run build.go",
+    "build": "bun run build-css && templ generate && go build -o holger-hahn-website .",
     "deploy": "bun run build && firebase deploy --only hosting"
   },
   "devDependencies": {
