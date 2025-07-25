@@ -59,7 +59,7 @@ templ Hero() {
 	<section class="bg-white py-24 lg:py-32">
 		<div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
 			<div class="lg:grid lg:grid-cols-2 lg:gap-16 items-center mb-16">
-				<div class="text-center lg:text-left">
+				<div class="text-center lg:text-left lg:order-2">
 					<h1 class="text-5xl lg:text-6xl font-bold text-gray-900 mb-6 leading-tight">
 						Secure Digital Asset<br/>
 						<span class="text-blue-600">Solutions</span>
@@ -77,13 +77,13 @@ templ Hero() {
 						</a>
 					</div>
 				</div>
-				<div class="mt-12 lg:mt-0 flex justify-center">
+				<div class="mt-12 lg:mt-0 flex justify-center lg:order-1">
 					<div class="relative group">
 						<picture>
 							<source media="(max-width: 640px)" srcset="/static/images/Holger-Hahn-small.webp" />
 							<source media="(max-width: 1024px)" srcset="/static/images/Holger-Hahn-medium.webp" />
 							<img src="/static/images/Holger-Hahn.webp" alt="Holger M. Hahn - Digital Assets Solutions Architect" 
-								 class="w-64 h-64 sm:w-72 sm:h-72 lg:w-80 lg:h-80 object-cover rounded-2xl shadow-2xl transition-all duration-300 hover:shadow-xl hover:scale-105 hover:-rotate-1"
+								 class="w-64 h-64 sm:w-72 sm:h-72 lg:w-96 lg:h-96 xl:w-[28rem] xl:h-[28rem] object-cover rounded-2xl shadow-2xl transition-all duration-300 hover:shadow-xl hover:scale-105 hover:-rotate-1"
 								 loading="eager" fetchpriority="high" decoding="async"/>
 						</picture>
 						<div class="absolute -bottom-4 -right-4 bg-blue-600 text-white px-3 py-2 sm:px-4 rounded-lg shadow-lg transition-all duration-300 group-hover:shadow-xl group-hover:scale-110 group-hover:bg-blue-700">
