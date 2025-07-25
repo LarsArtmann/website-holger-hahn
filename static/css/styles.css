@@ -1739,6 +1739,14 @@ body {
 }
 
 @media (min-width: 1024px) {
+  .lg\:order-1 {
+    order: 1;
+  }
+
+  .lg\:order-2 {
+    order: 2;
+  }
+
   .lg\:col-span-3 {
     grid-column: span 3 / span 3;
   }
@@ -1759,12 +1767,12 @@ body {
     display: grid;
   }
 
-  .lg\:h-80 {
-    height: 20rem;
+  .lg\:h-96 {
+    height: 24rem;
   }
 
-  .lg\:w-80 {
-    width: 20rem;
+  .lg\:w-96 {
+    width: 24rem;
   }
 
   .lg\:grid-cols-12 {
@@ -1826,5 +1834,15 @@ body {
   .lg\:text-6xl {
     font-size: 3.75rem;
     line-height: 1;
+  }
+}
+
+@media (min-width: 1280px) {
+  .xl\:h-\[28rem\] {
+    height: 28rem;
+  }
+
+  .xl\:w-\[28rem\] {
+    width: 28rem;
   }
 }
