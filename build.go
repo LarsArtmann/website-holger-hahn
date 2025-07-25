@@ -17,6 +17,13 @@ func main() {
 		panic(err)
 	}
 
+	// Generate TailwindCSS first
+	fmt.Println("Generating TailwindCSS...")
+	err = os.Chdir(".")
+	if err != nil {
+		panic(err)
+	}
+
 	// Generate index.html
 	fmt.Println("Generating index.html...")
 	indexFile, err := os.Create(filepath.Join(publicDir, "index.html"))

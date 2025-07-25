@@ -3,14 +3,16 @@
   "module": "index.ts",
   "type": "module",
   "scripts": {
-    "build-css": "npx @tailwindcss/cli -i ./static/css/input.css -o ./static/css/styles.css",
-    "watch-css": "npx @tailwindcss/cli -i ./static/css/input.css -o ./static/css/styles.css --watch"
+    "build-css": "npx tailwindcss -i ./static/css/input.css -o ./static/css/styles.css",
+    "watch-css": "npx tailwindcss -i ./static/css/input.css -o ./static/css/styles.css --watch",
+    "build": "bun run build-css && templ generate && go run build.go",
+    "deploy": "bun run build && firebase deploy --only hosting"
   },
   "devDependencies": {
-    "@tailwindcss/forms": "0.5.10",
-    "@tailwindcss/typography": "0.5.16",
+    "@tailwindcss/forms": "^0.5.7",
+    "@tailwindcss/typography": "^0.5.15",
     "@types/bun": "latest",
-    "tailwindcss": "4.1.11"
+    "tailwindcss": "^3.4.0"
   },
   "peerDependencies": {
     "typescript": "5.0.0"
