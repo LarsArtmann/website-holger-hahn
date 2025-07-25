@@ -78,15 +78,15 @@ templ Hero() {
 					</div>
 				</div>
 				<div class="mt-12 lg:mt-0 flex justify-center">
-					<div class="relative">
+					<div class="relative group">
 						<picture>
 							<source media="(max-width: 640px)" srcset="/static/images/Holger-Hahn-small.webp" />
 							<source media="(max-width: 1024px)" srcset="/static/images/Holger-Hahn-medium.webp" />
 							<img src="/static/images/Holger-Hahn.webp" alt="Holger M. Hahn - Digital Assets Solutions Architect" 
-								 class="w-64 h-64 sm:w-72 sm:h-72 lg:w-80 lg:h-80 object-cover rounded-2xl shadow-2xl transition-all duration-300"
+								 class="w-64 h-64 sm:w-72 sm:h-72 lg:w-80 lg:h-80 object-cover rounded-2xl shadow-2xl transition-all duration-300 hover:shadow-xl hover:scale-105 hover:-rotate-1"
 								 loading="eager" fetchpriority="high" decoding="async"/>
 						</picture>
-						<div class="absolute -bottom-4 -right-4 bg-blue-600 text-white px-4 py-2 rounded-lg shadow-lg">
+						<div class="absolute -bottom-4 -right-4 bg-blue-600 text-white px-4 py-2 rounded-lg shadow-lg transition-all duration-300 group-hover:shadow-xl group-hover:scale-110 group-hover:bg-blue-700">
 							<div class="text-sm font-semibold">15+ Years</div>
 							<div class="text-xs">Experience</div>
 						</div>
