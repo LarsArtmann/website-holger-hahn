@@ -1,0 +1,99 @@
+```mermaid
+graph TB
+    %% Current Events & Commands Architecture - Holger Hahn Website
+    %% STATUS: NO EVENT SOURCING OR CQRS IMPLEMENTED
+    
+    subgraph "❌ NO EVENT SOURCING ARCHITECTURE"
+        NoEvents[NO DOMAIN EVENTS]
+        NoEventStore[NO EVENT STORE]
+        NoEventHandlers[NO EVENT HANDLERS]
+        NoEventSourcing[NO EVENT SOURCING]
+    end
+    
+    subgraph "❌ NO CQRS IMPLEMENTATION"
+        NoCQRS[NO COMMAND/QUERY SEPARATION]
+        NoCommandBus[NO COMMAND BUS]
+        NoQueryBus[NO QUERY BUS]
+        NoReadModels[NO READ MODELS]
+    end
+    
+    subgraph "✅ TRADITIONAL CRUD FLOW"
+        HTTPRequest[HTTP Request]
+        
+        subgraph "HTTP Handlers"
+            PortfolioHandler[PortfolioHandlers]
+            ContactHandler[ContactHandler]
+        end
+        
+        subgraph "Application Services"
+            ContactService[ContactService]
+            TechnologyService[TechnologyService]
+            ExperienceService[ExperienceService]
+            PortfolioService[PortfolioService]
+        end
+        
+        subgraph "Domain Entities (No Events)"
+            ContactEntity[Contact Entity]
+            TechnologyEntity[Technology Entity]
+            ExperienceEntity[Experience Entity]
+        end
+        
+        subgraph "Repository Layer"
+            ContactRepo[ContactRepository]
+            TechnologyRepo[TechnologyRepository]
+            ExperienceRepo[ExperienceRepository]
+        end
+        
+        subgraph "Infrastructure"
+            MemoryStore[In-Memory Storage]
+            EmailService[SMTP Email Service]
+            LoggingService[Console Logging]
+        end
+    end
+    
+    %% Traditional CRUD Flow
+    HTTPRequest --> PortfolioHandler
+    HTTPRequest --> ContactHandler
+    
+    PortfolioHandler --> TechnologyService
+    PortfolioHandler --> ExperienceService
+    PortfolioHandler --> PortfolioService
+    ContactHandler --> ContactService
+    
+    ContactService --> ContactEntity
+    TechnologyService --> TechnologyEntity
+    ExperienceService --> ExperienceEntity
+    
+    ContactService --> ContactRepo
+    TechnologyService --> TechnologyRepo
+    ExperienceService --> ExperienceRepo
+    
+    ContactRepo --> MemoryStore
+    TechnologyRepo --> MemoryStore
+    ExperienceRepo --> MemoryStore
+    
+    ContactService --> EmailService
+    ContactService --> LoggingService
+    
+    %% Missing Event Flow (What Should Exist)
+    subgraph "🚫 MISSING EVENT ARCHITECTURE"
+        MissingEvents[Missing: Domain Events]
+        MissingEventStore[Missing: Event Store]
+        MissingProjections[Missing: Projections]
+        MissingAsyncProcessing[Missing: Async Processing]
+    end
+    
+    %% Styling
+    classDef missing fill:#ffcccc,stroke:#ff0000,stroke-width:2px,stroke-dasharray: 5 5
+    classDef traditional fill:#ccffcc,stroke:#00cc00,stroke-width:2px
+    classDef problem fill:#ff9999,stroke:#cc0000,stroke-width:3px
+    
+    class NoEvents,NoEventStore,NoEventHandlers,NoEventSourcing problem
+    class NoCQRS,NoCommandBus,NoQueryBus,NoReadModels problem
+    class MissingEvents,MissingEventStore,MissingProjections,MissingAsyncProcessing missing
+    class HTTPRequest,PortfolioHandler,ContactService,ContactEntity,ContactRepo traditional
+    
+    %% Notes
+    Note1[📝 ANALYSIS: This is a traditional CRUD architecture<br/>with NO event sourcing or CQRS patterns.<br/>All operations are synchronous request/response.]
+    Note2[⚠️ LIMITATIONS: No event history, no async processing,<br/>no command/query separation, no scalability for<br/>complex business workflows.]
+```

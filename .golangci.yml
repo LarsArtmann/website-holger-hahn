@@ -1,0 +1,398 @@
+# Holger Hahn Website - Strict GolangCI-Lint Configuration
+# Enterprise-grade linting for professional Go development
+# Designed for DDD/Clean Architecture enforcement
+
+run:
+  timeout: 10m
+  issues-exit-code: 1
+  tests: true
+  build-tags:
+    - integration
+    - e2e
+  modules-download-mode: readonly
+  allow-parallel-runners: true
+
+output:
+  formats:
+    - format: colored-line-number
+  print-issued-lines: true
+  print-linter-name: true
+  path-prefix: ""
+  sort-results: true
+
+linters-settings:
+  # Enable ALL available linters for maximum strictness
+  errcheck:
+    check-type-assertions: true
+    check-blank: true
+    exclude-functions:
+      - (*os.File).Close
+    
+  govet:
+    enable-all: true
+    
+  shadow:
+    strict: true
+    
+  revive:
+    severity: error
+    confidence: 0.8
+    rules:
+      - name: blank-imports
+      - name: context-as-argument
+      - name: context-keys-type
+      - name: dot-imports
+      - name: error-return
+      - name: error-strings
+      - name: error-naming
+      - name: exported
+      - name: if-return
+      - name: increment-decrement
+      - name: var-naming
+      - name: var-declaration
+      - name: package-comments
+      - name: range
+      - name: receiver-naming
+      - name: time-naming
+      - name: unexported-return
+      - name: indent-error-flow
+      - name: errorf
+      - name: empty-block
+      - name: superfluous-else
+      - name: unused-parameter
+      - name: unreachable-code
+      - name: redefines-builtin-id
+      - name: constant-logical-expr
+      - name: bool-literal-in-expr
+      - name: imports-blacklist
+      - name: function-result-limit
+        arguments: [3]
+      - name: argument-limit
+        arguments: [5]
+      - name: cyclomatic
+        arguments: [10]
+      - name: max-public-structs
+        arguments: [20]
+      - name: file-header
+        arguments: ["Licensed under GPL"]
+        
+  gocyclo:
+    min-complexity: 8
+    
+  maligned:
+    suggest-new: true
+    
+  dupl:
+    threshold: 60
+    
+  goconst:
+    min-len: 3
+    min-occurrences: 3
+    ignore-tests: false
+    match-constant: true
+    numbers: true
+    
+  depguard:
+    rules:
+      main:
+        deny:
+          - pkg: "github.com/pkg/errors"
+            desc: "Use standard library errors package instead"
+          - pkg: "github.com/sirupsen/logrus"  
+            desc: "Use standard library log/slog or our logging service"
+        allow:
+          - $gostd
+          - github.com/gin-gonic/gin
+          - github.com/spf13/viper
+          - github.com/samber/do
+          - github.com/a-h/templ
+          - holger-hahn-website
+            
+  misspell:
+    locale: US
+    ignore-words:
+      - holger
+      - hahn
+      - blockchain
+      - fintech
+      
+  lll:
+    line-length: 120
+    tab-width: 4
+    
+  unused:
+    check-exported: true
+    
+  unparam:
+    check-exported: true
+    
+  nakedret:
+    max-func-lines: 10
+    
+  prealloc:
+    simple: true
+    range-loops: true
+    for-loops: true
+    
+  gocritic:
+    enabled-tags:
+      - diagnostic
+      - experimental  
+      - opinionated
+      - performance
+      - style
+    disabled-checks:
+      - dupImport
+      - ifElseChain
+      - octalLiteral
+      - whyNoLint
+      - wrapperFunc
+      - importShadow
+      - unnamedResult
+      - unnecessaryBlock
+    settings:
+      captLocal:
+        paramsOnly: true
+      elseif:
+        skipBalanced: true
+      hugeParam:
+        sizeThreshold: 80
+      nestingReduce:
+        bodyWidth: 4
+      rangeExprCopy:
+        sizeThreshold: 512
+      rangeValCopy:
+        sizeThreshold: 128
+      truncateCmp:
+        skipArchDependent: true
+      underef:
+        skipRecvDeref: true
+      unnamedResult:
+        checkExported: true
+        
+  funlen:
+    lines: 150
+    statements: 50
+    
+  gocognit:
+    min-complexity: 12
+    
+  nestif:
+    min-complexity: 5
+    
+  goimports:
+    local-prefixes: holger-hahn-website
+    
+  gomnd:
+    settings:
+      mnd:
+        checks:
+          - argument
+          - case  
+          - condition
+          - operation
+          - return
+          - assign
+        ignored-numbers: 0,1,2,3
+        ignored-files: ".*_test.go"
+        ignored-functions: "make,len,cap,copy,append"
+        
+  godox:
+    keywords:
+      - TODO
+      - BUG
+      - FIXME
+      - HACK
+      
+  godot:
+    scope: declarations
+    exclude:
+      - "^func Test"
+      - "^func Example"
+    capital: false
+    
+  gosec:
+    severity: medium
+    confidence: medium
+    excludes:
+      - G404  # Use of weak random number generator (for non-crypto use)
+    includes:
+      - G101  # Look for hard coded credentials
+      - G102  # Bind to all interfaces  
+      - G103  # Audit the use of unsafe block
+      - G104  # Audit errors not checked
+      - G106  # Audit the use of ssh.InsecureIgnoreHostKey
+      - G107  # Url provided to HTTP request as taint input
+      - G108  # Profiling endpoint automatically exposed on /debug/pprof
+      - G109  # Potential Integer overflow made by strconv.Atoi result conversion to int16/32
+      - G110  # Potential DoS vulnerability via decompression bomb
+      - G201  # SQL query construction using format string
+      - G202  # SQL query construction using string concatenation
+      - G203  # Use of unescaped data in HTML templates
+      - G204  # Audit use of command execution
+      - G301  # Poor file permissions used when creating a directory
+      - G302  # Poor file permissions used with chmod
+      - G303  # Creating tempfile using a predictable path
+      - G304  # File path provided as taint input
+      - G305  # File traversal when extracting zip/tar archive
+      - G306  # Poor file permissions used when writing to a new file
+      - G307  # Deferring a method which returns an error
+      - G401  # Detect the usage of DES, RC4, MD5 or SHA1
+      - G402  # Look for bad TLS connection settings
+      - G403  # Ensure minimum RSA key length of 2048 bits
+      - G404  # Insecure random number source (rand)
+      - G501  # Import blocklist: crypto/md5
+      - G502  # Import blocklist: crypto/des
+      - G503  # Import blocklist: crypto/rc4
+      - G504  # Import blocklist: net/http/cgi
+      - G505  # Import blocklist: crypto/sha1
+      - G601  # Implicit memory aliasing of items from a range statement
+
+  testpackage:
+    skip-regexp: "(export|internal)_test\\.go"
+    
+  wsl:
+    strict-append: true
+    allow-assign-and-call: true
+    allow-assign-and-anything: false
+    allow-multiline-assign: true
+    force-case-trailing-whitespace: 0
+    
+  nlreturn:
+    block-size: 3
+
+linters:
+  enable-all: true
+  disable:
+    # Disabled linters (with justification)
+    - deadcode          # Deprecated in favor of unused
+    - exhaustivestruct  # Too strict for external structs
+    - golint           # Deprecated in favor of revive
+    - ifshort          # Can reduce readability
+    - interfacer       # Deprecated
+    - maligned         # Deprecated in favor of fieldalignment
+    - nosnakecase      # We allow snake_case for constants
+    - scopelint        # Deprecated in favor of exportloopref
+    - structcheck      # Deprecated in favor of unused
+    - varcheck         # Deprecated in favor of unused
+    - rowserrcheck     # Not applicable for this project
+    - sqlclosecheck    # Not applicable for this project
+    - wastedassign     # Can have false positives
+    - wrapcheck        # Too strict for internal errors
+    - exhaustruct      # Too strict for external structs
+    - tagliatelle      # We have consistent tag naming
+    - varnamelen       # Can be too restrictive
+    - ireturn          # We allow interface returns where appropriate
+    - nilnil           # We allow nil,nil returns where appropriate
+    - testableexamples # We don't need all examples to be testable
+    - paralleltest     # Not all tests need to be parallel
+    - tparallel        # Not all tests need to be parallel
+    - maintidx         # Maintainability index can be subjective
+
+issues:
+  max-issues-per-linter: 0
+  max-same-issues: 0
+  new: false
+  fix: false
+  exclude-use-default: false
+  uniq-by-line: true
+  exclude-dirs:
+    - vendor
+    - tmp
+    - bin
+    - .git
+  exclude-files:
+    - ".*\\.pb\\.go$"
+    - ".*_generated\\.go$"
+    - ".*mock.*\\.go$"
+  exclude-rules:
+    # Exclude some linters from running on tests files
+    - path: _test\.go
+      linters:
+        - gocyclo
+        - errcheck
+        - dupl
+        - gosec
+        - funlen
+        - gocognit
+        - gomnd
+        - lll
+        - nestif
+        - goconst
+        
+    # Exclude some linters for generated files
+    - path: ".*\\.pb\\.go"
+      linters:
+        - gocyclo
+        - errcheck
+        - dupl
+        - gosec
+        - lll
+        - unused
+        
+    # Exclude some linters for templ generated files
+    - path: ".*_templ\\.go"
+      linters:
+        - gocyclo
+        - errcheck 
+        - dupl
+        - gosec
+        - lll
+        - unused
+        - revive
+        - gocritic
+        
+    # Allow main function complexity
+    - path: main\.go
+      text: "cognitive complexity"
+      linters:
+        - gocognit
+        
+    # Allow CLI flag variables to be long
+    - path: cmd/
+      text: "line is \\d+ characters"
+      linters:
+        - lll
+        
+    # Allow complex switch statements in handlers
+    - path: internal/handler/
+      text: "cognitive complexity"
+      linters:
+        - gocognit
+        - gocyclo
+        
+  include:
+    - EXC0001 # errcheck: Almost all excludes are false positives
+    - EXC0002 # golint: we want to enforce comment on exported
+    - EXC0003 # golint: we want to flag missing comments
+    - EXC0004 # govet: we want to check for possible misuse
+    - EXC0005 # staticcheck: we want comprehensive checking
+    - EXC0006 # gosec: we want security checking
+    - EXC0007 # gosec: we want to enforce proper random usage
+    - EXC0008 # gosec: we want to check file permissions
+    - EXC0009 # gosec: we want to check for hardcoded credentials
+    - EXC0010 # gosec: we want to check for potential DoS
+    - EXC0011 # stylecheck: we want consistent style
+    - EXC0012 # revive: we want comprehensive code review
+    - EXC0013 # revive: we want to enforce exported comments
+    - EXC0014 # revive: we want package comments
+    - EXC0015 # revive: we want consistent receiver names
+
+severity:
+  default-severity: error
+  case-sensitive: false
+  rules:
+    - linters:
+        - dupl
+        - gosec 
+        - gocritic
+      severity: error
+    - linters:
+        - godox
+        - misspell
+      severity: warning
+    - linters:
+        - gocyclo
+        - gocognit
+        - funlen
+      severity: error

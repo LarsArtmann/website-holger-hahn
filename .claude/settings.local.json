@@ -40,7 +40,9 @@
       "Bash(pmd cpd:*)",
       "Bash($GOPATH/bin/dupl:*)",
       "Bash(~/go/bin/dupl:*)",
-      "Bash(time:*)"
+      "Bash(time:*)",
+      "WebFetch(domain:golangci-lint.run)",
+      "Bash(air:*)"
     ]
   },
   "enableAllProjectMcpServers": true,

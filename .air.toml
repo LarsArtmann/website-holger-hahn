@@ -1,0 +1,117 @@
+# Holger Hahn Website - Air Configuration for Hot Reload
+# https://github.com/air-verse/air
+
+# Working directory
+root = "."
+testdata_dir = "testdata"
+tmp_dir = "tmp"
+
+[build]
+# Commands to run before each build
+pre_cmd = ["templ generate"]
+
+# Build command
+cmd = "go build -o ./tmp/holger-hahn-website ."
+
+# Binary location
+bin = "./tmp/holger-hahn-website"
+
+# Arguments passed to the binary when running
+args_bin = []
+
+# Enable full_bin for environment variables
+full_bin = ""
+
+# Include directories to watch
+include_dir = ["internal", "cmd", "templates", "static"]
+
+# File extensions to watch for changes
+include_ext = ["go", "templ", "html", "css", "js", "toml", "yaml", "yml"]
+
+# Files to include specifically
+include_file = []
+
+# Directories to exclude from watching
+exclude_dir = [
+    "assets", 
+    "tmp", 
+    "vendor", 
+    "testdata",
+    "node_modules",
+    "public",
+    "docs",
+    ".git"
+]
+
+# Files to exclude from watching
+exclude_file = [
+    "*.log",
+    "*.tmp",
+    "duplicates-report.html"
+]
+
+# Regular expressions for files to exclude
+exclude_regex = ["_test.go", ".*_templ.go"]
+
+# Don't trigger build if file changes too frequently
+delay = 1000
+
+# Stop old binary when build errors occur
+stop_on_error = true
+
+# Send interrupt signal before killing process
+send_interrupt = false
+
+# Kill delay after interrupt
+kill_delay = "0s"
+
+# Don't follow symlinks
+follow_symlink = false
+
+# Exclude unchanged files
+exclude_unchanged = false
+
+# Log file for build errors
+log = "build-errors.log"
+
+# Don't rerun on every change - useful for tests
+rerun = false
+rerun_delay = 500
+
+# Commands to run after stopping (Ctrl+C)
+post_cmd = []
+
+[log]
+# Show timestamps in logs
+time = false
+
+# Only show main application logs (silence air internal logs)
+main_only = false
+
+# Silence all air logs
+silent = false
+
+[color]
+# Customize log colors
+main = "magenta"
+watcher = "cyan"  
+build = "yellow"
+runner = "green"
+app = ""
+
+[misc]
+# Clean tmp directory on exit
+clean_on_exit = true
+
+[screen]
+# Clear screen on rebuild
+clear_on_rebuild = false
+
+# Keep scroll position after rebuild  
+keep_scroll = true
+
+[proxy]
+# Enable browser live-reloading (experimental)
+enabled = false
+app_port = 0
+proxy_port = 0

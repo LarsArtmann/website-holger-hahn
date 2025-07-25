@@ -1,0 +1,189 @@
+```mermaid
+graph TB
+    %% Improved Events & Commands Architecture - Event Sourcing + CQRS
+    
+    subgraph "Command Side (Write Operations)"
+        HTTPCommands[HTTP Command Requests]
+        
+        subgraph "Command Processing"
+            CommandHandlers[Command Handlers]
+            CommandBus[Command Bus]
+            CommandValidation[Command Validation]
+        end
+        
+        subgraph "Domain Commands"
+            SubmitContactCmd[SubmitContactCommand]
+            AddTechnologyCmd[AddTechnologyCommand]
+            UpdateExperienceCmd[UpdateExperienceCommand]
+            ProcessContactCmd[ProcessContactCommand]
+        end
+        
+        subgraph "Aggregate Roots (Event Publishers)"
+            ContactAggregate[Contact Aggregate]
+            TechnologyAggregate[Technology Aggregate]
+            ExperienceAggregate[Experience Aggregate]
+        end
+        
+        subgraph "Domain Events"
+            ContactSubmitted[ContactSubmittedEvent]
+            ContactProcessed[ContactProcessedEvent]
+            TechnologyAdded[TechnologyAddedEvent]
+            ExperienceUpdated[ExperienceUpdatedEvent]
+            EmailRequested[EmailRequestedEvent]
+        end
+        
+        subgraph "Event Store"
+            EventRepository[Event Repository]
+            EventStream[Event Streams]
+            EventStorage[Event Storage Database]
+        end
+    end
+    
+    subgraph "Event Processing Pipeline"
+        EventDispatcher[Event Dispatcher]
+        
+        subgraph "Event Handlers"
+            EmailEventHandler[Email Event Handler]
+            NotificationHandler[Notification Event Handler]
+            AuditEventHandler[Audit Event Handler]
+            ProjectionHandler[Projection Event Handler]
+        end
+        
+        subgraph "External Services"
+            EmailService[Email Service]
+            NotificationService[Notification Service]
+            AuditService[Audit Service]
+        end
+    end
+    
+    subgraph "Query Side (Read Operations)"
+        HTTPQueries[HTTP Query Requests]
+        
+        subgraph "Query Processing"
+            QueryHandlers[Query Handlers]
+            QueryBus[Query Bus]
+            QueryValidation[Query Validation]
+        end
+        
+        subgraph "Queries"
+            GetContactsQuery[GetContactsQuery]
+            GetTechnologiesQuery[GetTechnologiesQuery]
+            GetExperienceQuery[GetExperienceQuery]
+            GetPortfolioQuery[GetPortfolioQuery]
+        end
+        
+        subgraph "Read Models (Projections)"
+            ContactReadModel[Contact Read Model]
+            TechnologyReadModel[Technology Read Model]
+            ExperienceReadModel[Experience Read Model]
+            PortfolioReadModel[Portfolio Read Model]
+        end
+        
+        subgraph "Query Storage"
+            ReadModelDB[Read Model Database]
+            ViewRepository[View Repository]
+        end
+    end
+    
+    subgraph "Projection Engine"
+        EventSubscriber[Event Subscriber]
+        ProjectionUpdater[Projection Updater]
+        ReadModelBuilder[Read Model Builder]
+    end
+    
+    %% Command Flow
+    HTTPCommands --> CommandHandlers
+    CommandHandlers --> CommandBus
+    CommandBus --> CommandValidation
+    CommandValidation --> SubmitContactCmd
+    CommandValidation --> AddTechnologyCmd
+    CommandValidation --> UpdateExperienceCmd
+    
+    SubmitContactCmd --> ContactAggregate
+    AddTechnologyCmd --> TechnologyAggregate
+    UpdateExperienceCmd --> ExperienceAggregate
+    
+    ContactAggregate --> ContactSubmitted
+    ContactAggregate --> ContactProcessed
+    TechnologyAggregate --> TechnologyAdded
+    ExperienceAggregate --> ExperienceUpdated
+    
+    ContactSubmitted --> EventRepository
+    ContactProcessed --> EventRepository
+    TechnologyAdded --> EventRepository
+    ExperienceUpdated --> EventRepository
+    EmailRequested --> EventRepository
+    
+    EventRepository --> EventStream
+    EventStream --> EventStorage
+    
+    %% Event Processing Flow
+    EventRepository --> EventDispatcher
+    EventDispatcher --> EmailEventHandler
+    EventDispatcher --> NotificationHandler
+    EventDispatcher --> AuditEventHandler
+    EventDispatcher --> ProjectionHandler
+    
+    EmailEventHandler --> EmailService
+    NotificationHandler --> NotificationService
+    AuditEventHandler --> AuditService
+    
+    %% Query Flow
+    HTTPQueries --> QueryHandlers
+    QueryHandlers --> QueryBus
+    QueryBus --> QueryValidation
+    QueryValidation --> GetContactsQuery
+    QueryValidation --> GetTechnologiesQuery
+    QueryValidation --> GetExperienceQuery
+    
+    GetContactsQuery --> ContactReadModel
+    GetTechnologiesQuery --> TechnologyReadModel
+    GetExperienceQuery --> ExperienceReadModel
+    GetPortfolioQuery --> PortfolioReadModel
+    
+    ContactReadModel --> ViewRepository
+    TechnologyReadModel --> ViewRepository
+    ExperienceReadModel --> ViewRepository
+    PortfolioReadModel --> ViewRepository
+    
+    ViewRepository --> ReadModelDB
+    
+    %% Projection Flow
+    EventDispatcher --> EventSubscriber
+    EventSubscriber --> ProjectionUpdater
+    ProjectionUpdater --> ReadModelBuilder
+    ReadModelBuilder --> ContactReadModel
+    ReadModelBuilder --> TechnologyReadModel
+    ReadModelBuilder --> ExperienceReadModel
+    ReadModelBuilder --> PortfolioReadModel
+    
+    %% Cross-Cutting Concerns
+    subgraph "Infrastructure Services"
+        MessageBus[Message Bus / Event Bus]
+        EventStorageImpl[Event Store Implementation]
+        HealthChecking[Health Checking]
+        Monitoring[Monitoring & Metrics]
+        ConfigManagement[Configuration Management]
+    end
+    
+    MessageBus --> EventDispatcher
+    EventStorageImpl --> EventStorage
+    
+    %% Styling
+    classDef command fill:#ff9999,stroke:#cc0000,stroke-width:2px
+    classDef event fill:#ffcc99,stroke:#cc6600,stroke-width:2px
+    classDef query fill:#99ff99,stroke:#00cc00,stroke-width:2px
+    classDef aggregate fill:#9999ff,stroke:#0000cc,stroke-width:2px
+    classDef infrastructure fill:#cccccc,stroke:#666666,stroke-width:2px
+    classDef async fill:#ffccff,stroke:#cc00cc,stroke-width:2px
+    
+    class HTTPCommands,CommandHandlers,CommandBus,SubmitContactCmd,AddTechnologyCmd command
+    class ContactSubmitted,ContactProcessed,TechnologyAdded,ExperienceUpdated,EmailRequested event
+    class HTTPQueries,QueryHandlers,QueryBus,GetContactsQuery,ContactReadModel,ViewRepository query
+    class ContactAggregate,TechnologyAggregate,ExperienceAggregate aggregate
+    class EventRepository,EventStorage,ReadModelDB,MessageBus,EventStorageImpl infrastructure
+    class EventDispatcher,EmailEventHandler,ProjectionHandler,EventSubscriber async
+    
+    %% Benefits Notes
+    Benefits[🎯 BENEFITS:<br/>✅ Complete audit trail via events<br/>✅ Async processing & scalability<br/>✅ Command/Query separation<br/>✅ Event-driven workflows<br/>✅ Eventual consistency<br/>✅ Replay capability<br/>✅ Complex business logic support]
+```

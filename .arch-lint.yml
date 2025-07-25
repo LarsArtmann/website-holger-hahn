@@ -1,0 +1,212 @@
+# Holger Hahn Website - Architectural Linting Configuration
+# Enforces Clean Architecture / DDD principles
+# Based on go-arch-lint (https://github.com/fe3dback/go-arch-lint)
+
+version: 3
+workdir: internal
+
+# Define architectural components based on DDD/Clean Architecture
+components:
+  # Presentation Layer - HTTP handlers and controllers
+  handler:
+    in: handler/**
+    
+  # Application Layer - Use cases and application services  
+  application:
+    in: application/**
+    
+  # Domain Layer - Business entities, aggregates, and domain services
+  domain:
+    in: domain/**
+    
+  # Service Layer - Business logic services (can be merged with application)
+  service:
+    in: service/**
+    
+  # Infrastructure Layer - External concerns (databases, email, logging)
+  infrastructure:
+    in: infrastructure/**
+    
+  # Repository Layer - Data access abstractions and implementations
+  repository:
+    in: repository/**
+    
+  # Container/DI - Dependency injection setup
+  container:
+    in: container/**
+    
+  # Configuration - Application configuration
+  config:
+    in: config/**
+
+# Common components that can be used by any layer
+commonComponents:
+  - config
+
+# Define architectural dependency rules
+# These rules enforce the Dependency Inversion Principle
+deps:
+  # Handler layer can only depend on Application and Domain
+  handler:
+    mayDependOn:
+      - application
+      - domain
+      - config
+    cannotDependOn:
+      - infrastructure
+      - repository
+      - service
+      - container
+      
+  # Application layer can depend on Domain and Repository interfaces
+  application:
+    mayDependOn:
+      - domain
+      - repository  # Only interfaces, not implementations
+      - config
+    cannotDependOn:
+      - handler
+      - infrastructure
+      - service
+      - container
+      
+  # Domain layer should be pure - no external dependencies
+  domain:
+    mayDependOn:
+      - config  # Only for domain configuration/constants
+    cannotDependOn:
+      - handler
+      - application
+      - service
+      - infrastructure
+      - repository
+      - container
+      
+  # Service layer (if separate from application) follows same rules as application
+  service:
+    mayDependOn:
+      - domain
+      - repository  # Only interfaces
+      - config
+    cannotDependOn:
+      - handler
+      - application
+      - infrastructure
+      - container
+      
+  # Infrastructure layer can depend on Domain for implementing interfaces
+  infrastructure:
+    mayDependOn:
+      - domain
+      - repository  # For implementing repository interfaces
+      - config
+    cannotDependOn:
+      - handler
+      - application
+      - service
+      - container
+      
+  # Repository interfaces (in domain or separate) should be pure
+  repository:
+    mayDependOn:
+      - domain
+      - config
+    cannotDependOn:
+      - handler
+      - application
+      - service
+      - infrastructure
+      - container
+      
+  # Container layer can depend on everything (for DI setup)
+  container:
+    mayDependOn:
+      - handler
+      - application
+      - domain
+      - service
+      - infrastructure
+      - repository
+      - config
+      
+# Define architectural warnings/suggestions
+warnings:
+  # Warn about potential violations
+  - name: "Handler should not import infrastructure directly"
+    component: handler
+    dependsOn: infrastructure
+    message: "Handlers should use dependency injection, not direct infrastructure imports"
+    
+  - name: "Domain should remain pure"
+    component: domain
+    dependsOn: ["application", "service", "infrastructure", "repository", "container"]
+    message: "Domain layer should not depend on other layers - maintain purity"
+    
+  - name: "Application should not know about infrastructure"
+    component: application
+    dependsOn: infrastructure
+    message: "Application layer should depend on abstractions, not concrete implementations"
+    
+  - name: "Service layer coupling"
+    component: service
+    dependsOn: infrastructure
+    message: "Service layer should use dependency injection for infrastructure concerns"
+
+# Exclude patterns for generated files or external dependencies
+excludeFiles:
+  - "**/*_test.go"           # Test files can have relaxed rules
+  - "**/*_templ.go"          # Templ generated files
+  - "**/*.pb.go"             # Protocol buffer generated files
+  - "**/mock_*.go"           # Mock files
+  - "**/mocks/**"            # Mock directories
+  - "**/vendor/**"           # Vendor dependencies
+  - "**/tmp/**"              # Temporary files
+  - "**/.git/**"             # Git files
+
+# Additional validation rules
+validationRules:
+  # Ensure key architectural boundaries are respected
+  - name: "Clean Architecture Boundaries"
+    description: "Enforce that inner layers don't depend on outer layers"
+    rules:
+      - component: domain
+        maxDependencies: 1  # Should only depend on config at most
+      - component: application
+        maxExternalDependencies: 3  # Domain, repository interfaces, config
+      - component: handler  
+        maxDependencies: 5  # Handler, application, domain, config
+        
+  # Ensure proper separation of concerns
+  - name: "Separation of Concerns"
+    description: "Each component should have focused responsibilities"
+    rules:
+      - component: handler
+        shouldNotContain: ["database", "sql", "smtp", "email"]
+        message: "Handlers should not contain infrastructure logic"
+      - component: domain
+        shouldNotContain: ["http", "gin", "json", "database", "sql"]
+        message: "Domain should not contain framework or infrastructure code"
+      - component: application
+        shouldNotContain: ["http", "gin", "database"]
+        message: "Application services should not contain HTTP or database specifics"
+
+# Documentation and reporting
+reporting:
+  format: "console"  # Options: console, json, yaml
+  includeSuccessfulChecks: false
+  verboseOutput: true
+  generateGraph: true
+  graphOutputPath: "docs/architecture-understanding/dependency-graph.svg"
+  
+# Performance and execution settings  
+execution:
+  timeout: "30s"
+  parallel: true
+  cacheResults: true
+  
+# Integration settings
+integration:
+  githubActions: true
+  preCommitHook: true
+  exitOnViolation: true
+  treatWarningsAsErrors: false
