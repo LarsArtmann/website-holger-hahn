@@ -8,40 +8,42 @@ import (
 	"time"
 )
 
-// ConsoleLoggingService implements LoggingService using console output
+// ConsoleLoggingService implements LoggingService using console output.
 type ConsoleLoggingService struct {
 	serviceName string
 }
 
-// NewConsoleLoggingService creates a new console logging service
+// NewConsoleLoggingService creates a new console logging service.
 func NewConsoleLoggingService(serviceName string) *ConsoleLoggingService {
 	return &ConsoleLoggingService{
 		serviceName: serviceName,
 	}
 }
 
-// Info logs an info message with structured data
+// Info logs an info message with structured data.
 func (l *ConsoleLoggingService) Info(ctx context.Context, message string, fields map[string]interface{}) {
 	l.logWithLevel("INFO", message, nil, fields)
 }
 
-// Error logs an error message with structured data
+// Error logs an error message with structured data.
 func (l *ConsoleLoggingService) Error(ctx context.Context, message string, err error, fields map[string]interface{}) {
 	if fields == nil {
 		fields = make(map[string]interface{})
 	}
+
 	if err != nil {
 		fields["error"] = err.Error()
 	}
+
 	l.logWithLevel("ERROR", message, err, fields)
 }
 
-// Warn logs a warning message with structured data
+// Warn logs a warning message with structured data.
 func (l *ConsoleLoggingService) Warn(ctx context.Context, message string, fields map[string]interface{}) {
 	l.logWithLevel("WARN", message, nil, fields)
 }
 
-// logWithLevel logs a message with the specified level
+// logWithLevel logs a message with the specified level.
 func (l *ConsoleLoggingService) logWithLevel(level, message string, err error, fields map[string]interface{}) {
 	logEntry := map[string]interface{}{
 		"timestamp": time.Now().UTC().Format(time.RFC3339),

@@ -4,19 +4,19 @@ import (
 	"time"
 )
 
-// Technology represents a technology skill or tool
+// Technology represents a technology skill or tool.
 type Technology struct {
+	CreatedAt   time.Time `json:"created_at"`
+	UpdatedAt   time.Time `json:"updated_at"`
 	ID          string    `json:"id"`
 	Name        string    `json:"name"`
 	Category    string    `json:"category"`
 	IconURL     string    `json:"icon_url,omitempty"`
 	Level       Level     `json:"level"`
 	Description string    `json:"description,omitempty"`
-	CreatedAt   time.Time `json:"created_at"`
-	UpdatedAt   time.Time `json:"updated_at"`
 }
 
-// Level represents proficiency level in a technology
+// Level represents proficiency level in a technology.
 type Level string
 
 const (
@@ -26,7 +26,7 @@ const (
 	LevelExpert       Level = "expert"
 )
 
-// IsValid checks if the level is valid
+// IsValid checks if the level is valid.
 func (l Level) IsValid() bool {
 	switch l {
 	case LevelBeginner, LevelIntermediate, LevelAdvanced, LevelExpert:
@@ -36,14 +36,15 @@ func (l Level) IsValid() bool {
 	}
 }
 
-// String returns the string representation of the level
+// String returns the string representation of the level.
 func (l Level) String() string {
 	return string(l)
 }
 
-// NewTechnology creates a new Technology instance
+// NewTechnology creates a new Technology instance.
 func NewTechnology(name, category string, level Level) *Technology {
 	now := time.Now()
+
 	return &Technology{
 		Name:      name,
 		Category:  category,
@@ -53,26 +54,31 @@ func NewTechnology(name, category string, level Level) *Technology {
 	}
 }
 
-// Validate checks if the Technology instance is valid
+// Validate checks if the Technology instance is valid.
 func (t *Technology) Validate() error {
 	if t.Name == "" {
 		return ErrInvalidInput("technology name cannot be empty")
 	}
+
 	if t.Category == "" {
 		return ErrInvalidInput("technology category cannot be empty")
 	}
+
 	if !t.Level.IsValid() {
 		return ErrInvalidInput("invalid technology level")
 	}
+
 	return nil
 }
 
-// UpdateLevel updates the proficiency level
+// UpdateLevel updates the proficiency level.
 func (t *Technology) UpdateLevel(level Level) error {
 	if !level.IsValid() {
 		return ErrInvalidInput("invalid technology level")
 	}
+
 	t.Level = level
 	t.UpdatedAt = time.Now()
+
 	return nil
 }

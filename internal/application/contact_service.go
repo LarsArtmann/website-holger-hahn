@@ -7,14 +7,14 @@ import (
 	"holger-hahn-website/internal/domain"
 )
 
-// ContactService handles contact form business logic
+// ContactService handles contact form business logic.
 type ContactService struct {
 	contactRepo domain.ContactRepository
 	emailSvc    domain.EmailService
 	logger      domain.LoggingService
 }
 
-// NewContactService creates a new contact service
+// NewContactService creates a new contact service.
 func NewContactService(
 	contactRepo domain.ContactRepository,
 	emailSvc domain.EmailService,
@@ -27,7 +27,7 @@ func NewContactService(
 	}
 }
 
-// SubmitContactForm handles a new contact form submission
+// SubmitContactForm handles a new contact form submission.
 func (s *ContactService) SubmitContactForm(ctx context.Context, req ContactFormRequest) (*ContactFormResponse, error) {
 	// Create domain entity with validation
 	contact, err := domain.NewContact(req.Name, req.Company, req.Email, req.Project)
@@ -37,6 +37,7 @@ func (s *ContactService) SubmitContactForm(ctx context.Context, req ContactFormR
 			"email":   req.Email,
 			"company": req.Company,
 		})
+
 		return nil, fmt.Errorf("validation failed: %w", err)
 	}
 
@@ -46,6 +47,7 @@ func (s *ContactService) SubmitContactForm(ctx context.Context, req ContactFormR
 			"contact_id": contact.ID,
 			"email":      contact.Email,
 		})
+
 		return nil, fmt.Errorf("failed to save contact: %w", err)
 	}
 
@@ -75,6 +77,7 @@ func (s *ContactService) SubmitContactForm(ctx context.Context, req ContactFormR
 
 	// Mark as processed
 	contact.MarkAsProcessed()
+
 	if err := s.contactRepo.Update(ctx, contact); err != nil {
 		s.logger.Error(ctx, "Failed to mark contact as processed", err, map[string]interface{}{
 			"contact_id": contact.ID,
@@ -89,7 +92,7 @@ func (s *ContactService) SubmitContactForm(ctx context.Context, req ContactFormR
 	}, nil
 }
 
-// GetContact retrieves a contact by ID
+// GetContact retrieves a contact by ID.
 func (s *ContactService) GetContact(ctx context.Context, id string) (*Contact, error) {
 	contact, err := s.contactRepo.FindByID(ctx, id)
 	if err != nil {
@@ -107,7 +110,7 @@ func (s *ContactService) GetContact(ctx context.Context, id string) (*Contact, e
 	}, nil
 }
 
-// ListContacts retrieves contacts with pagination
+// ListContacts retrieves contacts with pagination.
 func (s *ContactService) ListContacts(ctx context.Context, status string, limit, offset int) ([]*Contact, error) {
 	contacts, err := s.contactRepo.FindAll(ctx, domain.ContactStatus(status), limit, offset)
 	if err != nil {
@@ -130,12 +133,12 @@ func (s *ContactService) ListContacts(ctx context.Context, status string, limit,
 	return result, nil
 }
 
-// DTOs for application layer
+// DTOs for application layer.
 type ContactFormRequest struct {
-	Name    string `json:"name" binding:"required,min=2,max=100"`
-	Company string `json:"company" binding:"max=100"`
-	Email   string `json:"email" binding:"required,email"`
-	Project string `json:"project" binding:"required,min=10,max=2000"`
+	Name    string `binding:"required,min=2,max=100"   json:"name"`
+	Company string `binding:"max=100"                  json:"company"`
+	Email   string `binding:"required,email"           json:"email"`
+	Project string `binding:"required,min=10,max=2000" json:"project"`
 }
 
 type ContactFormResponse struct {
@@ -145,11 +148,11 @@ type ContactFormResponse struct {
 }
 
 type Contact struct {
-	ID          string `json:"id"`
-	Name        string `json:"name"`
-	Company     string `json:"company,omitempty"`
-	Email       string `json:"email"`
-	Project     string `json:"project"`
-	Status      string `json:"status"`
 	SubmittedAt interface{} `json:"submitted_at"`
+	ID          string      `json:"id"`
+	Name        string      `json:"name"`
+	Company     string      `json:"company,omitempty"`
+	Email       string      `json:"email"`
+	Project     string      `json:"project"`
+	Status      string      `json:"status"`
 }

@@ -136,6 +136,22 @@ run-staging:
     @echo "🎭 Running in staging mode..."
     ENVIRONMENT=staging GIN_MODE=release go run .
 
+# Deploy to Google Cloud Run (requires PROJECT_ID)
+deploy PROJECT_ID="your-project-id" REGION="us-central1":
+    @echo "🚀 Deploying to Google Cloud Run..."
+    @echo "Project: {{PROJECT_ID}}"
+    @echo "Region: {{REGION}}"
+    ./deploy.sh {{PROJECT_ID}} {{REGION}}
+
+# Deploy with build and lint checks
+deploy-full PROJECT_ID="your-project-id" REGION="us-central1": build lint deploy
+    @echo "✅ Full deployment with quality checks completed"
+
+# Quick deploy (skip linting - use for hotfixes)
+deploy-quick PROJECT_ID="your-project-id" REGION="us-central1": build
+    @echo "⚡ Quick deployment completed (linting skipped)"
+    ./deploy.sh {{PROJECT_ID}} {{REGION}}
+
 # Check project status
 status:
     @echo "=== Project Status ==="

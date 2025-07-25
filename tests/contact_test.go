@@ -10,15 +10,15 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// TestContactLinksPresent verifies that all contact information is correctly embedded in the HTML
+// TestContactLinksPresent verifies that all contact information is correctly embedded in the HTML.
 func TestContactLinksPresent(t *testing.T) {
 	// Setup Gin router
 	gin.SetMode(gin.TestMode)
 	router := gin.Default()
-	
+
 	// Serve static files (mock for testing)
 	router.Static("/static", "./static")
-	
+
 	// Mock the index page handler
 	router.GET("/", func(c *gin.Context) {
 		// This would normally render the template, but for testing we'll use a simplified version
@@ -108,13 +108,13 @@ func TestContactLinksPresent(t *testing.T) {
 	}
 }
 
-// TestContactLinksReachable verifies that the contact links are valid URLs
+// TestContactLinksReachable verifies that the contact links are valid URLs.
 func TestContactLinksReachable(t *testing.T) {
 	testCases := []struct {
 		name        string
 		url         string
-		expectCode  int
 		description string
+		expectCode  int
 	}{
 		{
 			name:        "LinkedIn Profile",
@@ -132,7 +132,7 @@ func TestContactLinksReachable(t *testing.T) {
 					return http.ErrUseLastResponse
 				},
 			}
-			
+
 			resp, err := client.Get(tc.url)
 			if err != nil {
 				t.Errorf("FAIL: %s - Could not reach URL %s: %v", tc.description, tc.url, err)
@@ -150,31 +150,31 @@ func TestContactLinksReachable(t *testing.T) {
 	}
 }
 
-// TestEmailFormat verifies email format validity
+// TestEmailFormat verifies email format validity.
 func TestEmailFormat(t *testing.T) {
 	email := "hello@holger-hahn.net"
-	
+
 	// Basic email validation
 	if !strings.Contains(email, "@") {
 		t.Errorf("FAIL: Email %s does not contain @", email)
 	}
-	
+
 	if !strings.Contains(email, ".") {
 		t.Errorf("FAIL: Email %s does not contain domain", email)
 	}
-	
+
 	parts := strings.Split(email, "@")
 	if len(parts) != 2 {
 		t.Errorf("FAIL: Email %s has invalid format", email)
 	}
-	
+
 	if len(parts[0]) == 0 {
 		t.Errorf("FAIL: Email %s has empty local part", email)
 	}
-	
+
 	if len(parts[1]) == 0 {
 		t.Errorf("FAIL: Email %s has empty domain part", email)
 	}
-	
+
 	t.Logf("PASS: Email %s has valid format", email)
 }

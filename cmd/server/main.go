@@ -1,6 +1,7 @@
 package main
 
 import (
+	"errors"
 	"log"
 	"net/http"
 	"time"
@@ -60,13 +61,13 @@ func main() {
 	}
 
 	log.Printf("Starting DDD architecture server on %s in %s mode", cfg.Server.Address(), cfg.Server.Environment)
-	
-	if err := server.ListenAndServe(); err != nil && err != http.ErrServerClosed {
+
+	if err := server.ListenAndServe(); err != nil && !errors.Is(err, http.ErrServerClosed) {
 		log.Fatalf("Failed to start server: %v", err)
 	}
 }
 
-// setupRoutes configures all application routes
+// setupRoutes configures all application routes.
 func setupRoutes(r *gin.Engine, handlers *handler.PortfolioHandlers) {
 	// Health check
 	r.GET("/health", handlers.HealthHandler)
@@ -74,7 +75,9 @@ func setupRoutes(r *gin.Engine, handlers *handler.PortfolioHandlers) {
 	// Main portfolio page - using existing template for now
 	r.GET("/", func(c *gin.Context) {
 		component := templates.Index()
+
 		c.Header("Content-Type", "text/html")
+
 		if err := component.Render(c.Request.Context(), c.Writer); err != nil {
 			c.JSON(500, gin.H{"error": "Failed to render template"})
 			return

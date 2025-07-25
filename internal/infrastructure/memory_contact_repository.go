@@ -2,6 +2,7 @@ package infrastructure
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"sort"
 	"sync"
@@ -9,23 +10,23 @@ import (
 	"holger-hahn-website/internal/domain"
 )
 
-// MemoryContactRepository is an in-memory implementation of ContactRepository
+// MemoryContactRepository is an in-memory implementation of ContactRepository.
 type MemoryContactRepository struct {
-	mu       sync.RWMutex
 	contacts map[string]*domain.Contact
+	mu       sync.RWMutex
 }
 
-// NewMemoryContactRepository creates a new in-memory contact repository
+// NewMemoryContactRepository creates a new in-memory contact repository.
 func NewMemoryContactRepository() *MemoryContactRepository {
 	return &MemoryContactRepository{
 		contacts: make(map[string]*domain.Contact),
 	}
 }
 
-// Save stores a contact submission
+// Save stores a contact submission.
 func (r *MemoryContactRepository) Save(ctx context.Context, contact *domain.Contact) error {
 	if contact == nil {
-		return fmt.Errorf("contact cannot be nil")
+		return errors.New("contact cannot be nil")
 	}
 
 	if err := contact.IsValid(); err != nil {
@@ -42,10 +43,10 @@ func (r *MemoryContactRepository) Save(ctx context.Context, contact *domain.Cont
 	return nil
 }
 
-// FindByID retrieves a contact by ID
+// FindByID retrieves a contact by ID.
 func (r *MemoryContactRepository) FindByID(ctx context.Context, id string) (*domain.Contact, error) {
 	if id == "" {
-		return nil, fmt.Errorf("id cannot be empty")
+		return nil, errors.New("id cannot be empty")
 	}
 
 	r.mu.RLock()
@@ -53,20 +54,22 @@ func (r *MemoryContactRepository) FindByID(ctx context.Context, id string) (*dom
 
 	contact, exists := r.contacts[id]
 	if !exists {
-		return nil, fmt.Errorf("contact not found")
+		return nil, errors.New("contact not found")
 	}
 
 	// Return a copy to avoid external mutations
 	contactCopy := *contact
+
 	return &contactCopy, nil
 }
 
-// FindAll retrieves all contacts with optional filtering
+// FindAll retrieves all contacts with optional filtering.
 func (r *MemoryContactRepository) FindAll(ctx context.Context, status domain.ContactStatus, limit, offset int) ([]*domain.Contact, error) {
 	r.mu.RLock()
 	defer r.mu.RUnlock()
 
 	var filtered []*domain.Contact
+
 	for _, contact := range r.contacts {
 		if status == "" || domain.ContactStatus(contact.Status) == status {
 			// Create a copy to avoid external mutations
@@ -85,6 +88,7 @@ func (r *MemoryContactRepository) FindAll(ctx context.Context, status domain.Con
 	if start < 0 {
 		start = 0
 	}
+
 	if start >= len(filtered) {
 		return []*domain.Contact{}, nil
 	}
@@ -97,10 +101,10 @@ func (r *MemoryContactRepository) FindAll(ctx context.Context, status domain.Con
 	return filtered[start:end], nil
 }
 
-// Update updates an existing contact
+// Update updates an existing contact.
 func (r *MemoryContactRepository) Update(ctx context.Context, contact *domain.Contact) error {
 	if contact == nil {
-		return fmt.Errorf("contact cannot be nil")
+		return errors.New("contact cannot be nil")
 	}
 
 	if err := contact.IsValid(); err != nil {
@@ -111,7 +115,7 @@ func (r *MemoryContactRepository) Update(ctx context.Context, contact *domain.Co
 	defer r.mu.Unlock()
 
 	if _, exists := r.contacts[contact.ID]; !exists {
-		return fmt.Errorf("contact not found")
+		return errors.New("contact not found")
 	}
 
 	// Create a copy to avoid external mutations
@@ -121,24 +125,25 @@ func (r *MemoryContactRepository) Update(ctx context.Context, contact *domain.Co
 	return nil
 }
 
-// Delete removes a contact (for GDPR compliance)
+// Delete removes a contact (for GDPR compliance).
 func (r *MemoryContactRepository) Delete(ctx context.Context, id string) error {
 	if id == "" {
-		return fmt.Errorf("id cannot be empty")
+		return errors.New("id cannot be empty")
 	}
 
 	r.mu.Lock()
 	defer r.mu.Unlock()
 
 	if _, exists := r.contacts[id]; !exists {
-		return fmt.Errorf("contact not found")
+		return errors.New("contact not found")
 	}
 
 	delete(r.contacts, id)
+
 	return nil
 }
 
-// Count returns the total number of contacts
+// Count returns the total number of contacts.
 func (r *MemoryContactRepository) Count(ctx context.Context, status domain.ContactStatus) (int, error) {
 	r.mu.RLock()
 	defer r.mu.RUnlock()
@@ -148,6 +153,7 @@ func (r *MemoryContactRepository) Count(ctx context.Context, status domain.Conta
 	}
 
 	count := 0
+
 	for _, contact := range r.contacts {
 		if domain.ContactStatus(contact.Status) == status {
 			count++

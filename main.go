@@ -13,19 +13,19 @@ import (
 	"holger-hahn-website/templates"
 )
 
-// ContactHandler handles HTTP requests for contact operations
+// ContactHandler handles HTTP requests for contact operations.
 type ContactHandler struct {
 	contactService *application.ContactService
 }
 
-// NewContactHandler creates a new contact handler
+// NewContactHandler creates a new contact handler.
 func NewContactHandler(contactService *application.ContactService) *ContactHandler {
 	return &ContactHandler{
 		contactService: contactService,
 	}
 }
 
-// SubmitContactForm handles POST /contact requests
+// SubmitContactForm handles POST /contact requests.
 func (h *ContactHandler) SubmitContactForm(c *gin.Context) {
 	var req application.ContactFormRequest
 
@@ -37,11 +37,13 @@ func (h *ContactHandler) SubmitContactForm(c *gin.Context) {
 			"message": "Please check all required fields and try again.",
 			"error":   err.Error(),
 		})
+
 		return
 	}
 
 	// Use application service to handle the request
 	ctx := context.Background()
+
 	response, err := h.contactService.SubmitContactForm(ctx, req)
 	if err != nil {
 		log.Printf("Contact service error: %v", err)
@@ -49,6 +51,7 @@ func (h *ContactHandler) SubmitContactForm(c *gin.Context) {
 			"success": false,
 			"message": "Sorry, there was an error processing your request. Please try again later.",
 		})
+
 		return
 	}
 
@@ -77,7 +80,9 @@ func main() {
 	// Routes
 	r.GET("/", func(c *gin.Context) {
 		component := templates.Index()
+
 		c.Header("Content-Type", "text/html")
+
 		if err := component.Render(c.Request.Context(), c.Writer); err != nil {
 			c.JSON(500, gin.H{"error": "Failed to render template"})
 			return
@@ -97,11 +102,11 @@ func main() {
 	if port == "" {
 		port = "8081" // Default for local development
 	}
-	
+
 	log.Printf("Server starting on :%s", port)
 	log.Println("Contact form endpoint: POST /contact")
 	log.Println("Health check: GET /health")
-	
+
 	if err := r.Run(":" + port); err != nil {
 		log.Fatal("Failed to start server:", err)
 	}
