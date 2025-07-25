@@ -42,7 +42,8 @@
       "Bash(~/go/bin/dupl:*)",
       "Bash(time:*)",
       "WebFetch(domain:golangci-lint.run)",
-      "Bash(air:*)"
+      "Bash(air:*)",
+      "Bash(docker build:*)"
     ]
   },
   "enableAllProjectMcpServers": true,

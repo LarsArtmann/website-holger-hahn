@@ -1,0 +1,88 @@
+# Docker ignore file for Holger Hahn Website
+# Optimize build context and reduce image size
+
+# Git files
+.git
+.gitignore
+.gitattributes
+
+# Development files
+.air.toml
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Documentation
+README.md
+*.md
+docs/
+COMPREHENSIVE_*
+EXECUTION_PLAN.md
+
+# Build artifacts (will be built in container)
+holger-hahn-website
+tmp/
+dist/
+build/
+
+# Node.js dependencies (will be installed in container)
+node_modules/
+.npm
+.yarn
+
+# Go build artifacts
+vendor/
+
+# Test files
+*_test.go
+testdata/
+coverage.out
+
+# Development databases
+*.db
+*.sqlite
+*.sqlite3
+data/
+
+# Logs
+*.log
+logs/
+build-errors.log
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# IDE files
+*.iml
+.classpath
+.project
+.settings/
+
+# Local environment files
+.env
+.env.local
+.env.*.local
+
+# Firebase
+.firebase/
+firebase-debug.log
+firebase-debug.*.log
+
+# Analysis reports
+duplicates-report.html
+duplicates.html
+
+# Cloud Run specific
+cloudbuild.yaml
+.gcloudignore
+
+# Development justfile
+justfile

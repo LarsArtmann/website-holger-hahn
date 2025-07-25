@@ -4,6 +4,7 @@ import (
 	"context"
 	"log"
 	"net/http"
+	"os"
 
 	"github.com/gin-gonic/gin"
 	"github.com/samber/do"
@@ -91,11 +92,17 @@ func main() {
 		c.JSON(http.StatusOK, gin.H{"status": "healthy"})
 	})
 
-	log.Println("Server starting on :8081")
+	// Get port from environment (Cloud Run sets PORT)
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "8081" // Default for local development
+	}
+	
+	log.Printf("Server starting on :%s", port)
 	log.Println("Contact form endpoint: POST /contact")
 	log.Println("Health check: GET /health")
 	
-	if err := r.Run(":8081"); err != nil {
+	if err := r.Run(":" + port); err != nil {
 		log.Fatal("Failed to start server:", err)
 	}
 }
