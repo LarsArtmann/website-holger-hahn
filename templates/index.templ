@@ -8,7 +8,9 @@ templ Index() {
 		<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 		<title>Holger M. Hahn - Digital Assets & Blockchain Solutions Architect</title>
 		<meta name="description" content="Enterprise blockchain solutions, digital asset custody, and regulatory compliance expert. Trusted by banks and fintech companies."/>
+		<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏦</text></svg>"/>
 		<link href="/static/css/styles.css" rel="stylesheet"/>
+		<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/devicon.min.css"/>
 		<script src="https://unpkg.com/htmx.org@1.9.10"></script>
 		
 		<!-- PostHog Analytics -->
@@ -54,62 +56,58 @@ templ Header() {
 }
 
 templ Hero() {
-	<section class="bg-gradient-to-br from-blue-900 via-blue-800 to-indigo-900 text-white py-20">
-		<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-			<div class="lg:grid lg:grid-cols-2 lg:gap-8 items-center">
-				<div>
-					<h1 class="text-4xl lg:text-6xl font-bold leading-tight mb-6">
-						Secure Digital Asset Solutions for 
-						<span class="text-yellow-400">Financial Institutions</span>
+	<section class="bg-white py-24 lg:py-32">
+		<div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+			<div class="lg:grid lg:grid-cols-2 lg:gap-16 items-center mb-16">
+				<div class="text-center lg:text-left">
+					<h1 class="text-5xl lg:text-6xl font-bold text-gray-900 mb-6 leading-tight">
+						Secure Digital Asset<br/>
+						<span class="text-blue-600">Solutions</span>
 					</h1>
-					<p class="text-xl text-blue-100 mb-8 leading-relaxed">
-						Transform fragmented workflows into compliant, automated platforms. 
-						15+ years of expertise in regulated digital-asset and banking environments.
+					<p class="text-xl text-gray-600 mb-8 leading-relaxed">
+						Transform fragmented workflows into compliant, automated platforms with 15+ years 
+						of expertise in regulated financial environments.
 					</p>
-					<div class="flex flex-col sm:flex-row gap-4">
-						<a href="#contact" class="bg-yellow-400 text-blue-900 px-8 py-4 rounded-lg font-semibold hover:bg-yellow-300 transition">
+					<div class="flex flex-col sm:flex-row justify-center lg:justify-start gap-6">
+						<a href="#contact" class="bg-blue-600 text-white px-8 py-4 rounded-lg font-semibold hover:bg-blue-700 transition-colors shadow-lg">
 							Start Your Project
 						</a>
-						<a href="#services" class="border border-white text-white px-8 py-4 rounded-lg font-semibold hover:bg-white hover:text-blue-900 transition">
+						<a href="#services" class="bg-gray-100 text-gray-900 px-8 py-4 rounded-lg font-semibold hover:bg-gray-200 transition-colors">
 							View Services
 						</a>
 					</div>
-					<div class="mt-12 flex items-center space-x-8">
-						<div class="text-center">
-							<div class="text-3xl font-bold">15+</div>
-							<div class="text-blue-200">Years Experience</div>
-						</div>
-						<div class="text-center">
-							<div class="text-3xl font-bold">5</div>
-							<div class="text-blue-200">Years in Digital Assets</div>
-						</div>
-						<div class="text-center">
-							<div class="text-3xl font-bold">100%</div>
-							<div class="text-blue-200">Regulatory Compliant</div>
+				</div>
+				<div class="mt-12 lg:mt-0 flex justify-center">
+					<div class="relative">
+						<img src="/static/images/Holger-Hahn.webp" alt="Holger M. Hahn - Digital Assets Solutions Architect" 
+							 class="w-80 h-80 object-cover rounded-2xl shadow-2xl"/>
+						<div class="absolute -bottom-4 -right-4 bg-blue-600 text-white px-4 py-2 rounded-lg shadow-lg">
+							<div class="text-sm font-semibold">15+ Years</div>
+							<div class="text-xs">Experience</div>
 						</div>
 					</div>
 				</div>
-				<div class="mt-12 lg:mt-0">
-					<div class="bg-white/10 backdrop-blur-sm rounded-2xl p-8">
-						<h3 class="text-xl font-semibold mb-6">Trusted by Leading Organizations</h3>
-						<div class="space-y-4">
-							<div class="flex items-center space-x-3">
-								<div class="w-2 h-2 bg-yellow-400 rounded-full"></div>
-								<span>Stuttgart Stock Exchange Group</span>
-							</div>
-							<div class="flex items-center space-x-3">
-								<div class="w-2 h-2 bg-yellow-400 rounded-full"></div>
-								<span>Hauck Aufhäuser Digital Custody</span>
-							</div>
-							<div class="flex items-center space-x-3">
-								<div class="w-2 h-2 bg-yellow-400 rounded-full"></div>
-								<span>C24 Bank (Open Banking)</span>
-							</div>
-							<div class="flex items-center space-x-3">
-								<div class="w-2 h-2 bg-yellow-400 rounded-full"></div>
-								<span>Talis NFT Marketplace</span>
-							</div>
-						</div>
+			</div>
+			
+			<!-- Client Logos Section -->
+			<div class="bg-gray-50 rounded-2xl p-8 lg:p-12">
+				<p class="text-center text-gray-500 text-sm uppercase tracking-wide mb-8">Trusted by Leading Organizations</p>
+				<div class="grid grid-cols-2 lg:grid-cols-4 gap-8 items-center justify-items-center">
+					<div class="text-center">
+						<div class="text-2xl font-bold text-gray-900">15+</div>
+						<div class="text-sm text-gray-500">Years Experience</div>
+					</div>
+					<div class="text-center">
+						<div class="text-2xl font-bold text-gray-900">5</div>
+						<div class="text-sm text-gray-500">Years in Digital Assets</div>
+					</div>
+					<div class="text-center">
+						<div class="text-2xl font-bold text-gray-900">100%</div>
+						<div class="text-sm text-gray-500">Regulatory Compliant</div>
+					</div>
+					<div class="text-center">
+						<div class="text-2xl font-bold text-gray-900">4+</div>
+						<div class="text-sm text-gray-500">Major Institutions</div>
 					</div>
 				</div>
 			</div>
@@ -118,62 +116,86 @@ templ Hero() {
 }
 
 templ About() {
-	<section id="about" class="py-20 bg-white">
-		<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-			<div class="lg:grid lg:grid-cols-2 lg:gap-16 items-center">
-				<div>
-					<h2 class="text-3xl lg:text-4xl font-bold text-gray-900 mb-6">
-						Bridging Traditional Finance & Digital Assets
-					</h2>
-					<p class="text-lg text-gray-600 mb-6 leading-relaxed">
-						Over 15 years building and securing software, with specialized expertise in regulated 
-						digital-asset and retail-banking environments. I transform fragmented workflows into 
-						compliant, automated platforms.
-					</p>
-					<p class="text-lg text-gray-600 mb-8 leading-relaxed">
-						My approach combines deep technical knowledge with regulatory compliance understanding, 
-						ensuring your digital asset solutions meet both business objectives and regulatory requirements.
-					</p>
+	<section id="about" class="py-24 bg-gray-50">
+		<div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+			<div class="text-center mb-16">
+				<h2 class="text-4xl lg:text-5xl font-bold text-gray-900 mb-6">
+					Bridging Traditional Finance & Digital Assets
+				</h2>
+				<p class="text-xl text-gray-600 max-w-4xl mx-auto leading-relaxed">
+					Over 15 years building and securing software, with specialized expertise in regulated 
+					digital-asset and retail-banking environments.
+				</p>
+			</div>
+			
+			<div class="grid lg:grid-cols-2 gap-16 items-start">
+				<div class="bg-white rounded-2xl p-8 shadow-sm">
+					<h3 class="text-2xl font-bold text-gray-900 mb-6">Core Technologies</h3>
 					<div class="grid grid-cols-2 gap-6">
-						<div>
-							<h4 class="font-semibold text-gray-900 mb-2">Core Technologies</h4>
-							<ul class="text-gray-600 space-y-1">
-								<li>• Java & Python</li>
-								<li>• Kubernetes & AWS</li>
-								<li>• Rust/CosmWasm</li>
-								<li>• Fireblocks Integration</li>
-							</ul>
+						<div class="space-y-4">
+							<div class="inline-flex items-center gap-2 px-3 py-2 bg-blue-50 text-blue-700 rounded-lg text-sm font-medium">
+								<svg class="w-4 h-4" viewBox="0 0 128 128" fill="currentColor">
+									<path d="M52.581 67.817s-3.284 1.911 2.341 2.557c6.814.778 10.297.666 17.805-.753"/>
+								</svg>
+								Java
+							</div>
+							<div class="inline-flex items-center gap-2 px-3 py-2 bg-blue-50 text-blue-700 rounded-lg text-sm font-medium">
+								<svg class="w-4 h-4" viewBox="0 0 128 128" fill="currentColor">
+									<path d="M20.3 46.34c1.539 1.008 2.17 3.54 1.26 5.062"/>
+								</svg>
+								Python
+							</div>
 						</div>
-						<div>
-							<h4 class="font-semibold text-gray-900 mb-2">Specializations</h4>
-							<ul class="text-gray-600 space-y-1">
-								<li>• Digital Asset Custody</li>
-								<li>• Regulatory Compliance</li>
-								<li>• Smart Contract Development</li>
-								<li>• Test Automation</li>
-							</ul>
+						<div class="space-y-4">
+							<div class="inline-flex items-center gap-2 px-3 py-2 bg-green-50 text-green-700 rounded-lg text-sm font-medium">
+								<svg class="w-4 h-4" viewBox="0 0 128 128" fill="currentColor">
+									<path d="M63.8 16.283a4.956 4.915 0 0 0-1.9.48"/>
+								</svg>
+								Kubernetes
+							</div>
+							<div class="inline-flex items-center gap-2 px-3 py-2 bg-orange-50 text-orange-700 rounded-lg text-sm font-medium">
+								<svg class="w-4 h-4" viewBox="0 0 128 128" fill="currentColor">
+									<path d="M36.379 53.64c0 1.56.168 2.825.465 3.75"/>
+								</svg>
+								AWS
+							</div>
 						</div>
 					</div>
 				</div>
-				<div class="mt-12 lg:mt-0">
-					<div class="bg-gray-50 rounded-2xl p-8">
-						<h3 class="text-xl font-semibold text-gray-900 mb-6">Key Achievements</h3>
-						<div class="space-y-6">
-							<div class="border-l-4 border-blue-600 pl-4">
-								<h4 class="font-semibold text-gray-900">Eliminated Operational Risk</h4>
+				<div class="bg-white rounded-2xl p-8 shadow-sm">
+					<h3 class="text-2xl font-bold text-gray-900 mb-6">Key Achievements</h3>
+					<div class="space-y-6">
+						<div class="flex items-start gap-4">
+							<div class="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0">
+								<svg class="w-4 h-4 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
+									<path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+								</svg>
+							</div>
+							<div>
+								<h4 class="font-semibold text-gray-900 mb-1">Eliminated Operational Risk</h4>
 								<p class="text-gray-600">Replaced Excel-based custody operations with automated Fireblocks solution</p>
 							</div>
-							<div class="border-l-4 border-green-600 pl-4">
-								<h4 class="font-semibold text-gray-900">Production Smart Contracts</h4>
+						</div>
+						<div class="flex items-start gap-4">
+							<div class="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center flex-shrink-0">
+								<svg class="w-4 h-4 text-green-600" fill="currentColor" viewBox="0 0 20 20">
+									<path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+								</svg>
+							</div>
+							<div>
+								<h4 class="font-semibold text-gray-900 mb-1">Production Smart Contracts</h4>
 								<p class="text-gray-600">Built audit-approved smart contracts now operating in production</p>
 							</div>
-							<div class="border-l-4 border-purple-600 pl-4">
-								<h4 class="font-semibold text-gray-900">80%+ Test Coverage</h4>
-								<p class="text-gray-600">Improved development culture with comprehensive automated testing</p>
+						</div>
+						<div class="flex items-start gap-4">
+							<div class="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center flex-shrink-0">
+								<svg class="w-4 h-4 text-purple-600" fill="currentColor" viewBox="0 0 20 20">
+									<path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+								</svg>
 							</div>
-							<div class="border-l-4 border-orange-600 pl-4">
-								<h4 class="font-semibold text-gray-900">AWS Migration</h4>
-								<p class="text-gray-600">Risk analysis and migration to Fireblocks Wallet Management System</p>
+							<div>
+								<h4 class="font-semibold text-gray-900 mb-1">80%+ Test Coverage</h4>
+								<p class="text-gray-600">Improved development culture with comprehensive automated testing</p>
 							</div>
 						</div>
 					</div>
