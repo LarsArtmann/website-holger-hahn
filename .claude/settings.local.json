@@ -22,7 +22,12 @@
       "mcp__filesystem__create_directory",
       "Bash(identify:*)",
       "Bash(convert:*)",
-      "Bash(magick:*)"
+      "Bash(magick:*)",
+      "WebFetch(domain:devicon.dev)",
+      "mcp__filesystem__get_file_info",
+      "mcp__filesystem__read_multiple_files",
+      "Bash(./build)",
+      "mcp__puppeteer__puppeteer_click"
     ]
   },
   "enableAllProjectMcpServers": true,
