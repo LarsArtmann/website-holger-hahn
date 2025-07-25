@@ -1681,6 +1681,23 @@ body {
   box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
 }
 
+/* Optimize hover effects for devices that support hover */
+@media (hover: hover) and (pointer: fine) {
+  .hover\:scale-105:hover {
+    --tw-scale-x: 1.05;
+    --tw-scale-y: 1.05;
+  }
+  
+  .hover\:-rotate-1:hover {
+    --tw-rotate: -1deg;
+  }
+  
+  .group:hover .group-hover\:scale-110 {
+    --tw-scale-x: 1.1;
+    --tw-scale-y: 1.1;
+  }
+}
+
 @media (min-width: 640px) {
   .sm\:h-72 {
     height: 18rem;
