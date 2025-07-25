@@ -1,0 +1,67 @@
+package templates
+
+templ Hero() {
+	<section class="bg-modern-secondary py-24 lg:py-32 relative overflow-hidden">
+		<div class="absolute inset-0 bg-gradient-to-br from-electric-cyan/5 via-transparent to-electric-violet/5"></div>
+		<div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+			<div class="lg:grid lg:grid-cols-2 lg:gap-16 items-center mb-16">
+				<div class="text-center lg:text-left lg:order-2">
+					<h1 class="text-5xl lg:text-6xl font-bold text-modern-primary mb-6 leading-tight">
+						Secure Digital Asset<br/>
+						<span class="accent-modern-primary shimmer">Solutions</span>
+					</h1>
+					<p class="text-xl text-modern-secondary mb-8 leading-relaxed">
+						Transform fragmented workflows into compliant, automated platforms with 15+ years 
+						of expertise in regulated financial environments.
+					</p>
+					<div class="flex flex-col sm:flex-row justify-center lg:justify-start gap-6">
+						<a href="#contact" class="modern-button-primary text-center">
+							Start Your Project
+						</a>
+						<a href="#services" class="modern-button-secondary text-center">
+							View Services
+						</a>
+					</div>
+				</div>
+				<div class="mt-12 lg:mt-0 flex justify-center lg:order-1">
+					<div class="relative group floating">
+						<picture>
+							<source media="(max-width: 640px)" srcset="/static/images/Holger-Hahn-small.webp" />
+							<source media="(max-width: 1024px)" srcset="/static/images/Holger-Hahn-medium.webp" />
+							<img src="/static/images/Holger-Hahn.webp" alt="Holger M. Hahn - Digital Assets Solutions Architect" 
+								 class="w-64 h-64 sm:w-72 sm:h-72 lg:w-96 lg:h-96 xl:w-[28rem] xl:h-[28rem] object-cover rounded-2xl shadow-2xl transition-all duration-300 hover:shadow-xl hover:scale-105 hover:-rotate-1"
+								 loading="eager" fetchpriority="high" decoding="async"/>
+						</picture>
+						<div class="absolute -bottom-4 -right-4 bg-accent-modern-primary text-white px-3 py-2 sm:px-4 rounded-lg shadow-lg transition-all duration-300 group-hover:shadow-xl group-hover:scale-110 group-hover:bg-accent-modern-secondary">
+							<div class="text-sm font-semibold">15+ Years</div>
+							<div class="text-xs">Experience</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+			<!-- Client Logos Section -->
+			<div class="modern-card bg-modern-tertiary p-8 lg:p-12">
+				<p class="text-center text-modern-tertiary text-sm uppercase tracking-wide mb-8">Trusted by Leading Organizations</p>
+				<div class="grid grid-cols-2 lg:grid-cols-4 gap-8 items-center justify-items-center">
+					<div class="text-center">
+						<div class="text-2xl font-bold text-gray-900">15+</div>
+						<div class="text-sm text-gray-500">Years Experience</div>
+					</div>
+					<div class="text-center">
+						<div class="text-2xl font-bold text-gray-900">5</div>
+						<div class="text-sm text-gray-500">Years in Digital Assets</div>
+					</div>
+					<div class="text-center">
+						<div class="text-2xl font-bold text-gray-900">100%</div>
+						<div class="text-sm text-gray-500">Regulatory Compliant</div>
+					</div>
+					<div class="text-center">
+						<div class="text-2xl font-bold text-gray-900">4+</div>
+						<div class="text-sm text-gray-500">Major Institutions</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+}
