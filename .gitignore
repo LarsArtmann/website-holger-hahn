@@ -181,6 +181,7 @@ dist
 *.so
 *.dylib
 website
+holger-hahn-website
 
 # Test binary, built with `go test -c`
 *.test
