@@ -184,6 +184,24 @@ body {
   border-color: var(--border-strong);
 }
 
+/* Force override ALL devicon colors to professional monochrome */
+.tech-badge i[class*="devicon-"],
+.tech-badge svg {
+  color: var(--text-primary) !important;
+}
+
+/* Specific overrides for stubborn devicon colors */
+.tech-badge .devicon-java-plain,
+.tech-badge .devicon-python-plain,
+.tech-badge .devicon-rust-plain,
+.tech-badge .devicon-php-plain,
+.tech-badge .devicon-kubernetes-plain,
+.tech-badge .devicon-amazonwebservices-plain-wordmark,
+.tech-badge .devicon-docker-plain,
+.tech-badge .devicon-linux-plain {
+  color: var(--text-primary) !important;
+}
+
 /* Service Cards - Professional Grid */
 .service-card {
   background-color: var(--white);
