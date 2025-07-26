@@ -64,13 +64,15 @@ type Service struct {
 }
 
 type Technology struct {
-	ID          string         `json:"id"`
-	Name        string         `json:"name"`
-	Category    string         `json:"category"`
-	IconClass   sql.NullString `json:"icon_class"`
-	ColorScheme sql.NullString `json:"color_scheme"`
-	SortOrder   sql.NullInt64  `json:"sort_order"`
-	IsActive    sql.NullBool   `json:"is_active"`
-	CreatedAt   sql.NullTime   `json:"created_at"`
-	UpdatedAt   sql.NullTime   `json:"updated_at"`
+	ID               string         `json:"id"`
+	Name             string         `json:"name"`
+	Category         string         `json:"category"`
+	ProficiencyLevel string         `json:"proficiency_level"`
+	IconClass        sql.NullString `json:"icon_class"`
+	ColorScheme      sql.NullString `json:"color_scheme"`
+	Description      sql.NullString `json:"description"`
+	SortOrder        sql.NullInt64  `json:"sort_order"`
+	IsActive         sql.NullBool   `json:"is_active"`
+	CreatedAt        sql.NullTime   `json:"created_at"`
+	UpdatedAt        sql.NullTime   `json:"updated_at"`
 }

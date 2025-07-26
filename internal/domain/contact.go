@@ -12,27 +12,30 @@ import (
 
 // Contact represents a contact form submission.
 type Contact struct {
-	SubmittedAt time.Time  `json:"submitted_at"`
-	ProcessedAt *time.Time `json:"processed_at,omitempty"`
 	ID          string     `json:"id"`
 	Name        string     `json:"name"`
-	Company     string     `json:"company,omitempty"`
 	Email       string     `json:"email"`
-	Project     string     `json:"project"`
+	Company     string     `json:"company,omitempty"`
+	Message     string     `json:"message"`
+	Subject     string     `json:"subject,omitempty"`
 	Status      string     `json:"status"`
+	Source      string     `json:"source"`
+	SubmittedAt time.Time  `json:"submitted_at"`
+	ProcessedAt *time.Time `json:"processed_at,omitempty"`
 }
 
 // ContactStatus represents the status of a contact submission.
 type ContactStatus string
 
 const (
-	StatusPending   ContactStatus = "pending"
-	StatusProcessed ContactStatus = "processed"
-	StatusArchived  ContactStatus = "archived"
+	StatusNew      ContactStatus = "new"
+	StatusRead     ContactStatus = "read"
+	StatusReplied  ContactStatus = "replied"
+	StatusArchived ContactStatus = "archived"
 )
 
 // NewContact creates a new contact with validation.
-func NewContact(name, company, email, project string) (*Contact, error) {
+func NewContact(name, company, email, message, subject string) (*Contact, error) {
 	if err := validateName(name); err != nil {
 		return nil, fmt.Errorf("invalid name: %w", err)
 	}
@@ -41,8 +44,8 @@ func NewContact(name, company, email, project string) (*Contact, error) {
 		return nil, fmt.Errorf("invalid email: %w", err)
 	}
 
-	if err := validateProject(project); err != nil {
-		return nil, fmt.Errorf("invalid project: %w", err)
+	if err := validateMessage(message); err != nil {
+		return nil, fmt.Errorf("invalid message: %w", err)
 	}
 
 	return &Contact{
@@ -50,15 +53,24 @@ func NewContact(name, company, email, project string) (*Contact, error) {
 		Name:        strings.TrimSpace(name),
 		Company:     strings.TrimSpace(company),
 		Email:       strings.ToLower(strings.TrimSpace(email)),
-		Project:     strings.TrimSpace(project),
-		Status:      string(StatusPending),
+		Message:     strings.TrimSpace(message),
+		Subject:     strings.TrimSpace(subject),
+		Status:      string(StatusNew),
+		Source:      "website",
 		SubmittedAt: time.Now().UTC(),
 	}, nil
 }
 
-// MarkAsProcessed marks the contact as processed.
-func (c *Contact) MarkAsProcessed() {
-	c.Status = string(StatusProcessed)
+// MarkAsRead marks the contact as read.
+func (c *Contact) MarkAsRead() {
+	c.Status = string(StatusRead)
+	now := time.Now().UTC()
+	c.ProcessedAt = &now
+}
+
+// MarkAsReplied marks the contact as replied.
+func (c *Contact) MarkAsReplied() {
+	c.Status = string(StatusReplied)
 	now := time.Now().UTC()
 	c.ProcessedAt = &now
 }
@@ -73,7 +85,7 @@ func (c *Contact) IsValid() error {
 		return err
 	}
 
-	if err := validateProject(c.Project); err != nil {
+	if err := validateMessage(c.Message); err != nil {
 		return err
 	}
 
@@ -108,14 +120,14 @@ func validateEmail(email string) error {
 	return nil
 }
 
-func validateProject(project string) error {
-	project = strings.TrimSpace(project)
-	if len(project) < 10 {
-		return ErrProjectTooShort
+func validateMessage(message string) error {
+	message = strings.TrimSpace(message)
+	if len(message) < 10 {
+		return ErrMessageTooShort
 	}
 
-	if len(project) > 2000 {
-		return ErrProjectTooLong
+	if len(message) > 2000 {
+		return ErrMessageTooLong
 	}
 
 	return nil

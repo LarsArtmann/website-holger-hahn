@@ -9,20 +9,28 @@ SELECT * FROM technologies
 WHERE category = ? AND is_active = TRUE
 ORDER BY sort_order, name;
 
+-- name: ListTechnologiesByLevel :many
+SELECT * FROM technologies 
+WHERE proficiency_level = ? AND is_active = TRUE
+ORDER BY category, sort_order, name;
+
 -- name: GetTechnology :one
 SELECT * FROM technologies WHERE id = ?;
 
+-- name: GetTechnologyByName :one
+SELECT * FROM technologies WHERE name = ? AND is_active = TRUE;
+
 -- name: CreateTechnology :one
 INSERT INTO technologies (
-    name, category, icon_class, color_scheme, sort_order
+    name, category, proficiency_level, icon_class, color_scheme, description, sort_order
 ) VALUES (
-    ?, ?, ?, ?, ?
+    ?, ?, ?, ?, ?, ?, ?
 ) RETURNING *;
 
 -- name: UpdateTechnology :one
 UPDATE technologies 
-SET name = ?, category = ?, icon_class = ?, color_scheme = ?, 
-    sort_order = ?, updated_at = CURRENT_TIMESTAMP
+SET name = ?, category = ?, proficiency_level = ?, icon_class = ?, color_scheme = ?, 
+    description = ?, sort_order = ?, updated_at = CURRENT_TIMESTAMP
 WHERE id = ?
 RETURNING *;
 

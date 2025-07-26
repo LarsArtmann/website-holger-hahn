@@ -72,7 +72,8 @@
       "Bash(done)",
       "Bash(kill:*)",
       "Bash(fieldalignment:*)",
-      "WebFetch(domain:www.ey.com)"
+      "WebFetch(domain:www.ey.com)",
+      "Bash(kill:*)"
     ]
   },
   "enableAllProjectMcpServers": true,

@@ -33,8 +33,10 @@ CREATE TABLE technologies (
     id TEXT PRIMARY KEY DEFAULT (lower(hex(randomblob(16)))),
     name TEXT NOT NULL UNIQUE,
     category TEXT NOT NULL, -- 'language', 'infrastructure', 'blockchain'
+    proficiency_level TEXT NOT NULL DEFAULT 'intermediate' CHECK (proficiency_level IN ('beginner', 'intermediate', 'advanced', 'expert')),
     icon_class TEXT, -- CSS class for devicon or custom icon
     color_scheme TEXT, -- 'blue', 'green', 'orange', etc.
+    description TEXT, -- Technology description
     sort_order INTEGER DEFAULT 0,
     is_active BOOLEAN DEFAULT TRUE,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,

@@ -107,26 +107,30 @@ func (q *Queries) CreateService(ctx context.Context, arg CreateServiceParams) (S
 
 const CreateTechnology = `-- name: CreateTechnology :one
 INSERT INTO technologies (
-    name, category, icon_class, color_scheme, sort_order
+    name, category, proficiency_level, icon_class, color_scheme, description, sort_order
 ) VALUES (
-    ?, ?, ?, ?, ?
-) RETURNING id, name, category, icon_class, color_scheme, sort_order, is_active, created_at, updated_at
+    ?, ?, ?, ?, ?, ?, ?
+) RETURNING id, name, category, proficiency_level, icon_class, color_scheme, description, sort_order, is_active, created_at, updated_at
 `
 
 type CreateTechnologyParams struct {
-	Name        string         `json:"name"`
-	Category    string         `json:"category"`
-	IconClass   sql.NullString `json:"icon_class"`
-	ColorScheme sql.NullString `json:"color_scheme"`
-	SortOrder   sql.NullInt64  `json:"sort_order"`
+	Name             string         `json:"name"`
+	Category         string         `json:"category"`
+	ProficiencyLevel string         `json:"proficiency_level"`
+	IconClass        sql.NullString `json:"icon_class"`
+	ColorScheme      sql.NullString `json:"color_scheme"`
+	Description      sql.NullString `json:"description"`
+	SortOrder        sql.NullInt64  `json:"sort_order"`
 }
 
 func (q *Queries) CreateTechnology(ctx context.Context, arg CreateTechnologyParams) (Technology, error) {
 	row := q.db.QueryRowContext(ctx, CreateTechnology,
 		arg.Name,
 		arg.Category,
+		arg.ProficiencyLevel,
 		arg.IconClass,
 		arg.ColorScheme,
+		arg.Description,
 		arg.SortOrder,
 	)
 	var i Technology
@@ -134,8 +138,10 @@ func (q *Queries) CreateTechnology(ctx context.Context, arg CreateTechnologyPara
 		&i.ID,
 		&i.Name,
 		&i.Category,
+		&i.ProficiencyLevel,
 		&i.IconClass,
 		&i.ColorScheme,
+		&i.Description,
 		&i.SortOrder,
 		&i.IsActive,
 		&i.CreatedAt,
@@ -246,7 +252,7 @@ func (q *Queries) GetService(ctx context.Context, id string) (Service, error) {
 }
 
 const GetTechnology = `-- name: GetTechnology :one
-SELECT id, name, category, icon_class, color_scheme, sort_order, is_active, created_at, updated_at FROM technologies WHERE id = ?
+SELECT id, name, category, proficiency_level, icon_class, color_scheme, description, sort_order, is_active, created_at, updated_at FROM technologies WHERE id = ?
 `
 
 func (q *Queries) GetTechnology(ctx context.Context, id string) (Technology, error) {
@@ -256,8 +262,33 @@ func (q *Queries) GetTechnology(ctx context.Context, id string) (Technology, err
 		&i.ID,
 		&i.Name,
 		&i.Category,
+		&i.ProficiencyLevel,
 		&i.IconClass,
 		&i.ColorScheme,
+		&i.Description,
+		&i.SortOrder,
+		&i.IsActive,
+		&i.CreatedAt,
+		&i.UpdatedAt,
+	)
+	return i, err
+}
+
+const GetTechnologyByName = `-- name: GetTechnologyByName :one
+SELECT id, name, category, proficiency_level, icon_class, color_scheme, description, sort_order, is_active, created_at, updated_at FROM technologies WHERE name = ? AND is_active = TRUE
+`
+
+func (q *Queries) GetTechnologyByName(ctx context.Context, name string) (Technology, error) {
+	row := q.db.QueryRowContext(ctx, GetTechnologyByName, name)
+	var i Technology
+	err := row.Scan(
+		&i.ID,
+		&i.Name,
+		&i.Category,
+		&i.ProficiencyLevel,
+		&i.IconClass,
+		&i.ColorScheme,
+		&i.Description,
 		&i.SortOrder,
 		&i.IsActive,
 		&i.CreatedAt,
@@ -352,7 +383,7 @@ func (q *Queries) ListServices(ctx context.Context) ([]Service, error) {
 }
 
 const ListTechnologies = `-- name: ListTechnologies :many
-SELECT id, name, category, icon_class, color_scheme, sort_order, is_active, created_at, updated_at FROM technologies 
+SELECT id, name, category, proficiency_level, icon_class, color_scheme, description, sort_order, is_active, created_at, updated_at FROM technologies 
 WHERE is_active = TRUE
 ORDER BY category, sort_order, name
 `
@@ -371,8 +402,10 @@ func (q *Queries) ListTechnologies(ctx context.Context) ([]Technology, error) {
 			&i.ID,
 			&i.Name,
 			&i.Category,
+			&i.ProficiencyLevel,
 			&i.IconClass,
 			&i.ColorScheme,
+			&i.Description,
 			&i.SortOrder,
 			&i.IsActive,
 			&i.CreatedAt,
@@ -392,7 +425,7 @@ func (q *Queries) ListTechnologies(ctx context.Context) ([]Technology, error) {
 }
 
 const ListTechnologiesByCategory = `-- name: ListTechnologiesByCategory :many
-SELECT id, name, category, icon_class, color_scheme, sort_order, is_active, created_at, updated_at FROM technologies 
+SELECT id, name, category, proficiency_level, icon_class, color_scheme, description, sort_order, is_active, created_at, updated_at FROM technologies 
 WHERE category = ? AND is_active = TRUE
 ORDER BY sort_order, name
 `
@@ -410,8 +443,51 @@ func (q *Queries) ListTechnologiesByCategory(ctx context.Context, category strin
 			&i.ID,
 			&i.Name,
 			&i.Category,
+			&i.ProficiencyLevel,
 			&i.IconClass,
 			&i.ColorScheme,
+			&i.Description,
+			&i.SortOrder,
+			&i.IsActive,
+			&i.CreatedAt,
+			&i.UpdatedAt,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const ListTechnologiesByLevel = `-- name: ListTechnologiesByLevel :many
+SELECT id, name, category, proficiency_level, icon_class, color_scheme, description, sort_order, is_active, created_at, updated_at FROM technologies 
+WHERE proficiency_level = ? AND is_active = TRUE
+ORDER BY category, sort_order, name
+`
+
+func (q *Queries) ListTechnologiesByLevel(ctx context.Context, proficiencyLevel string) ([]Technology, error) {
+	rows, err := q.db.QueryContext(ctx, ListTechnologiesByLevel, proficiencyLevel)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	items := []Technology{}
+	for rows.Next() {
+		var i Technology
+		if err := rows.Scan(
+			&i.ID,
+			&i.Name,
+			&i.Category,
+			&i.ProficiencyLevel,
+			&i.IconClass,
+			&i.ColorScheme,
+			&i.Description,
 			&i.SortOrder,
 			&i.IsActive,
 			&i.CreatedAt,
@@ -530,27 +606,31 @@ func (q *Queries) UpdateService(ctx context.Context, arg UpdateServiceParams) (S
 
 const UpdateTechnology = `-- name: UpdateTechnology :one
 UPDATE technologies 
-SET name = ?, category = ?, icon_class = ?, color_scheme = ?, 
-    sort_order = ?, updated_at = CURRENT_TIMESTAMP
+SET name = ?, category = ?, proficiency_level = ?, icon_class = ?, color_scheme = ?, 
+    description = ?, sort_order = ?, updated_at = CURRENT_TIMESTAMP
 WHERE id = ?
-RETURNING id, name, category, icon_class, color_scheme, sort_order, is_active, created_at, updated_at
+RETURNING id, name, category, proficiency_level, icon_class, color_scheme, description, sort_order, is_active, created_at, updated_at
 `
 
 type UpdateTechnologyParams struct {
-	Name        string         `json:"name"`
-	Category    string         `json:"category"`
-	IconClass   sql.NullString `json:"icon_class"`
-	ColorScheme sql.NullString `json:"color_scheme"`
-	SortOrder   sql.NullInt64  `json:"sort_order"`
-	ID          string         `json:"id"`
+	Name             string         `json:"name"`
+	Category         string         `json:"category"`
+	ProficiencyLevel string         `json:"proficiency_level"`
+	IconClass        sql.NullString `json:"icon_class"`
+	ColorScheme      sql.NullString `json:"color_scheme"`
+	Description      sql.NullString `json:"description"`
+	SortOrder        sql.NullInt64  `json:"sort_order"`
+	ID               string         `json:"id"`
 }
 
 func (q *Queries) UpdateTechnology(ctx context.Context, arg UpdateTechnologyParams) (Technology, error) {
 	row := q.db.QueryRowContext(ctx, UpdateTechnology,
 		arg.Name,
 		arg.Category,
+		arg.ProficiencyLevel,
 		arg.IconClass,
 		arg.ColorScheme,
+		arg.Description,
 		arg.SortOrder,
 		arg.ID,
 	)
@@ -559,8 +639,10 @@ func (q *Queries) UpdateTechnology(ctx context.Context, arg UpdateTechnologyPara
 		&i.ID,
 		&i.Name,
 		&i.Category,
+		&i.ProficiencyLevel,
 		&i.IconClass,
 		&i.ColorScheme,
+		&i.Description,
 		&i.SortOrder,
 		&i.IsActive,
 		&i.CreatedAt,

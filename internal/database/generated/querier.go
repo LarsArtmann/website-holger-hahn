@@ -31,6 +31,7 @@ type Querier interface {
 	GetPageViewStats(ctx context.Context) ([]GetPageViewStatsRow, error)
 	GetService(ctx context.Context, id string) (Service, error)
 	GetTechnology(ctx context.Context, id string) (Technology, error)
+	GetTechnologyByName(ctx context.Context, name string) (Technology, error)
 	ListAnalyticsEvents(ctx context.Context, arg ListAnalyticsEventsParams) ([]AnalyticsEvent, error)
 	ListAnalyticsEventsByType(ctx context.Context, arg ListAnalyticsEventsByTypeParams) ([]AnalyticsEvent, error)
 	ListContacts(ctx context.Context, arg ListContactsParams) ([]Contact, error)
@@ -42,6 +43,7 @@ type Querier interface {
 	// Technologies queries
 	ListTechnologies(ctx context.Context) ([]Technology, error)
 	ListTechnologiesByCategory(ctx context.Context, category string) ([]Technology, error)
+	ListTechnologiesByLevel(ctx context.Context, proficiencyLevel string) ([]Technology, error)
 	UpdateContactStatus(ctx context.Context, arg UpdateContactStatusParams) (Contact, error)
 	UpdateExperience(ctx context.Context, arg UpdateExperienceParams) (Experience, error)
 	UpdateService(ctx context.Context, arg UpdateServiceParams) (Service, error)
