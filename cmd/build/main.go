@@ -125,37 +125,42 @@ func copyFile(cleanSrcPath, cleanDstPath string) error {
 	return err
 }
 
+// processFileOrDir processes a single file or directory entry during directory copying.
+// It validates paths and either creates a directory or copies a file.
+func processFileOrDir(path, src, dst string, info os.FileInfo) error {
+	// Validate source path.
+	cleanPath, err := validatePath(path, src, false)
+	if err != nil {
+		return err
+	}
+
+	// Calculate the destination path.
+	relPath, err := filepath.Rel(src, path)
+	if err != nil {
+		return err
+	}
+
+	dstPath := filepath.Join(dst, relPath)
+
+	// Validate destination path.
+	cleanDstPath, err := validatePath(dstPath, dst, true)
+	if err != nil {
+		return err
+	}
+
+	if info.IsDir() {
+		return os.MkdirAll(cleanDstPath, info.Mode())
+	}
+
+	// Copy file using the extracted copyFile function.
+	return copyFile(cleanPath, cleanDstPath)
+}
+
 func copyDir(src, dst string) error {
 	return filepath.Walk(src, func(path string, info os.FileInfo, err error) error {
 		if err != nil {
 			return err
 		}
-
-		// Validate source path.
-		cleanPath, err := validatePath(path, src, false)
-		if err != nil {
-			return err
-		}
-
-		// Calculate the destination path.
-		relPath, err := filepath.Rel(src, path)
-		if err != nil {
-			return err
-		}
-
-		dstPath := filepath.Join(dst, relPath)
-
-		// Validate destination path.
-		cleanDstPath, err := validatePath(dstPath, dst, true)
-		if err != nil {
-			return err
-		}
-
-		if info.IsDir() {
-			return os.MkdirAll(cleanDstPath, info.Mode())
-		}
-
-		// Copy file using the extracted copyFile function.
-		return copyFile(cleanPath, cleanDstPath)
+		return processFileOrDir(path, src, dst, info)
 	})
 }
