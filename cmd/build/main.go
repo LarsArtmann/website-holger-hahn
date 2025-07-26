@@ -6,7 +6,6 @@ package main
 import (
 	"context"
 	"errors"
-	"fmt"
 	"log"
 	"os"
 	"path/filepath"
@@ -72,27 +71,42 @@ func main() {
 	log.Printf("Build completed! Files generated in public/ directory")
 }
 
-func copyDir(src, dst string) error {
-	// Clean and get absolute path for source directory to prevent path traversal.
-	cleanSrc, err := filepath.Abs(filepath.Clean(src))
+// validatePath validates that a path is safe and within the expected base directory.
+// It returns the cleaned absolute path if validation succeeds.
+func validatePath(path, basePath string, isDestination bool) (string, error) {
+	// Clean and get absolute path to prevent path traversal.
+	cleanPath, err := filepath.Abs(filepath.Clean(path))
 	if err != nil {
-		return err
+		return "", err
 	}
 
+	// Get clean base path for validation.
+	cleanBasePath, err := filepath.Abs(filepath.Clean(basePath))
+	if err != nil {
+		return "", err
+	}
+
+	// Ensure the path is within the base directory (prevent directory traversal).
+	if !strings.HasPrefix(cleanPath, cleanBasePath) {
+		if isDestination {
+			return "", ErrDestinationPathTraversal
+		}
+		return "", ErrPathTraversal
+	}
+
+	return cleanPath, nil
+}
+
+func copyDir(src, dst string) error {
 	return filepath.Walk(src, func(path string, info os.FileInfo, err error) error {
 		if err != nil {
 			return err
 		}
 
-		// Clean the path and validate it's within the source directory.
-		cleanPath, err := filepath.Abs(filepath.Clean(path))
+		// Validate source path.
+		cleanPath, err := validatePath(path, src, false)
 		if err != nil {
 			return err
-		}
-
-		// Ensure the path is within the source directory (prevent directory traversal).
-		if !strings.HasPrefix(cleanPath, cleanSrc) {
-			return ErrPathTraversal
 		}
 
 		// Calculate the destination path.
@@ -103,34 +117,18 @@ func copyDir(src, dst string) error {
 
 		dstPath := filepath.Join(dst, relPath)
 
-		// Clean and validate destination path to prevent directory traversal.
-		cleanDstPath, err := filepath.Abs(filepath.Clean(dstPath))
+		// Validate destination path.
+		cleanDstPath, err := validatePath(dstPath, dst, true)
 		if err != nil {
 			return err
-		}
-
-		// Get clean destination directory for validation.
-		cleanDst, err := filepath.Abs(filepath.Clean(dst))
-		if err != nil {
-			return err
-		}
-
-		// Ensure destination path is within the target directory.
-		if !strings.HasPrefix(cleanDstPath, cleanDst) {
-			return ErrDestinationPathTraversal
 		}
 
 		if info.IsDir() {
 			return os.MkdirAll(cleanDstPath, info.Mode())
 		}
 
-		// Copy file - double-check path is safe before opening.
-		// Additional security check to satisfy gosec G304.
-		if !filepath.IsAbs(cleanPath) || !strings.HasPrefix(cleanPath, cleanSrc) {
-			return fmt.Errorf("invalid source path after validation: %s", cleanPath)
-		}
-
-		srcFile, err := os.Open(cleanPath) // #nosec G304 - Path validated above
+		// Copy file using validated paths.
+		srcFile, err := os.Open(cleanPath) // #nosec G304 - Path validated by validatePath
 		if err != nil {
 			return err
 		}
@@ -141,12 +139,7 @@ func copyDir(src, dst string) error {
 			return err
 		}
 
-		// Additional security check to satisfy gosec G304.
-		if !filepath.IsAbs(cleanDstPath) || !strings.HasPrefix(cleanDstPath, cleanDst) {
-			return fmt.Errorf("invalid destination path after validation: %s", cleanDstPath)
-		}
-
-		dstFile, err := os.Create(cleanDstPath) // #nosec G304 - Path validated above
+		dstFile, err := os.Create(cleanDstPath) // #nosec G304 - Path validated by validatePath
 		if err != nil {
 			return err
 		}
