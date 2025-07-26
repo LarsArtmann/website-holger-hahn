@@ -95,10 +95,7 @@ func NewInMemoryTechnologyRepository() repository.TechnologyRepository {
 
 // GetByName finds a technology by its name.
 func (r *InMemoryTechnologyRepository) GetByName(ctx context.Context, name string) (*domain.Technology, error) {
-	r.mu.RLock()
-	defer r.mu.RUnlock()
-
-	for _, tech := range r.techs {
+	for _, tech := range r.GetAll() {
 		if tech.Name == name {
 			return tech, nil
 		}
