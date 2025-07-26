@@ -40,7 +40,7 @@ func TestEndToEndContactFlow(t *testing.T) {
 		component := templates.Index()
 		c.Header("Content-Type", "text/html")
 		if err := component.Render(c.Request.Context(), c.Writer); err != nil {
-			c.JSON(500, gin.H{"error": "Failed to render template"})
+			c.JSON(constants.HTTPInternalServerError, gin.H{"error": "Failed to render template"})
 			return
 		}
 	})
@@ -333,7 +333,7 @@ func TestPerformanceBasic(t *testing.T) {
 		component := templates.Index()
 		c.Header("Content-Type", "text/html")
 		if err := component.Render(c.Request.Context(), c.Writer); err != nil {
-			c.JSON(500, gin.H{"error": "Failed to render template"})
+			c.JSON(constants.HTTPInternalServerError, gin.H{"error": "Failed to render template"})
 			return
 		}
 	})

@@ -10,6 +10,9 @@ import (
 	"os"
 	"time"
 
+	"github.com/gin-gonic/gin"
+	"github.com/samber/do"
+
 	"holger-hahn-website/internal/application"
 	"holger-hahn-website/internal/config"
 	"holger-hahn-website/internal/constants"
@@ -18,9 +21,6 @@ import (
 	"holger-hahn-website/internal/infrastructure"
 	"holger-hahn-website/internal/service"
 	"holger-hahn-website/templates"
-
-	"github.com/gin-gonic/gin"
-	"github.com/samber/do"
 )
 
 // ContactHandler handles HTTP requests for contact operations.

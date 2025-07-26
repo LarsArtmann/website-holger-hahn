@@ -1,3 +1,6 @@
+// Package service provides business logic and application services for the portfolio website.
+// It contains shared utilities and helper functions for service layer operations,
+// including ID generation, error handling, pagination, and ordering utilities.
 package service
 
 import (

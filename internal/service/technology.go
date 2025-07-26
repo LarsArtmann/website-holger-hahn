@@ -1,3 +1,6 @@
+// Package service provides business logic and application services for the portfolio website.
+// It contains technology management services that handle CRUD operations, validation,
+// and business rules for technology entities with filtering and categorization.
 package service
 
 import (
@@ -12,42 +15,53 @@ import (
 
 // TechnologyService handles business logic for technologies.
 type TechnologyService struct {
-	repo repository.TechnologyRepository
+	repo       repository.TechnologyRepository
+	validator  *CompoundValidator
+	errorHandler *StandardServiceErrorHandlers
 }
 
 // NewTechnologyService creates a new technology service.
 func NewTechnologyService(repo repository.TechnologyRepository) *TechnologyService {
+	if repo == nil {
+		panic("repository cannot be nil")
+	}
+	
 	return &TechnologyService{
-		repo: repo,
+		repo:         repo,
+		validator:    NewCompoundValidator(),
+		errorHandler: NewStandardServiceErrorHandlers("TechnologyService"),
 	}
 }
 
 // CreateTechnology creates a new technology with validation.
 func (s *TechnologyService) CreateTechnology(ctx context.Context, name, category string, level domain.Level) (*domain.Technology, error) {
-	// Normalize input
-	name = strings.TrimSpace(name)
-	category = strings.TrimSpace(category)
-
-	if name == "" {
-		return nil, domain.ErrInvalidInput("technology name cannot be empty")
+	// Validate and normalize input
+	normalizedName, err := NewStringField("technology name", name).Required().MinLength(2).MaxLength(100).Validate()
+	if err != nil {
+		return nil, err
+	}
+	
+	normalizedCategory, err := NewStringField("category", category).Required().MaxLength(50).Validate()
+	if err != nil {
+		return nil, err
 	}
 
 	// Check if technology already exists
-	existing, err := s.repo.GetByName(ctx, name)
+	existing, err := s.repo.GetByName(ctx, normalizedName)
 	if err == nil && existing != nil {
-		return nil, domain.ErrConflict(fmt.Sprintf("technology '%s' already exists", name))
+		return nil, s.errorHandler.Repository.HandleAlreadyExists("technology", normalizedName)
 	}
 
 	// Create new technology
-	tech := domain.NewTechnology(name, category, level)
+	tech := domain.NewTechnology(normalizedName, normalizedCategory, level)
 	tech.ID = generateID()
 
-	if err := tech.Validate(); err != nil {
+	if err := s.validator.ValidateAndNormalize(ctx, tech); err != nil {
 		return nil, err
 	}
 
 	if err := s.repo.Create(ctx, tech); err != nil {
-		return nil, domain.ErrInternal(fmt.Sprintf("failed to create technology: %v", err))
+		return nil, s.errorHandler.Repository.HandleCreateError("technology", err)
 	}
 
 	return tech, nil
@@ -55,13 +69,13 @@ func (s *TechnologyService) CreateTechnology(ctx context.Context, name, category
 
 // GetTechnology retrieves a technology by ID.
 func (s *TechnologyService) GetTechnology(ctx context.Context, id string) (*domain.Technology, error) {
-	if id == "" {
-		return nil, domain.ErrInvalidInput("technology ID cannot be empty")
+	if err := s.validator.ValidateID(id, "technology"); err != nil {
+		return nil, err
 	}
 
 	tech, err := s.repo.GetByID(ctx, id)
 	if err != nil {
-		return nil, domain.ErrNotFound("technology")
+		return nil, s.errorHandler.Repository.HandleNotFound("technology", id)
 	}
 
 	return tech, nil
@@ -69,6 +83,11 @@ func (s *TechnologyService) GetTechnology(ctx context.Context, id string) (*doma
 
 // ListTechnologies retrieves technologies with filtering and pagination.
 func (s *TechnologyService) ListTechnologies(ctx context.Context, filter TechnologyFilter) ([]*domain.Technology, error) {
+	// Validate list request parameters
+	if err := s.validator.ValidateListRequest(filter.Limit, filter.Offset, filter.OrderBy, filter.OrderDir, "technology"); err != nil {
+		return nil, err
+	}
+
 	repoFilter := repository.TechnologyFilter{
 		Category: filter.Category,
 		Level:    filter.Level,
@@ -80,7 +99,7 @@ func (s *TechnologyService) ListTechnologies(ctx context.Context, filter Technol
 
 	technologies, err := s.repo.List(ctx, repoFilter)
 	if err != nil {
-		return nil, domain.ErrInternal(fmt.Sprintf("failed to list technologies: %v", err))
+		return nil, s.errorHandler.Repository.HandleListError("technologies", err)
 	}
 
 	return technologies, nil

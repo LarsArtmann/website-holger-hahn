@@ -151,14 +151,13 @@ func (r *InMemoryTechnologyRepository) GetByLevel(ctx context.Context, level dom
 
 // InMemoryExperienceRepository is a simple in-memory implementation for development/testing.
 type InMemoryExperienceRepository struct {
-	exps map[string]*domain.Experience
-	mu   sync.RWMutex
+	*InMemoryBaseCRUD[*domain.Experience]
 }
 
 // NewInMemoryExperienceRepository creates a new in-memory experience repository.
 func NewInMemoryExperienceRepository() repository.ExperienceRepository {
 	repo := &InMemoryExperienceRepository{
-		exps: make(map[string]*domain.Experience),
+		InMemoryBaseCRUD: NewInMemoryBaseCRUD[*domain.Experience]("experience"),
 	}
 	repo.populateSampleData()
 	return repo
@@ -241,7 +240,7 @@ func (r *InMemoryExperienceRepository) populateSampleData() {
 	fireblocks.AddAchievement(*productivityAchievement)
 	fireblocks.AddAchievement(*costSavingsAchievement)
 
-	r.exps[fireblocks.ID] = fireblocks
+	r.entities[fireblocks.ID] = fireblocks
 
 	// Current Consulting experience with metrics
 	consultingStart := time.Date(2024, 1, 1, 0, 0, 0, 0, time.UTC)
