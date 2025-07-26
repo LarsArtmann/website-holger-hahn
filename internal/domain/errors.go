@@ -32,7 +32,7 @@ func (e *DomainError) Error() string {
 
 // Static error variables to avoid dynamic error creation.
 var (
-	// Validation errors
+	// Validation errors.
 	ErrNameRequired           = errors.New("name is required")
 	ErrNameTooShort           = errors.New("name must be at least 2 characters long")
 	ErrNameTooLong            = errors.New("name must be less than 100 characters")
@@ -45,22 +45,22 @@ var (
 	ErrTechnologyIDEmpty      = errors.New("technology ID cannot be empty")
 	ErrCategoryEmpty          = errors.New("category cannot be empty")
 
-	// Not found errors
+	// Not found errors.
 	ErrContactNotFound    = errors.New("contact not found")
 	ErrTechnologyNotFound = errors.New("technology not found")
 	ErrExperienceNotFound = errors.New("experience not found")
 	ErrServiceNotFound    = errors.New("service not found")
 
-	// Conflict errors
+	// Conflict errors.
 	ErrTechnologyExists = errors.New("technology already exists")
 	ErrContactExists    = errors.New("contact already exists")
 
-	// Repository errors
+	// Repository errors.
 	ErrContactNil     = errors.New("contact cannot be nil")
 	ErrIDEmpty        = errors.New("id cannot be empty")
 	ErrInvalidContact = errors.New("invalid contact")
 
-	// Service errors
+	// Service errors.
 	ErrCreateTechnology = errors.New("failed to create technology")
 	ErrUpdateTechnology = errors.New("failed to update technology")
 	ErrDeleteTechnology = errors.New("failed to delete technology")
@@ -72,7 +72,7 @@ var (
 	ErrTechByCategory   = errors.New("failed to get technologies by category")
 	ErrTechByLevel      = errors.New("failed to get technologies by level")
 
-	// Handler errors
+	// Handler errors.
 	ErrLoadExperiences  = errors.New("failed to load experiences")
 	ErrLoadServices     = errors.New("failed to load services")
 	ErrLoadTechnologies = errors.New("failed to load technologies")
@@ -87,27 +87,30 @@ func ErrInvalidInput(message string) error {
 	}
 }
 
-// IsValidationError checks if an error is a validation error
+// IsValidationError checks if an error is a validation error.
 func IsValidationError(err error) bool {
 	if domErr, ok := err.(*DomainError); ok {
 		return domErr.Type == ErrorTypeValidation
 	}
+
 	return false
 }
 
-// IsNotFoundError checks if an error is a not found error
+// IsNotFoundError checks if an error is a not found error.
 func IsNotFoundError(err error) bool {
 	if domErr, ok := err.(*DomainError); ok {
 		return domErr.Type == ErrorTypeNotFound
 	}
+
 	return false
 }
 
-// IsConflictError checks if an error is a conflict error
+// IsConflictError checks if an error is a conflict error.
 func IsConflictError(err error) bool {
 	if domErr, ok := err.(*DomainError); ok {
 		return domErr.Type == ErrorTypeConflict
 	}
+
 	return false
 }
 
@@ -140,5 +143,6 @@ func IsInternalError(err error) bool {
 	if domainErr, ok := err.(*DomainError); ok {
 		return domainErr.Type == ErrorTypeInternal
 	}
+
 	return false
 }

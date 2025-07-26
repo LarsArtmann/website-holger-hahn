@@ -25,6 +25,7 @@ func NewPortfolioService(repo repository.ServiceRepository, techRepo repository.
 	if repo == nil {
 		panic("service repository cannot be nil")
 	}
+
 	if techRepo == nil {
 		panic("technology repository cannot be nil")
 	}

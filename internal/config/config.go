@@ -24,9 +24,9 @@ var (
 
 // Config holds application configuration.
 type Config struct {
-	Server   ServerConfig   `json:"server"`
-	Database DatabaseConfig `json:"database"`
 	Logging  LoggingConfig  `json:"logging"`
+	Database DatabaseConfig `json:"database"`
+	Server   ServerConfig   `json:"server"`
 }
 
 // ServerConfig holds server-related configuration.

@@ -24,6 +24,7 @@ func (e *ErrorHandler) HandleRepositoryError(operation string, err error) error 
 	if err == nil {
 		return nil
 	}
+
 	return domain.ErrInternal(fmt.Sprintf("failed to %s: %v", operation, err))
 }
 
@@ -32,6 +33,7 @@ func (e *ErrorHandler) HandleCreateError(entityType string, err error) error {
 	if err == nil {
 		return nil
 	}
+
 	return domain.ErrInternal(fmt.Sprintf("failed to create %s: %v", entityType, err))
 }
 
@@ -40,6 +42,7 @@ func (e *ErrorHandler) HandleUpdateError(entityType string, err error) error {
 	if err == nil {
 		return nil
 	}
+
 	return domain.ErrInternal(fmt.Sprintf("failed to update %s: %v", entityType, err))
 }
 
@@ -48,6 +51,7 @@ func (e *ErrorHandler) HandleDeleteError(entityType string, err error) error {
 	if err == nil {
 		return nil
 	}
+
 	return domain.ErrInternal(fmt.Sprintf("failed to delete %s: %v", entityType, err))
 }
 
@@ -56,6 +60,7 @@ func (e *ErrorHandler) HandleListError(entityType string, err error) error {
 	if err == nil {
 		return nil
 	}
+
 	return domain.ErrInternal(fmt.Sprintf("failed to list %s: %v", entityType, err))
 }
 
@@ -64,6 +69,7 @@ func (e *ErrorHandler) HandleGetError(entityType string, err error) error {
 	if err == nil {
 		return nil
 	}
+
 	return domain.ErrNotFound(entityType)
 }
 
@@ -72,6 +78,7 @@ func (e *ErrorHandler) HandleCustomOperation(operationName string, err error) er
 	if err == nil {
 		return nil
 	}
+
 	return domain.ErrInternal(fmt.Sprintf("failed to %s: %v", operationName, err))
 }
 
@@ -80,16 +87,17 @@ func (e *ErrorHandler) HandleRepositoryListError(entityType string, err error) e
 	if err == nil {
 		return nil
 	}
+
 	return domain.ErrInternal(fmt.Sprintf("failed to list %s: %v", entityType, err))
 }
 
 // ServiceErrorContext provides contextual error information.
 type ServiceErrorContext struct {
+	Error       error
 	ServiceName string
 	Operation   string
 	EntityType  string
 	EntityID    string
-	Error       error
 }
 
 // ContextualErrorHandler provides error handling with rich context.
@@ -113,8 +121,9 @@ func (c *ContextualErrorHandler) HandleWithContext(ctx context.Context, errorCtx
 	// Add context to error message
 	contextMessage := fmt.Sprintf("[%s.%s]", errorCtx.ServiceName, errorCtx.Operation)
 	if errorCtx.EntityType != "" {
-		contextMessage += fmt.Sprintf(" %s", errorCtx.EntityType)
+		contextMessage += " " + errorCtx.EntityType
 	}
+
 	if errorCtx.EntityID != "" {
 		contextMessage += fmt.Sprintf(" (ID: %s)", errorCtx.EntityID)
 	}
@@ -173,7 +182,7 @@ func (b *BusinessLogicErrorHandler) HandleRelationshipError(fromEntity, toEntity
 
 // HandleDuplicateRelationship handles duplicate relationship errors.
 func (b *BusinessLogicErrorHandler) HandleDuplicateRelationship(relationshipType string) error {
-	return domain.ErrConflict(fmt.Sprintf("%s already exists", relationshipType))
+	return domain.ErrConflict(relationshipType + " already exists")
 }
 
 // HandleInvalidStateTransition handles invalid state transition errors.

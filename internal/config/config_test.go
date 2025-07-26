@@ -109,8 +109,8 @@ func TestServerConfig_Address(t *testing.T) {
 	tests := []struct {
 		name     string
 		host     string
-		port     int
 		expected string
+		port     int
 	}{
 		{
 			name:     "localhost with default port",
@@ -420,7 +420,7 @@ func TestGetEnvAsInt(t *testing.T) {
 	})
 }
 
-// BenchmarkLoadConfig benchmarks the config loading performance
+// BenchmarkLoadConfig benchmarks the config loading performance.
 func BenchmarkLoadConfig(b *testing.B) {
 	// Set up some environment variables
 	os.Setenv("SERVER_HOST", "localhost")
@@ -430,18 +430,18 @@ func BenchmarkLoadConfig(b *testing.B) {
 
 	b.ResetTimer()
 
-	for i := 0; i < b.N; i++ {
+	for range b.N {
 		_ = LoadConfig()
 	}
 }
 
-// BenchmarkConfigValidate benchmarks the config validation performance
+// BenchmarkConfigValidate benchmarks the config validation performance.
 func BenchmarkConfigValidate(b *testing.B) {
 	config := LoadConfig()
 
 	b.ResetTimer()
 
-	for i := 0; i < b.N; i++ {
+	for range b.N {
 		_ = config.Validate()
 	}
 }

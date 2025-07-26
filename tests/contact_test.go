@@ -7,9 +7,9 @@ import (
 	"strings"
 	"testing"
 
-	"holger-hahn-website/internal/constants"
-
 	"github.com/gin-gonic/gin"
+
+	"holger-hahn-website/internal/constants"
 )
 
 // TestContactLinksPresent verifies that all contact information is correctly embedded in the HTML.
@@ -146,7 +146,7 @@ func TestContactLinksReachable(t *testing.T) {
 			// Status 429 (rate limiting) and 999 (LinkedIn bot detection) are also acceptable as they indicate the URL exists
 			if resp.StatusCode >= constants.HTTPSuccessRangeStart && resp.StatusCode < constants.HTTPClientErrorRangeStart {
 				t.Logf("PASS: %s - URL %s returned status %d", tc.description, tc.url, resp.StatusCode)
-			} else if resp.StatusCode == 429 {
+			} else if resp.StatusCode == http.StatusTooManyRequests {
 				t.Logf("PASS: %s - URL %s returned status 429 (rate limited, but reachable)", tc.description, tc.url)
 			} else if resp.StatusCode == 999 {
 				t.Logf("PASS: %s - URL %s returned status 999 (LinkedIn bot detection, but reachable)", tc.description, tc.url)

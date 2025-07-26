@@ -4,6 +4,7 @@
 package main
 
 import (
+	"errors"
 	"os"
 	"path/filepath"
 	"strings"
@@ -14,33 +15,31 @@ import (
 
 func TestValidatePath(t *testing.T) {
 	// Create a temporary directory for testing
-	tmpDir, err := os.MkdirTemp("", "test_validate_path")
-	if err != nil {
-		t.Fatal(err)
-	}
-	defer os.RemoveAll(tmpDir)
+	tmpDir := t.TempDir()
 
 	// Create a subdirectory
 	subDir := filepath.Join(tmpDir, "subdir")
-	err = os.MkdirAll(subDir, 0o755)
+
+	err := os.MkdirAll(subDir, 0o755)
 	if err != nil {
 		t.Fatal(err)
 	}
 
 	// Create a test file
 	testFile := filepath.Join(subDir, "test.txt")
+
 	err = os.WriteFile(testFile, []byte("test content"), 0o644)
 	if err != nil {
 		t.Fatal(err)
 	}
 
 	tests := []struct {
+		expectedError error
 		name          string
 		path          string
 		basePath      string
 		isDestination bool
 		expectError   bool
-		expectedError error
 	}{
 		{
 			name:        "valid file path within base",
@@ -81,6 +80,7 @@ func TestValidatePath(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			var cleanPath string
+
 			var err error
 			if tt.isDestination {
 				cleanPath, err = security.ValidateDestinationPath(tt.path, tt.basePath)
@@ -93,7 +93,8 @@ func TestValidatePath(t *testing.T) {
 					t.Errorf("expected error but got none")
 					return
 				}
-				if tt.expectedError != nil && err != tt.expectedError {
+
+				if tt.expectedError != nil && !errors.Is(err, tt.expectedError) {
 					t.Errorf("expected error %v, got %v", tt.expectedError, err)
 				}
 			} else {
@@ -101,6 +102,7 @@ func TestValidatePath(t *testing.T) {
 					t.Errorf("unexpected error: %v", err)
 					return
 				}
+
 				if !filepath.IsAbs(cleanPath) {
 					t.Errorf("expected absolute path, got %s", cleanPath)
 				}
@@ -111,22 +113,14 @@ func TestValidatePath(t *testing.T) {
 
 func TestCopyFile(t *testing.T) {
 	// Create temporary directories for testing
-	srcDir, err := os.MkdirTemp("", "test_copy_src")
-	if err != nil {
-		t.Fatal(err)
-	}
-	defer os.RemoveAll(srcDir)
-
-	dstDir, err := os.MkdirTemp("", "test_copy_dst")
-	if err != nil {
-		t.Fatal(err)
-	}
-	defer os.RemoveAll(dstDir)
+	srcDir := t.TempDir()
+	dstDir := t.TempDir()
 
 	// Create source file
 	srcFile := filepath.Join(srcDir, "test.txt")
 	testContent := "test file content\nwith multiple lines"
-	err = os.WriteFile(srcFile, []byte(testContent), 0o644)
+
+	err := os.WriteFile(srcFile, []byte(testContent), 0o644)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -194,28 +188,21 @@ func TestCopyFile(t *testing.T) {
 
 func TestProcessFileOrDir(t *testing.T) {
 	// Create temporary directories for testing
-	srcDir, err := os.MkdirTemp("", "test_process_src")
-	if err != nil {
-		t.Fatal(err)
-	}
-	defer os.RemoveAll(srcDir)
-
-	dstDir, err := os.MkdirTemp("", "test_process_dst")
-	if err != nil {
-		t.Fatal(err)
-	}
-	defer os.RemoveAll(dstDir)
+	srcDir := t.TempDir()
+	dstDir := t.TempDir()
 
 	// Create test file
 	testFile := filepath.Join(srcDir, "test.txt")
 	testContent := "test file content"
-	err = os.WriteFile(testFile, []byte(testContent), 0o644)
+
+	err := os.WriteFile(testFile, []byte(testContent), 0o644)
 	if err != nil {
 		t.Fatal(err)
 	}
 
 	// Create test directory
 	testSubDir := filepath.Join(srcDir, "subdir")
+
 	err = os.MkdirAll(testSubDir, 0o755)
 	if err != nil {
 		t.Fatal(err)
@@ -272,6 +259,7 @@ func TestProcessFileOrDir(t *testing.T) {
 				if err != nil {
 					t.Fatal(err)
 				}
+
 				expectedDstPath := filepath.Join(dstDir, relPath)
 
 				// Verify destination exists and is correct type
@@ -304,17 +292,10 @@ func TestProcessFileOrDir(t *testing.T) {
 
 func TestCopyDir(t *testing.T) {
 	// Create temporary directories for testing
-	srcDir, err := os.MkdirTemp("", "test_copydir_src")
-	if err != nil {
-		t.Fatal(err)
-	}
-	defer os.RemoveAll(srcDir)
+	srcDir := t.TempDir()
+	dstDir := t.TempDir()
 
-	dstDir, err := os.MkdirTemp("", "test_copydir_dst")
-	if err != nil {
-		t.Fatal(err)
-	}
-	defer os.RemoveAll(dstDir)
+	var err error
 
 	// Create test structure
 	testFiles := map[string]string{
@@ -343,6 +324,7 @@ func TestCopyDir(t *testing.T) {
 
 	// Create empty directory
 	emptyDir := filepath.Join(srcDir, "emptydir")
+
 	err = os.MkdirAll(emptyDir, 0o755)
 	if err != nil {
 		t.Fatal(err)

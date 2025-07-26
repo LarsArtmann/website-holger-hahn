@@ -25,6 +25,7 @@ func NewExperienceService(repo repository.ExperienceRepository, techRepo reposit
 	if repo == nil {
 		panic("experience repository cannot be nil")
 	}
+
 	if techRepo == nil {
 		panic("technology repository cannot be nil")
 	}
@@ -191,6 +192,7 @@ func (s *ExperienceService) AddAchievementToExperience(ctx context.Context, expe
 	} else {
 		ach = domain.NewAchievement(achievement.Title, achievement.Description, achievement.Impact)
 	}
+
 	ach.ID = generateID()
 
 	// Add achievement
@@ -279,8 +281,8 @@ type ExperienceFilter struct {
 
 // AchievementRequest represents a request to add an achievement.
 type AchievementRequest struct {
+	Metrics     *domain.Metrics `json:"metrics,omitempty"`
 	Title       string          `json:"title"`
 	Description string          `json:"description"`
 	Impact      string          `json:"impact,omitempty"`
-	Metrics     *domain.Metrics `json:"metrics,omitempty"`
 }

@@ -1,7 +1,6 @@
 package service
 
 import (
-	"context"
 	"fmt"
 	"testing"
 	"time"
@@ -341,6 +340,7 @@ func TestExperienceService_AddTechnologyToExperience(t *testing.T) {
 		// Verify repository calls
 		expCalls := mockExperienceRepo.GetCallLog()
 		techCalls := mockTechRepo.GetCallLog()
+
 		testutil.AssertTrue(t, len(expCalls) >= 2, "Should have GetByID and Update calls")
 		testutil.AssertLen(t, techCalls, 1)
 		testutil.AssertContains(t, techCalls, "GetByID("+technology.ID+")")
@@ -545,16 +545,16 @@ func TestExperienceService_GetTotalExperience(t *testing.T) {
 	})
 }
 
-// Benchmark tests
+// Benchmark tests.
 func BenchmarkExperienceService_CreateExperience(b *testing.B) {
-	ctx := context.Background()
+	ctx := b.Context()
 	mockExperienceRepo := testutil.NewMockExperienceRepository()
 	mockTechRepo := testutil.NewMockTechnologyRepository()
 	service := NewExperienceService(mockExperienceRepo, mockTechRepo)
 
 	b.ResetTimer()
 
-	for i := 0; i < b.N; i++ {
+	for i := range b.N {
 		req := CreateExperienceRequest{
 			CompanyName: fmt.Sprintf("Company-%d", i),
 			Position:    "Developer",
@@ -566,7 +566,7 @@ func BenchmarkExperienceService_CreateExperience(b *testing.B) {
 }
 
 func BenchmarkExperienceService_ListExperiences(b *testing.B) {
-	ctx := context.Background()
+	ctx := b.Context()
 	mockExperienceRepo := testutil.NewMockExperienceRepository()
 	mockTechRepo := testutil.NewMockTechnologyRepository()
 	service := NewExperienceService(mockExperienceRepo, mockTechRepo)
@@ -577,7 +577,7 @@ func BenchmarkExperienceService_ListExperiences(b *testing.B) {
 
 	b.ResetTimer()
 
-	for i := 0; i < b.N; i++ {
+	for range b.N {
 		_, _ = service.ListExperiences(ctx, ExperienceFilter{})
 	}
 }

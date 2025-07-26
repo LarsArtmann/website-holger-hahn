@@ -47,6 +47,7 @@ func ValidatePath(path, basePath string, isDestination bool) (string, error) {
 		if isDestination {
 			return "", ErrDestinationPathTraversal
 		}
+
 		return "", ErrPathTraversal
 	}
 

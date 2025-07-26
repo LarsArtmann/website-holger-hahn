@@ -8,18 +8,18 @@ import (
 	"holger-hahn-website/internal/domain"
 )
 
-// TestTimeNow provides a fixed time for consistent testing
+// TestTimeNow provides a fixed time for consistent testing.
 var TestTimeNow = time.Date(2024, 1, 15, 10, 30, 0, 0, time.UTC)
 
-// TechnologyFixtures provides common technology test data
+// TechnologyFixtures provides common technology test data.
 type TechnologyFixtures struct{}
 
-// NewTechnologyFixtures creates a new technology fixtures instance
+// NewTechnologyFixtures creates a new technology fixtures instance.
 func NewTechnologyFixtures() *TechnologyFixtures {
 	return &TechnologyFixtures{}
 }
 
-// ValidTechnology returns a valid technology for testing
+// ValidTechnology returns a valid technology for testing.
 func (f *TechnologyFixtures) ValidTechnology() *domain.Technology {
 	tech := domain.NewTechnology("Go", "Backend", domain.LevelExpert)
 	tech.ID = "tech-001"
@@ -27,10 +27,11 @@ func (f *TechnologyFixtures) ValidTechnology() *domain.Technology {
 	tech.IconURL = "https://example.com/go-icon.png"
 	tech.CreatedAt = TestTimeNow
 	tech.UpdatedAt = TestTimeNow
+
 	return tech
 }
 
-// TechnologiesList returns a list of technologies for testing
+// TechnologiesList returns a list of technologies for testing.
 func (f *TechnologyFixtures) TechnologiesList() []*domain.Technology {
 	return []*domain.Technology{
 		{
@@ -86,39 +87,45 @@ func (f *TechnologyFixtures) TechnologiesList() []*domain.Technology {
 	}
 }
 
-// ExpertTechnologies returns technologies with expert level
+// ExpertTechnologies returns technologies with expert level.
 func (f *TechnologyFixtures) ExpertTechnologies() []*domain.Technology {
 	all := f.TechnologiesList()
+
 	var expert []*domain.Technology
+
 	for _, tech := range all {
 		if tech.Level == domain.LevelExpert {
 			expert = append(expert, tech)
 		}
 	}
+
 	return expert
 }
 
-// BackendTechnologies returns backend category technologies
+// BackendTechnologies returns backend category technologies.
 func (f *TechnologyFixtures) BackendTechnologies() []*domain.Technology {
 	all := f.TechnologiesList()
+
 	var backend []*domain.Technology
+
 	for _, tech := range all {
 		if tech.Category == "Backend" {
 			backend = append(backend, tech)
 		}
 	}
+
 	return backend
 }
 
-// ExperienceFixtures provides common experience test data
+// ExperienceFixtures provides common experience test data.
 type ExperienceFixtures struct{}
 
-// NewExperienceFixtures creates a new experience fixtures instance
+// NewExperienceFixtures creates a new experience fixtures instance.
 func NewExperienceFixtures() *ExperienceFixtures {
 	return &ExperienceFixtures{}
 }
 
-// ValidExperience returns a valid experience for testing
+// ValidExperience returns a valid experience for testing.
 func (f *ExperienceFixtures) ValidExperience() *domain.Experience {
 	startDate := TestTimeNow.AddDate(-2, 0, 0) // 2 years ago
 	exp := domain.NewExperience(
@@ -132,10 +139,11 @@ func (f *ExperienceFixtures) ValidExperience() *domain.Experience {
 	exp.ID = "exp-001"
 	exp.CreatedAt = TestTimeNow
 	exp.UpdatedAt = TestTimeNow
+
 	return exp
 }
 
-// CurrentExperience returns a current experience (no end date)
+// CurrentExperience returns a current experience (no end date).
 func (f *ExperienceFixtures) CurrentExperience() *domain.Experience {
 	startDate := TestTimeNow.AddDate(-1, 0, 0) // 1 year ago
 	exp := domain.NewExperience(
@@ -149,10 +157,11 @@ func (f *ExperienceFixtures) CurrentExperience() *domain.Experience {
 	exp.ID = "exp-002"
 	exp.CreatedAt = TestTimeNow
 	exp.UpdatedAt = TestTimeNow
+
 	return exp
 }
 
-// CompletedExperience returns a completed experience (with end date)
+// CompletedExperience returns a completed experience (with end date).
 func (f *ExperienceFixtures) CompletedExperience() *domain.Experience {
 	startDate := TestTimeNow.AddDate(-3, 0, 0) // 3 years ago
 	endDate := TestTimeNow.AddDate(-2, 0, 0)   // 2 years ago
@@ -168,10 +177,11 @@ func (f *ExperienceFixtures) CompletedExperience() *domain.Experience {
 	exp.SetEndDate(endDate)
 	exp.CreatedAt = TestTimeNow
 	exp.UpdatedAt = TestTimeNow
+
 	return exp
 }
 
-// ExperiencesList returns a list of experiences for testing
+// ExperiencesList returns a list of experiences for testing.
 func (f *ExperienceFixtures) ExperiencesList() []*domain.Experience {
 	return []*domain.Experience{
 		f.CurrentExperience(),
@@ -180,7 +190,7 @@ func (f *ExperienceFixtures) ExperiencesList() []*domain.Experience {
 	}
 }
 
-// ExperienceWithTechnologies returns an experience with technologies added
+// ExperienceWithTechnologies returns an experience with technologies added.
 func (f *ExperienceFixtures) ExperienceWithTechnologies() *domain.Experience {
 	exp := f.ValidExperience()
 	techFixtures := NewTechnologyFixtures()
@@ -193,7 +203,7 @@ func (f *ExperienceFixtures) ExperienceWithTechnologies() *domain.Experience {
 	return exp
 }
 
-// ExperienceWithAchievements returns an experience with achievements
+// ExperienceWithAchievements returns an experience with achievements.
 func (f *ExperienceFixtures) ExperienceWithAchievements() *domain.Experience {
 	exp := f.ValidExperience()
 
@@ -238,40 +248,40 @@ func (f *ExperienceFixtures) ExperienceWithAchievements() *domain.Experience {
 	return exp
 }
 
-// MetricsFixtures provides common metrics test data
+// MetricsFixtures provides common metrics test data.
 type MetricsFixtures struct{}
 
-// NewMetricsFixtures creates a new metrics fixtures instance
+// NewMetricsFixtures creates a new metrics fixtures instance.
 func NewMetricsFixtures() *MetricsFixtures {
 	return &MetricsFixtures{}
 }
 
-// TestCoverageImprovement returns test coverage metrics
+// TestCoverageImprovement returns test coverage metrics.
 func (f *MetricsFixtures) TestCoverageImprovement() *domain.CoverageMetric {
 	return domain.NewTestCoverageMetric(35.0, 80.0)
 }
 
-// DeploymentTimeImprovement returns deployment time metrics
+// DeploymentTimeImprovement returns deployment time metrics.
 func (f *MetricsFixtures) DeploymentTimeImprovement() *domain.TimeMetric {
 	return domain.NewDeploymentTimeMetric(180, 10)
 }
 
-// SystemReliability returns reliability metrics
+// SystemReliability returns reliability metrics.
 func (f *MetricsFixtures) SystemReliability() *domain.ReliabilityMetric {
 	return domain.NewReliabilityMetric(99.9, 1440, 3, 1)
 }
 
-// TeamProductivity returns productivity metrics
+// TeamProductivity returns productivity metrics.
 func (f *MetricsFixtures) TeamProductivity() *domain.ProductivityMetric {
 	return domain.NewProductivityMetric(8, 36, 18, 45.0)
 }
 
-// CostSavings returns cost savings metrics
+// CostSavings returns cost savings metrics.
 func (f *MetricsFixtures) CostSavings() *domain.CostMetric {
 	return domain.NewCostMetric(8000, 96000, 320.0, 4)
 }
 
-// CompleteMetrics returns a full metrics object
+// CompleteMetrics returns a full metrics object.
 func (f *MetricsFixtures) CompleteMetrics() *domain.Metrics {
 	return &domain.Metrics{
 		TestCoverage:      f.TestCoverageImprovement(),

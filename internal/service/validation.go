@@ -62,7 +62,7 @@ func (s *StringFieldValidator) Validate() (string, error) {
 
 	// Check if required
 	if s.required && normalized == "" {
-		return "", domain.ErrInvalidInput(fmt.Sprintf("%s cannot be empty", s.fieldName))
+		return "", domain.ErrInvalidInput(s.fieldName + " cannot be empty")
 	}
 
 	// Check minimum length
@@ -156,6 +156,7 @@ func (v *EntityExistenceValidator) ValidateEntityExists(entity interface{}, enti
 	if entity == nil {
 		return domain.ErrNotFound(entityType)
 	}
+
 	return nil
 }
 
@@ -164,6 +165,7 @@ func (v *EntityExistenceValidator) ValidateEntityNotExists(entity interface{}, e
 	if entity != nil {
 		return domain.ErrConflict(fmt.Sprintf("%s '%s' already exists", entityType, entityName))
 	}
+
 	return nil
 }
 
@@ -182,8 +184,9 @@ func NewRelationshipValidator() *RelationshipValidator {
 // ValidateRelationshipNotExists validates that a relationship doesn't already exist.
 func (v *RelationshipValidator) ValidateRelationshipNotExists(exists bool, relationshipType string) error {
 	if exists {
-		return domain.ErrConflict(fmt.Sprintf("%s already exists", relationshipType))
+		return domain.ErrConflict(relationshipType + " already exists")
 	}
+
 	return nil
 }
 
@@ -204,14 +207,16 @@ func (v *DateValidator) ValidateStartEndDates(startDate time.Time, endDate *time
 	if endDate != nil && endDate.Before(startDate) {
 		return domain.ErrInvalidInput("end date cannot be before start date")
 	}
+
 	return nil
 }
 
 // ValidateDateNotInFuture validates that a date is not in the future.
 func (v *DateValidator) ValidateDateNotInFuture(date time.Time, fieldName string) error {
 	if date.After(time.Now()) {
-		return domain.ErrInvalidInput(fmt.Sprintf("%s cannot be in the future", fieldName))
+		return domain.ErrInvalidInput(fieldName + " cannot be in the future")
 	}
+
 	return nil
 }
 

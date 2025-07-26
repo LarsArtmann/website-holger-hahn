@@ -87,6 +87,7 @@ func copyFile(cleanSrcPath, cleanDstPath string) error {
 
 	// Copy file contents.
 	_, err = dstFile.ReadFrom(srcFile)
+
 	return err
 }
 
@@ -126,6 +127,7 @@ func copyDir(src, dst string) error {
 		if err != nil {
 			return err
 		}
+
 		return processFileOrDir(path, src, dst, info)
 	})
 }

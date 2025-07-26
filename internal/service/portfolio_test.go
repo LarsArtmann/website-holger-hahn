@@ -1,7 +1,6 @@
 package service
 
 import (
-	"context"
 	"testing"
 
 	"holger-hahn-website/internal/domain"
@@ -408,7 +407,7 @@ func TestPortfolioService_DeactivateService(t *testing.T) {
 	})
 }
 
-// Test service filter validation
+// Test service filter validation.
 func TestServiceFilter_Validation(t *testing.T) {
 	t.Run("valid filters", func(t *testing.T) {
 		category := domain.ServiceTypeConsulting
@@ -454,7 +453,7 @@ func TestServiceFilter_Validation(t *testing.T) {
 	})
 }
 
-// Test request validation
+// Test request validation.
 func TestCreateServiceRequest_Validation(t *testing.T) {
 	t.Run("valid request", func(t *testing.T) {
 		req := CreateServiceRequest{
@@ -520,29 +519,29 @@ func TestDeliverableRequest_Validation(t *testing.T) {
 	})
 }
 
-// Benchmark tests
+// Benchmark tests.
 func BenchmarkPortfolioService_ListServices(b *testing.B) {
-	ctx := context.Background()
+	ctx := b.Context()
 	mockServiceRepo := testutil.NewMockServiceRepository()
 	mockTechRepo := testutil.NewMockTechnologyRepository()
 	service := NewPortfolioService(mockServiceRepo, mockTechRepo)
 
 	b.ResetTimer()
 
-	for i := 0; i < b.N; i++ {
+	for range b.N {
 		_, _ = service.ListServices(ctx, ServiceFilter{})
 	}
 }
 
 func BenchmarkPortfolioService_GetActiveServices(b *testing.B) {
-	ctx := context.Background()
+	ctx := b.Context()
 	mockServiceRepo := testutil.NewMockServiceRepository()
 	mockTechRepo := testutil.NewMockTechnologyRepository()
 	service := NewPortfolioService(mockServiceRepo, mockTechRepo)
 
 	b.ResetTimer()
 
-	for i := 0; i < b.N; i++ {
+	for range b.N {
 		_, _ = service.GetActiveServices(ctx)
 	}
 }

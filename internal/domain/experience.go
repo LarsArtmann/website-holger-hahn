@@ -26,11 +26,11 @@ type Experience struct {
 // Achievement represents a specific achievement during an experience.
 type Achievement struct {
 	CreatedAt   time.Time `json:"created_at"`
+	Metrics     *Metrics  `json:"metrics,omitempty"`
 	ID          string    `json:"id"`
 	Title       string    `json:"title"`
 	Description string    `json:"description"`
 	Impact      string    `json:"impact,omitempty"`
-	Metrics     *Metrics  `json:"metrics,omitempty"`
 }
 
 // Metrics represents quantified business impact metrics for achievements.
@@ -44,45 +44,45 @@ type Metrics struct {
 
 // CoverageMetric represents test coverage improvements.
 type CoverageMetric struct {
-	Before      float64 `json:"before"`      // Previous coverage percentage
-	After       float64 `json:"after"`       // Improved coverage percentage
-	Improvement float64 `json:"improvement"` // Percentage point improvement
-	Unit        string  `json:"unit"`        // e.g., "%"
+	Unit        string  `json:"unit"`
+	Before      float64 `json:"before"`
+	After       float64 `json:"after"`
+	Improvement float64 `json:"improvement"`
 }
 
 // TimeMetric represents time-based improvements.
 type TimeMetric struct {
-	Before      int     `json:"before"`      // Previous time in minutes
-	After       int     `json:"after"`       // Improved time in minutes
-	Improvement float64 `json:"improvement"` // Percentage improvement
-	Unit        string  `json:"unit"`        // e.g., "minutes", "hours"
+	Unit        string  `json:"unit"`
+	Before      int     `json:"before"`
+	After       int     `json:"after"`
+	Improvement float64 `json:"improvement"`
 }
 
 // ReliabilityMetric represents system reliability improvements.
 type ReliabilityMetric struct {
-	Uptime    float64 `json:"uptime"`    // Uptime percentage
-	MTBF      int     `json:"mtbf"`      // Mean time between failures (hours)
-	MTTR      int     `json:"mttr"`      // Mean time to recovery (minutes)
-	Incidents int     `json:"incidents"` // Number of incidents per month
-	Unit      string  `json:"unit"`      // e.g., "%", "hours", "minutes"
+	Unit      string  `json:"unit"`
+	Uptime    float64 `json:"uptime"`
+	MTBF      int     `json:"mtbf"`
+	MTTR      int     `json:"mttr"`
+	Incidents int     `json:"incidents"`
 }
 
 // ProductivityMetric represents team productivity improvements.
 type ProductivityMetric struct {
-	DeploymentFrequency int     `json:"deployment_frequency"` // Deployments per week
-	LeadTime            int     `json:"lead_time"`            // Lead time in hours
-	CycleTime           int     `json:"cycle_time"`           // Cycle time in hours
-	Efficiency          float64 `json:"efficiency"`           // Team efficiency improvement %
-	Unit                string  `json:"unit"`                 // e.g., "per week", "hours", "%"
+	Unit                string  `json:"unit"`
+	DeploymentFrequency int     `json:"deployment_frequency"`
+	LeadTime            int     `json:"lead_time"`
+	CycleTime           int     `json:"cycle_time"`
+	Efficiency          float64 `json:"efficiency"`
 }
 
 // CostMetric represents cost savings and ROI.
 type CostMetric struct {
-	MonthlySavings float64 `json:"monthly_savings"` // Monthly cost savings in USD
-	AnnualSavings  float64 `json:"annual_savings"`  // Annual cost savings in USD
-	ROI            float64 `json:"roi"`             // Return on investment %
-	PaybackPeriod  int     `json:"payback_period"`  // Payback period in months
-	Unit           string  `json:"unit"`            // e.g., "USD", "%", "months"
+	Unit           string  `json:"unit"`
+	MonthlySavings float64 `json:"monthly_savings"`
+	AnnualSavings  float64 `json:"annual_savings"`
+	ROI            float64 `json:"roi"`
+	PaybackPeriod  int     `json:"payback_period"`
 }
 
 // NewExperience creates a new Experience instance.
@@ -127,6 +127,7 @@ func NewAchievementWithMetrics(title, description, impact string, metrics *Metri
 // NewTestCoverageMetric creates a test coverage improvement metric.
 func NewTestCoverageMetric(before, after float64) *CoverageMetric {
 	improvement := after - before
+
 	return &CoverageMetric{
 		Before:      before,
 		After:       after,
@@ -138,6 +139,7 @@ func NewTestCoverageMetric(before, after float64) *CoverageMetric {
 // NewDeploymentTimeMetric creates a deployment time improvement metric.
 func NewDeploymentTimeMetric(beforeMinutes, afterMinutes int) *TimeMetric {
 	improvement := float64(beforeMinutes-afterMinutes) / float64(beforeMinutes) * 100
+
 	return &TimeMetric{
 		Before:      beforeMinutes,
 		After:       afterMinutes,

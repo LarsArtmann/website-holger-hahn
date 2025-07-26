@@ -7,12 +7,12 @@ import (
 	"context"
 )
 
-// Entity represents a generic entity interface
+// Entity represents a generic entity interface.
 type Entity interface {
 	GetID() string
 }
 
-// Repository defines common repository operations for any entity type
+// Repository defines common repository operations for any entity type.
 type Repository[T Entity] interface {
 	// Create creates a new entity
 	Create(ctx context.Context, entity T) error
@@ -27,7 +27,7 @@ type Repository[T Entity] interface {
 	Delete(ctx context.Context, id string) error
 }
 
-// Filterable defines interface for entities that support filtering
+// Filterable defines interface for entities that support filtering.
 type Filterable[T Entity, F any] interface {
 	Repository[T]
 

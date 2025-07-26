@@ -23,7 +23,7 @@ import (
 	"holger-hahn-website/templates"
 )
 
-// TestEndToEndContactFlow tests the complete contact form workflow
+// TestEndToEndContactFlow tests the complete contact form workflow.
 func TestEndToEndContactFlow(t *testing.T) {
 	// Setup dependency injection container
 	injector := infrastructure.SetupContainer()
@@ -42,7 +42,9 @@ func TestEndToEndContactFlow(t *testing.T) {
 	// Routes
 	router.GET("/", func(c *gin.Context) {
 		component := templates.Index()
+
 		c.Header("Content-Type", "text/html")
+
 		if err := component.Render(c.Request.Context(), c.Writer); err != nil {
 			c.JSON(constants.HTTPInternalServerError, gin.H{"error": "Failed to render template"})
 			return
@@ -162,8 +164,8 @@ func TestEndToEndContactFlow(t *testing.T) {
 
 	t.Run("Contact Form Validation Errors", func(t *testing.T) {
 		invalidTestCases := []struct {
-			name string
 			data map[string]interface{}
+			name string
 		}{
 			{
 				name: "Missing Name",
@@ -223,7 +225,7 @@ func TestEndToEndContactFlow(t *testing.T) {
 	})
 }
 
-// ContactHandler for testing
+// ContactHandler for testing.
 type ContactHandler struct {
 	contactService *application.ContactService
 }
@@ -237,23 +239,26 @@ func (h *ContactHandler) SubmitContactForm(c *gin.Context) {
 			"message": "Please check all required fields and try again.",
 			"error":   err.Error(),
 		})
+
 		return
 	}
 
 	ctx := context.Background()
+
 	response, err := h.contactService.SubmitContactForm(ctx, req)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"success": false,
 			"message": "Sorry, there was an error processing your request. Please try again later.",
 		})
+
 		return
 	}
 
 	c.JSON(http.StatusOK, response)
 }
 
-// TestSystemIntegration tests all system components working together
+// TestSystemIntegration tests all system components working together.
 func TestSystemIntegration(t *testing.T) {
 	t.Run("Template Generation", func(t *testing.T) {
 		// Test that templates can be generated without errors
@@ -264,7 +269,8 @@ func TestSystemIntegration(t *testing.T) {
 
 		// Test rendering
 		var buf bytes.Buffer
-		ctx := context.Background()
+
+		ctx := t.Context()
 		if err := component.Render(ctx, &buf); err != nil {
 			t.Errorf("Failed to render Index template: %v", err)
 		}
@@ -324,7 +330,7 @@ func TestSystemIntegration(t *testing.T) {
 	})
 }
 
-// TestPerformanceBasic tests basic performance expectations
+// TestPerformanceBasic tests basic performance expectations.
 func TestPerformanceBasic(t *testing.T) {
 	injector := infrastructure.SetupContainer()
 	contactService := do.MustInvoke[*application.ContactService](injector)
@@ -335,7 +341,9 @@ func TestPerformanceBasic(t *testing.T) {
 	router.Static("/static", "../static")
 	router.GET("/", func(c *gin.Context) {
 		component := templates.Index()
+
 		c.Header("Content-Type", "text/html")
+
 		if err := component.Render(c.Request.Context(), c.Writer); err != nil {
 			c.JSON(constants.HTTPInternalServerError, gin.H{"error": "Failed to render template"})
 			return
@@ -354,6 +362,7 @@ func TestPerformanceBasic(t *testing.T) {
 		if err != nil {
 			t.Fatalf("Homepage request failed: %v", err)
 		}
+
 		defer resp.Body.Close()
 
 		// Homepage should load in under 100ms for local testing
@@ -383,6 +392,7 @@ func TestPerformanceBasic(t *testing.T) {
 		if err != nil {
 			t.Fatalf("Contact form submission failed: %v", err)
 		}
+
 		defer resp.Body.Close()
 
 		// Contact form should process in under 200ms for local testing

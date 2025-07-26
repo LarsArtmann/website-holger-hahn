@@ -20,7 +20,7 @@ func TestGenerateID(t *testing.T) {
 		ids := make(map[string]bool)
 
 		// Generate multiple IDs and check for uniqueness
-		for i := 0; i < 100; i++ {
+		for range 100 {
 			id := generateID()
 			testutil.AssertFalse(t, ids[id], "ID should be unique: "+id)
 			ids[id] = true
@@ -302,9 +302,9 @@ func TestValidateOrderBy(t *testing.T) {
 	})
 }
 
-// Benchmark tests
+// Benchmark tests.
 func BenchmarkGenerateID(b *testing.B) {
-	for i := 0; i < b.N; i++ {
+	for range b.N {
 		_ = generateID()
 	}
 }
@@ -314,19 +314,19 @@ func BenchmarkWrapError(b *testing.B) {
 
 	b.ResetTimer()
 
-	for i := 0; i < b.N; i++ {
+	for range b.N {
 		_ = WrapError("TestOperation", err)
 	}
 }
 
 func BenchmarkNewPagination(b *testing.B) {
-	for i := 0; i < b.N; i++ {
+	for i := range b.N {
 		_ = NewPagination(20, i%1000)
 	}
 }
 
 func BenchmarkValidateOrderBy(b *testing.B) {
-	for i := 0; i < b.N; i++ {
+	for range b.N {
 		_ = ValidateOrderBy("technology", "name")
 	}
 }

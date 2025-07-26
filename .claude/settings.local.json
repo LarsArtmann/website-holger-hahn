@@ -69,7 +69,9 @@
       "Bash(\"/Users/larsartmann/projects/holger-hahn/internal/container/container.go\" )",
       "Bash(\"/Users/larsartmann/projects/holger-hahn/internal/container/memory_repositories.go\")",
       "Bash(do)",
-      "Bash(done)"
+      "Bash(done)",
+      "Bash(kill:*)",
+      "Bash(fieldalignment:*)"
     ]
   },
   "enableAllProjectMcpServers": true,

@@ -22,16 +22,18 @@ func NewBaseService() *BaseService {
 // ValidateID validates that an ID is not empty.
 func (b *BaseService) ValidateID(id, entityType string) error {
 	if id == "" {
-		return domain.ErrInvalidInput(fmt.Sprintf("%s ID cannot be empty", entityType))
+		return domain.ErrInvalidInput(entityType + " ID cannot be empty")
 	}
+
 	return nil
 }
 
 // ValidateNonEmpty validates that a string field is not empty after trimming.
 func (b *BaseService) ValidateNonEmpty(value, fieldName string) error {
 	if strings.TrimSpace(value) == "" {
-		return domain.ErrInvalidInput(fmt.Sprintf("%s cannot be empty", fieldName))
+		return domain.ErrInvalidInput(fieldName + " cannot be empty")
 	}
+
 	return nil
 }
 
@@ -45,6 +47,7 @@ func (b *BaseService) WrapRepositoryError(operation string, err error) error {
 	if err == nil {
 		return nil
 	}
+
 	return domain.ErrInternal(fmt.Sprintf("failed to %s: %v", operation, err))
 }
 
@@ -53,6 +56,7 @@ func (b *BaseService) HandleNotFound(err error, entityType string) error {
 	if err != nil {
 		return domain.ErrNotFound(entityType)
 	}
+
 	return nil
 }
 
@@ -128,7 +132,7 @@ func (c *CRUDOperations[T]) Create(ctx context.Context, entity *T) error {
 	}
 
 	if err := c.repo.Create(ctx, entity); err != nil {
-		return c.WrapRepositoryError(fmt.Sprintf("create %s", c.entityType), err)
+		return c.WrapRepositoryError("create "+c.entityType, err)
 	}
 
 	return nil
@@ -141,7 +145,7 @@ func (c *CRUDOperations[T]) Update(ctx context.Context, entity *T) error {
 	}
 
 	if err := c.repo.Update(ctx, entity); err != nil {
-		return c.WrapRepositoryError(fmt.Sprintf("update %s", c.entityType), err)
+		return c.WrapRepositoryError("update "+c.entityType, err)
 	}
 
 	return nil
@@ -160,7 +164,7 @@ func (c *CRUDOperations[T]) Delete(ctx context.Context, id string) error {
 	}
 
 	if err := c.repo.Delete(ctx, id); err != nil {
-		return c.WrapRepositoryError(fmt.Sprintf("delete %s", c.entityType), err)
+		return c.WrapRepositoryError("delete "+c.entityType, err)
 	}
 
 	return nil
@@ -185,5 +189,6 @@ func (s *ServiceConstructor[T]) ValidateConstructorArgs(args ...interface{}) err
 			return domain.ErrInvalidInput(fmt.Sprintf("%s constructor argument %d cannot be nil", s.serviceName, i+1))
 		}
 	}
+
 	return nil
 }

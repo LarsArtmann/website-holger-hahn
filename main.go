@@ -47,6 +47,7 @@ func (h *ContactHandler) SubmitContactForm(c *gin.Context) {
 			"message": "Please check all required fields and try again.",
 			"error":   err.Error(),
 		})
+
 		return
 	}
 
@@ -60,6 +61,7 @@ func (h *ContactHandler) SubmitContactForm(c *gin.Context) {
 			"success": false,
 			"message": "Sorry, there was an error processing your request. Please try again later.",
 		})
+
 		return
 	}
 
@@ -75,7 +77,9 @@ func setupRoutes(r *gin.Engine, portfolioHandlers *handler.PortfolioHandlers, co
 	// Main portfolio page
 	r.GET("/", func(c *gin.Context) {
 		component := templates.Index()
+
 		c.Header("Content-Type", "text/html")
+
 		if err := component.Render(c.Request.Context(), c.Writer); err != nil {
 			c.JSON(constants.HTTPInternalServerError, gin.H{"error": "Failed to render template"})
 			return
@@ -151,6 +155,7 @@ func main() {
 		if shutdownErr := di.Shutdown(); shutdownErr != nil {
 			log.Printf("Error shutting down DI container: %v", shutdownErr)
 		}
+
 		os.Exit(constants.ExitFailure)
 	}
 

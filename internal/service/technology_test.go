@@ -1,7 +1,6 @@
 package service
 
 import (
-	"context"
 	"fmt"
 	"testing"
 
@@ -362,22 +361,22 @@ func TestTechnologyService_GetTechnologiesByLevel(t *testing.T) {
 	})
 }
 
-// Benchmark tests
+// Benchmark tests.
 func BenchmarkTechnologyService_CreateTechnology(b *testing.B) {
-	ctx := context.Background()
+	ctx := b.Context()
 	mockRepo := testutil.NewMockTechnologyRepository()
 	service := NewTechnologyService(mockRepo)
 
 	b.ResetTimer()
 
-	for i := 0; i < b.N; i++ {
+	for i := range b.N {
 		name := fmt.Sprintf("Tech-%d", i)
 		_, _ = service.CreateTechnology(ctx, name, "Backend", domain.LevelExpert)
 	}
 }
 
 func BenchmarkTechnologyService_ListTechnologies(b *testing.B) {
-	ctx := context.Background()
+	ctx := b.Context()
 	mockRepo := testutil.NewMockTechnologyRepository()
 	service := NewTechnologyService(mockRepo)
 
@@ -387,7 +386,7 @@ func BenchmarkTechnologyService_ListTechnologies(b *testing.B) {
 
 	b.ResetTimer()
 
-	for i := 0; i < b.N; i++ {
+	for range b.N {
 		_, _ = service.ListTechnologies(ctx, TechnologyFilter{})
 	}
 }

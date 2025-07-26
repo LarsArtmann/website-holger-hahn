@@ -16,8 +16,8 @@ import (
 // InMemoryBaseCRUD provides common CRUD operations for in-memory repositories.
 type InMemoryBaseCRUD[T repository.Entity] struct {
 	entities map[string]T
-	mu       sync.RWMutex
 	typeName string
+	mu       sync.RWMutex
 }
 
 // NewInMemoryBaseCRUD creates a new base CRUD repository.
@@ -33,6 +33,7 @@ func (r *InMemoryBaseCRUD[T]) Create(ctx context.Context, entity T) error {
 	r.mu.Lock()
 	defer r.mu.Unlock()
 	r.entities[entity.GetID()] = entity
+
 	return nil
 }
 
@@ -42,6 +43,7 @@ func (r *InMemoryBaseCRUD[T]) GetByID(ctx context.Context, id string) (T, error)
 	defer r.mu.RUnlock()
 
 	var zero T
+
 	item, exists := r.entities[id]
 	if !exists {
 		return zero, domain.ErrNotFound(r.typeName)
@@ -55,6 +57,7 @@ func (r *InMemoryBaseCRUD[T]) Update(ctx context.Context, entity T) error {
 	r.mu.Lock()
 	defer r.mu.Unlock()
 	r.entities[entity.GetID()] = entity
+
 	return nil
 }
 
@@ -63,6 +66,7 @@ func (r *InMemoryBaseCRUD[T]) Delete(ctx context.Context, id string) error {
 	r.mu.Lock()
 	defer r.mu.Unlock()
 	delete(r.entities, id)
+
 	return nil
 }
 
@@ -76,6 +80,7 @@ func (r *InMemoryBaseCRUD[T]) GetAll() map[string]T {
 	for k, v := range r.entities {
 		result[k] = v
 	}
+
 	return result
 }
 
@@ -160,6 +165,7 @@ func NewInMemoryExperienceRepository() repository.ExperienceRepository {
 		InMemoryBaseCRUD: NewInMemoryBaseCRUD[*domain.Experience]("experience"),
 	}
 	repo.populateSampleData()
+
 	return repo
 }
 
