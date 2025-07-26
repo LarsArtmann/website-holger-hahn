@@ -8,7 +8,6 @@ import (
 	"fmt"
 
 	"github.com/gin-gonic/gin"
-
 	"holger-hahn-website/internal/constants"
 	"holger-hahn-website/internal/domain"
 	"holger-hahn-website/internal/service"

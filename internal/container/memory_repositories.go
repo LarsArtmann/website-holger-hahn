@@ -383,9 +383,242 @@ type InMemoryServiceRepository struct {
 
 // NewInMemoryServiceRepository creates a new in-memory service repository.
 func NewInMemoryServiceRepository() repository.ServiceRepository {
-	return &InMemoryServiceRepository{
+	repo := &InMemoryServiceRepository{
 		InMemoryBaseCRUD: NewInMemoryBaseCRUD[*domain.Service]("service"),
 	}
+	repo.populateSampleData()
+
+	return repo
+}
+
+// populateSampleData adds comprehensive sample services with deliverables and pricing.
+func (r *InMemoryServiceRepository) populateSampleData() {
+	// Digital Asset Custody Consulting - Based on Fireblocks experience
+	custodyConsulting := domain.NewService(
+		"Digital Asset Custody Solutions",
+		"Expert consulting for institutional-grade digital asset custody infrastructure, focusing on security, compliance, and scalability for financial institutions",
+		domain.ServiceTypeConsulting,
+	)
+	custodyConsulting.ID = "service-custody-001"
+	custodyConsulting.Duration = "3-6 months"
+	
+	// Set enterprise consulting pricing
+	if err := custodyConsulting.SetPricing(domain.PricingInfo{
+		Type:        domain.PricingTypeDaily,
+		Amount:      1500.0,
+		Currency:    "EUR",
+		Description: "Daily rate for enterprise consulting engagements",
+	}); err != nil {
+		panic(fmt.Sprintf("invalid custody consulting pricing in test data: %v", err))
+	}
+
+	// Add deliverables
+	custodyDeliverable1 := domain.NewDeliverable(
+		"Security Architecture Assessment",
+		"Comprehensive review of existing infrastructure and recommendations for enterprise-grade security",
+		"Week 1-2",
+	)
+	custodyDeliverable1.ID = "deliverable-001"
+
+	custodyDeliverable2 := domain.NewDeliverable(
+		"Custody Implementation Roadmap",
+		"Detailed technical roadmap with timelines, resource requirements, and risk mitigation strategies",
+		"Week 3-4",
+	)
+	custodyDeliverable2.ID = "deliverable-002"
+
+	custodyDeliverable3 := domain.NewDeliverable(
+		"Compliance Framework Design",
+		"Regulatory compliance framework tailored to specific jurisdictions and institutional requirements",
+		"Week 4-6",
+	)
+	custodyDeliverable3.ID = "deliverable-003"
+
+	custodyConsulting.AddDeliverable(*custodyDeliverable1)
+	custodyConsulting.AddDeliverable(*custodyDeliverable2)
+	custodyConsulting.AddDeliverable(*custodyDeliverable3)
+
+	r.entities[custodyConsulting.ID] = custodyConsulting
+
+	// Blockchain Development Services
+	blockchainDev := domain.NewService(
+		"Blockchain Infrastructure Development", 
+		"End-to-end development of secure, scalable blockchain solutions for enterprise applications with focus on performance and regulatory compliance",
+		domain.ServiceTypeDevelopment,
+	)
+	blockchainDev.ID = "service-blockchain-001"
+	blockchainDev.Duration = "4-8 months"
+
+	if err := blockchainDev.SetPricing(domain.PricingInfo{
+		Type:        domain.PricingTypeProject,
+		Amount:      150000.0,
+		Currency:    "EUR", 
+		Description: "Fixed price for complete blockchain infrastructure projects",
+	}); err != nil {
+		panic(fmt.Sprintf("invalid blockchain dev pricing in test data: %v", err))
+	}
+
+	devDeliverable1 := domain.NewDeliverable(
+		"Smart Contract Architecture",
+		"Design and implementation of secure, gas-optimized smart contracts with comprehensive testing",
+		"Month 1-2",
+	)
+	devDeliverable1.ID = "deliverable-004"
+
+	devDeliverable2 := domain.NewDeliverable(
+		"Integration Layer Development", 
+		"API and middleware development for seamless integration with existing enterprise systems",
+		"Month 2-4",
+	)
+	devDeliverable2.ID = "deliverable-005"
+
+	devDeliverable3 := domain.NewDeliverable(
+		"Security Audit & Deployment",
+		"Complete security audit, penetration testing, and production deployment with monitoring",
+		"Month 4-6",
+	)
+	devDeliverable3.ID = "deliverable-006"
+
+	blockchainDev.AddDeliverable(*devDeliverable1)
+	blockchainDev.AddDeliverable(*devDeliverable2)
+	blockchainDev.AddDeliverable(*devDeliverable3)
+
+	r.entities[blockchainDev.ID] = blockchainDev
+
+	// Financial Systems Architecture
+	finArchitecture := domain.NewService(
+		"Financial Systems Architecture",
+		"Enterprise architecture design for regulated financial institutions, focusing on scalability, security, and regulatory compliance",
+		domain.ServiceTypeArchitecture,
+	)
+	finArchitecture.ID = "service-finarch-001"
+	finArchitecture.Duration = "2-4 months"
+
+	if err := finArchitecture.SetPricing(domain.PricingInfo{
+		Type:        domain.PricingTypeRetainer,
+		Amount:      25000.0,
+		Currency:    "EUR",
+		Description: "Monthly retainer for ongoing architecture consulting",
+	}); err != nil {
+		panic(fmt.Sprintf("invalid fin architecture pricing in test data: %v", err))
+	}
+
+	archDeliverable1 := domain.NewDeliverable(
+		"System Architecture Blueprint",
+		"Comprehensive architecture documentation with scalability and security considerations",
+		"Month 1",
+	)
+	archDeliverable1.ID = "deliverable-007"
+
+	archDeliverable2 := domain.NewDeliverable(
+		"Technology Stack Recommendations",
+		"Detailed technology selection with pros/cons analysis and implementation guidelines", 
+		"Month 1-2",
+	)
+	archDeliverable2.ID = "deliverable-008"
+
+	archDeliverable3 := domain.NewDeliverable(
+		"Implementation Governance",
+		"Ongoing architectural oversight and guidance throughout implementation phases",
+		"Month 2-4",
+	)
+	archDeliverable3.ID = "deliverable-009"
+
+	finArchitecture.AddDeliverable(*archDeliverable1)
+	finArchitecture.AddDeliverable(*archDeliverable2)
+	finArchitecture.AddDeliverable(*archDeliverable3)
+
+	r.entities[finArchitecture.ID] = finArchitecture
+
+	// Technical Due Diligence & Auditing
+	technicalAudit := domain.NewService(
+		"Technical Due Diligence & Security Auditing",
+		"Comprehensive technical assessment of blockchain projects and financial systems for investors and enterprises",
+		domain.ServiceTypeAuditing,
+	)
+	technicalAudit.ID = "service-audit-001"
+	technicalAudit.Duration = "2-6 weeks"
+
+	if err := technicalAudit.SetPricing(domain.PricingInfo{
+		Type:        domain.PricingTypeProject,
+		Amount:      35000.0,
+		Currency:    "EUR",
+		Description: "Fixed price for complete technical due diligence assessment",
+	}); err != nil {
+		panic(fmt.Sprintf("invalid audit pricing in test data: %v", err))
+	}
+
+	auditDeliverable1 := domain.NewDeliverable(
+		"Code Review & Security Analysis",
+		"Line-by-line code review with security vulnerability assessment and recommendations",
+		"Week 1-2",
+	)
+	auditDeliverable1.ID = "deliverable-010"
+
+	auditDeliverable2 := domain.NewDeliverable(
+		"Architecture Assessment Report",
+		"Technical architecture evaluation with scalability and maintainability analysis",
+		"Week 2-3",
+	)
+	auditDeliverable2.ID = "deliverable-011"
+
+	auditDeliverable3 := domain.NewDeliverable(
+		"Risk Assessment & Recommendations",
+		"Comprehensive risk analysis with prioritized recommendations and remediation timeline",
+		"Week 3-4",
+	)
+	auditDeliverable3.ID = "deliverable-012"
+
+	technicalAudit.AddDeliverable(*auditDeliverable1)
+	technicalAudit.AddDeliverable(*auditDeliverable2)
+	technicalAudit.AddDeliverable(*auditDeliverable3)
+
+	r.entities[technicalAudit.ID] = technicalAudit
+
+	// Team Training & Mentoring
+	teamTraining := domain.NewService(
+		"Blockchain & Financial Technology Training",
+		"Comprehensive training programs for development teams and technical leadership in blockchain and fintech technologies",
+		domain.ServiceTypeTraining,
+	)
+	teamTraining.ID = "service-training-001"
+	teamTraining.Duration = "1-3 months"
+
+	if err := teamTraining.SetPricing(domain.PricingInfo{
+		Type:        domain.PricingTypeDaily,
+		Amount:      2000.0,
+		Currency:    "EUR",
+		Description: "Daily rate for team training and workshops",
+	}); err != nil {
+		panic(fmt.Sprintf("invalid training pricing in test data: %v", err))
+	}
+
+	trainingDeliverable1 := domain.NewDeliverable(
+		"Custom Training Curriculum",
+		"Tailored training program based on team skills assessment and business objectives",
+		"Week 1",
+	)
+	trainingDeliverable1.ID = "deliverable-013"
+
+	trainingDeliverable2 := domain.NewDeliverable(
+		"Hands-on Workshop Sessions",
+		"Interactive workshops with real-world project examples and best practices",
+		"Week 2-6",
+	)
+	trainingDeliverable2.ID = "deliverable-014"
+
+	trainingDeliverable3 := domain.NewDeliverable(
+		"Ongoing Mentoring Support",
+		"Continued guidance and support for project implementation and problem-solving",
+		"Month 2-3",
+	)
+	trainingDeliverable3.ID = "deliverable-015"
+
+	teamTraining.AddDeliverable(*trainingDeliverable1)
+	teamTraining.AddDeliverable(*trainingDeliverable2)
+	teamTraining.AddDeliverable(*trainingDeliverable3)
+
+	r.entities[teamTraining.ID] = teamTraining
 }
 
 // Note: Create, GetByID, Update, Delete methods are inherited from InMemoryBaseCRUD

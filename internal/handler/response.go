@@ -6,7 +6,6 @@ import (
 
 	"github.com/a-h/templ"
 	"github.com/gin-gonic/gin"
-
 	"holger-hahn-website/internal/constants"
 	"holger-hahn-website/internal/domain"
 )

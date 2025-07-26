@@ -5,7 +5,6 @@ package infrastructure
 
 import (
 	"github.com/samber/do"
-
 	"holger-hahn-website/internal/application"
 	"holger-hahn-website/internal/domain"
 )

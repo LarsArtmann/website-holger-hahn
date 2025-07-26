@@ -10,7 +10,6 @@ import (
 	"strconv"
 
 	"gopkg.in/gomail.v2"
-
 	"holger-hahn-website/internal/domain"
 )
 
