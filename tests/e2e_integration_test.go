@@ -37,7 +37,7 @@ func TestEndToEndContactFlow(t *testing.T) {
 	router := gin.Default()
 
 	// Serve static files
-	router.Static("/static", "./static")
+	router.Static("/static", "../static")
 
 	// Routes
 	router.GET("/", func(c *gin.Context) {
@@ -275,7 +275,7 @@ func TestSystemIntegration(t *testing.T) {
 		}
 
 		// Verify HTML structure
-		if !strings.Contains(rendered, "<!DOCTYPE html>") {
+		if !strings.Contains(strings.ToLower(rendered), "<!doctype html>") {
 			t.Error("Template missing DOCTYPE declaration")
 		}
 
@@ -301,7 +301,7 @@ func TestSystemIntegration(t *testing.T) {
 	t.Run("Static File Serving", func(t *testing.T) {
 		gin.SetMode(gin.TestMode)
 		router := gin.Default()
-		router.Static("/static", "./static")
+		router.Static("/static", "../static")
 
 		server := httptest.NewServer(router)
 		defer server.Close()
@@ -332,7 +332,7 @@ func TestPerformanceBasic(t *testing.T) {
 
 	gin.SetMode(gin.TestMode)
 	router := gin.Default()
-	router.Static("/static", "./static")
+	router.Static("/static", "../static")
 	router.GET("/", func(c *gin.Context) {
 		component := templates.Index()
 		c.Header("Content-Type", "text/html")
