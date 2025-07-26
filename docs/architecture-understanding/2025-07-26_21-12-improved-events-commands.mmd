@@ -1,363 +1,232 @@
-```mermaid
+%% Improved Events & Commands - Holger Hahn Website
+%% Shows proper CQRS with command/query separation
+%% Event sourcing with proper aggregate handling
+%% Created: 2025-07-26 21:12
+
 graph TB
-    %% Improved Events & Commands - CQRS with Event Sourcing
-
-    subgraph "✅ COMMAND SIDE (Write Model)"
-        subgraph "Command Handlers"
-            CH_CONTACT["`**Contact Command Handler**
-            *Business Logic*
-            - SubmitContactForm
-            - UpdateContactStatus
-            - ArchiveContact
-            - Business Rule Validation
-            - Authorization Checks`"]
-
-            CH_PORTFOLIO["`**Portfolio Command Handler**
-            *Content Management*
-            - UpdateTechnology
-            - AddExperience
-            - UpdateService
-            - PublishContent
-            - Version Management`"]
-
-            CH_ANALYTICS["`**Analytics Command Handler**
-            *Event Processing*
-            - TrackPageView
-            - RecordInteraction
-            - ProcessMetrics
-            - GenerateReports
-            - Data Aggregation`"]
-        end
-
-        subgraph "Commands"
-            CMD_CONTACT["`**Contact Commands**
-            *Write Operations*
-            - SubmitContactFormCommand
-            - UpdateContactStatusCommand
-            - ScheduleFollowUpCommand
-            - ArchiveContactCommand`"]
-
-            CMD_PORTFOLIO["`**Portfolio Commands**
-            *Content Operations*
-            - UpdateTechnologyCommand
-            - AddExperienceCommand
-            - PublishServiceCommand
-            - UpdateSkillLevelCommand`"]
-
-            CMD_ANALYTICS["`**Analytics Commands**
-            *Tracking Operations*
-            - TrackPageViewCommand
-            - RecordServiceClickCommand
-            - TrackFormInteractionCommand
-            - ProcessMetricsCommand`"]
-        end
-
-        subgraph "Command Validation"
-            CV["`**Command Validators**
-            *Business Rules*
-            - Input Validation
-            - Business Rule Checks
-            - Authorization Validation
-            - Precondition Verification
-            - Rate Limiting`"]
-        end
+    %% External Triggers
+    User[fa:fa-user User Actions]
+    Browser[fa:fa-browser Web Browser]
+    ExternalSystems[fa:fa-cloud External Systems<br/>APIs, Webhooks]
+    
+    %% Command Interface Layer
+    subgraph "Command Interface - CQRS"
+        ContactFormCommand[fa:fa-envelope Submit Contact Form<br/>Command Handler]
+        UpdateTechnologyCommand[fa:fa-code Update Technology<br/>Command Handler]
+        UpdateExperienceCommand[fa:fa-user-tie Update Experience<br/>Command Handler]
+        UpdateServiceCommand[fa:fa-briefcase Update Service<br/>Command Handler]
+        AnalyticsCommand[fa:fa-chart-line Track Analytics Event<br/>Command Handler]
     end
-
-    subgraph "✅ EVENT SOURCING SYSTEM"
-        subgraph "Domain Events"
-            DE_CONTACT["`**Contact Events**
-            *Domain State Changes*
-            - ContactFormSubmitted
-            - ContactStatusUpdated
-            - FollowUpScheduled
-            - ContactArchived
-            - EmailSent`"]
-
-            DE_PORTFOLIO["`**Portfolio Events**
-            *Content Changes*
-            - TechnologyUpdated
-            - ExperienceAdded
-            - ServicePublished
-            - SkillLevelChanged
-            - ContentVersioned`"]
-
-            DE_ANALYTICS["`**Analytics Events**
-            *User Behavior*
-            - PageViewed
-            - ServiceClicked
-            - FormInteracted
-            - FileDownloaded
-            - SessionStarted`"]
-
-            DE_SYSTEM["`**System Events**
-            *Infrastructure*
-            - DatabaseConnected
-            - CacheWarmed
-            - EmailDelivered
-            - ErrorOccurred
-            - PerformanceMetric`"]
-        end
-
-        subgraph "Event Store"
-            ES["`**Event Store**
-            *Persistent Event Log*
-            - Event Persistence
-            - Event Ordering
-            - Event Correlation
-            - Event Replay
-            - Snapshot Support
-            - Audit Trail`"]
-        end
-
-        subgraph "Event Bus"
-            EB["`**Event Bus**
-            *Event Distribution*
-            - Event Publishing
-            - Subscriber Management
-            - Event Routing
-            - Error Handling
-            - Dead Letter Queue`"]
-        end
+    
+    %% Query Interface Layer
+    subgraph "Query Interface - CQRS"
+        PortfolioQuery[fa:fa-search Get Portfolio Data<br/>Query Handler]
+        ContactQuery[fa:fa-envelope-open Get Contact Data<br/>Query Handler]
+        AnalyticsQuery[fa:fa-chart-bar Get Analytics Data<br/>Query Handler]
+        ReportingQuery[fa:fa-file-chart Generate Reports<br/>Query Handler]
     end
-
-    subgraph "✅ QUERY SIDE (Read Model)"
-        subgraph "Query Handlers"
-            QH_PORTFOLIO["`**Portfolio Query Handler**
-            *Read Operations*
-            - GetTechnologies
-            - GetExperiences
-            - GetServices
-            - SearchContent
-            - GetPortfolioStats`"]
-
-            QH_CONTACT["`**Contact Query Handler**
-            *Contact Queries*
-            - GetContacts
-            - GetContactStats
-            - SearchContacts
-            - GetFollowUps
-            - GetLeadMetrics`"]
-
-            QH_ANALYTICS["`**Analytics Query Handler**
-            *Business Intelligence*
-            - GetPageViews
-            - GetConversionMetrics
-            - GetUserBehavior
-            - GetPerformanceMetrics
-            - GenerateDashboard`"]
-        end
-
-        subgraph "Read Models"
-            RM_PORTFOLIO["`**Portfolio Read Models**
-            *Optimized Views*
-            - TechnologyCatalog
-            - ExperienceTimeline
-            - ServicePortfolio
-            - SkillMatrix
-            - ContentIndex`"]
-
-            RM_CONTACT["`**Contact Read Models**
-            *Contact Views*
-            - ContactList
-            - LeadPipeline
-            - FollowUpQueue
-            - ContactStats
-            - CommunicationHistory`"]
-
-            RM_ANALYTICS["`**Analytics Read Models**
-            *Analytics Views*
-            - PageViewStats
-            - ConversionFunnel
-            - UserJourney
-            - PerformanceDashboard
-            - BusinessMetrics`"]
-        end
-
-        subgraph "Materialized Views"
-            MV["`**Materialized Views**
-            *Performance Optimization*
-            - Pre-computed Aggregates
-            - Cached Query Results
-            - Optimized Indexes
-            - Real-time Updates
-            - Performance Metrics`"]
-        end
+    
+    %% Command Bus & Query Bus
+    subgraph "CQRS Infrastructure"
+        CommandBus[fa:fa-terminal Command Bus<br/>Routing & Validation]
+        QueryBus[fa:fa-search Query Bus<br/>Read Optimization]
+        CommandValidator[fa:fa-shield Command Validator<br/>Business Rules]
+        QueryOptimizer[fa:fa-rocket Query Optimizer<br/>Caching & Performance]
     end
-
-    subgraph "✅ EVENT PROCESSING PIPELINE"
-        subgraph "Event Processors"
-            EP_EMAIL["`**Email Event Processor**
-            *Communication*
-            - ContactFormSubmitted → Send Email
-            - StatusUpdated → Notify User
-            - FollowUpScheduled → Send Reminder
-            - Async Processing
-            - Retry Logic`"]
-
-            EP_ANALYTICS["`**Analytics Event Processor**
-            *Data Processing*
-            - Page Views → Update Stats
-            - Interactions → User Journey
-            - Errors → Alert System
-            - Real-time Processing
-            - Batch Processing`"]
-
-            EP_CACHE["`**Cache Event Processor**
-            *Performance*
-            - Content Updated → Invalidate Cache
-            - User Action → Update Cache
-            - System Event → Cache Warming
-            - Cache Coherence
-            - TTL Management`"]
-        end
-
-        subgraph "Saga Orchestration"
-            SAGA["`**Sagas**
-            *Long-running Processes*
-            - Contact Follow-up Process
-            - Content Publishing Workflow
-            - Analytics Report Generation
-            - Error Recovery Process
-            - State Management`"]
-        end
+    
+    %% Domain Aggregates with Events
+    subgraph "Domain Aggregates - Event Sourcing"
+        ContactAggregate[fa:fa-id-card Contact Aggregate<br/>Business Logic + Events]
+        TechnologyAggregate[fa:fa-laptop-code Technology Aggregate<br/>Validation + Events]
+        ExperienceAggregate[fa:fa-timeline Experience Aggregate<br/>Timeline + Events]
+        ServiceAggregate[fa:fa-handshake Service Aggregate<br/>Pricing + Events]
+        AnalyticsAggregate[fa:fa-chart-area Analytics Aggregate<br/>Metrics + Events]
     end
-
-    subgraph "✅ INTEGRATION LAYER"
-        subgraph "API Gateway"
-            API["`**API Gateway**
-            *Request Routing*
-            - Command Routing
-            - Query Routing
-            - Rate Limiting
-            - Authentication
-            - Request Validation`"]
-        end
-
-        subgraph "Event Adapters"
-            EA["`**Event Adapters**
-            *External Integration*
-            - External System Events
-            - Webhook Processing
-            - API Event Translation
-            - Event Formatting
-            - Error Handling`"]
-        end
+    
+    %% Domain Events
+    subgraph "Domain Events - Business Events"
+        ContactSubmittedEvent[fa:fa-check Contact Submitted<br/>Domain Event]
+        ContactProcessedEvent[fa:fa-cog Contact Processed<br/>Domain Event]
+        TechnologyUpdatedEvent[fa:fa-code Technology Updated<br/>Domain Event]
+        ExperienceAddedEvent[fa:fa-plus Experience Added<br/>Domain Event]
+        ServiceUpdatedEvent[fa:fa-briefcase Service Updated<br/>Domain Event]
+        PageViewedEvent[fa:fa-eye Page Viewed<br/>Analytics Event]
+        UserEngagementEvent[fa:fa-mouse User Engagement<br/>Analytics Event]
     end
-
+    
+    %% Event Store & Persistence
+    subgraph "Event Store - Event Sourcing"
+        EventStore[fa:fa-archive Event Store<br/>Persistent Event Log]
+        EventStream[fa:fa-stream Event Stream<br/>Ordered Events]
+        Snapshots[fa:fa-camera Aggregate Snapshots<br/>Performance Optimization]
+        EventMetadata[fa:fa-tags Event Metadata<br/>Correlation & Causation]
+    end
+    
+    %% Event Handlers & Side Effects
+    subgraph "Event Handlers - Side Effects"
+        EmailHandler[fa:fa-paper-plane Email Handler<br/>Notification Service]
+        AnalyticsHandler[fa:fa-chart-line Analytics Handler<br/>Metrics Processing]
+        AuditHandler[fa:fa-clipboard Audit Handler<br/>Compliance Logging]
+        CacheHandler[fa:fa-memory Cache Handler<br/>Read Model Updates]
+        IntegrationHandler[fa:fa-share-alt Integration Handler<br/>External System Sync]
+    end
+    
+    %% Read Models & Projections
+    subgraph "Read Models - Query Optimization"
+        ContactReadModel[fa:fa-table Contact Read Model<br/>Optimized for Queries]
+        PortfolioReadModel[fa:fa-table Portfolio Read Model<br/>Denormalized Views]
+        AnalyticsReadModel[fa:fa-table Analytics Read Model<br/>Aggregated Metrics]
+        ReportingReadModel[fa:fa-table Reporting Read Model<br/>Business Intelligence]
+    end
+    
+    %% Event Processing Engine
+    subgraph "Event Processing Engine"
+        EventDispatcher[fa:fa-share Event Dispatcher<br/>Async Processing]
+        EventRouter[fa:fa-route Event Router<br/>Handler Selection]
+        EventReplay[fa:fa-redo Event Replay<br/>Recovery & Debugging]
+        EventProjector[fa:fa-project-diagram Event Projector<br/>Read Model Updates]
+    end
+    
+    %% Saga Orchestration
+    subgraph "Saga Orchestration - Complex Workflows"
+        ContactProcessingSaga[fa:fa-workflow Contact Processing Saga<br/>Multi-step Workflow]
+        NotificationSaga[fa:fa-bell Notification Saga<br/>Email + Follow-up]
+        AnalyticsSaga[fa:fa-chart-pie Analytics Processing Saga<br/>Data Aggregation]
+        ReportingSaga[fa:fa-file-export Reporting Saga<br/>Scheduled Reports]
+    end
+    
+    %% Analytics & Business Intelligence
+    subgraph "Analytics & Business Intelligence"
+        RealTimeAnalytics[fa:fa-chart-line Real-time Analytics<br/>Live Dashboards]
+        BusinessMetrics[fa:fa-tachometer-alt Business Metrics<br/>KPI Tracking]
+        UserBehaviorAnalysis[fa:fa-user-chart User Behavior Analysis<br/>Engagement Patterns]
+        PerformanceMetrics[fa:fa-speedometer Performance Metrics<br/>System Health]
+    end
+    
+    %% External Event Sources
+    subgraph "External Event Sources"
+        WebhookEvents[fa:fa-webhook Webhook Events<br/>External Integrations]
+        ScheduledEvents[fa:fa-clock Scheduled Events<br/>Cron Jobs]
+        SystemEvents[fa:fa-server System Events<br/>Infrastructure]
+    end
+    
     %% Command Flow
-    API --> CV
-    CV --> CMD_CONTACT
-    CV --> CMD_PORTFOLIO
-    CV --> CMD_ANALYTICS
-
-    CMD_CONTACT --> CH_CONTACT
-    CMD_PORTFOLIO --> CH_PORTFOLIO
-    CMD_ANALYTICS --> CH_ANALYTICS
-
-    CH_CONTACT --> DE_CONTACT
-    CH_PORTFOLIO --> DE_PORTFOLIO
-    CH_ANALYTICS --> DE_ANALYTICS
-
-    %% Event Flow
-    DE_CONTACT --> ES
-    DE_PORTFOLIO --> ES
-    DE_ANALYTICS --> ES
-    DE_SYSTEM --> ES
-
-    ES --> EB
-
-    EB --> EP_EMAIL
-    EB --> EP_ANALYTICS
-    EB --> EP_CACHE
-    EB --> SAGA
-
+    User -->|User Actions| Browser
+    Browser -->|Commands| CommandBus
+    ExternalSystems -->|API Calls| CommandBus
+    
+    CommandBus --> CommandValidator
+    CommandValidator --> ContactFormCommand
+    CommandValidator --> UpdateTechnologyCommand
+    CommandValidator --> UpdateExperienceCommand
+    CommandValidator --> UpdateServiceCommand
+    CommandValidator --> AnalyticsCommand
+    
+    %% Command to Aggregate
+    ContactFormCommand --> ContactAggregate
+    UpdateTechnologyCommand --> TechnologyAggregate
+    UpdateExperienceCommand --> ExperienceAggregate
+    UpdateServiceCommand --> ServiceAggregate
+    AnalyticsCommand --> AnalyticsAggregate
+    
     %% Query Flow
-    API --> QH_PORTFOLIO
-    API --> QH_CONTACT
-    API --> QH_ANALYTICS
-
-    QH_PORTFOLIO --> RM_PORTFOLIO
-    QH_CONTACT --> RM_CONTACT
-    QH_ANALYTICS --> RM_ANALYTICS
-
-    RM_PORTFOLIO --> MV
-    RM_CONTACT --> MV
-    RM_ANALYTICS --> MV
-
-    %% Event Processing to Read Models
-    EP_ANALYTICS -.->|"Updates"| RM_ANALYTICS
-    EP_CACHE -.->|"Optimizes"| MV
-    SAGA -.->|"Coordinates"| RM_CONTACT
-
-    %% External Integration
-    EA --> EB
-    EB --> EA
-
+    Browser -->|Queries| QueryBus
+    QueryBus --> QueryOptimizer
+    QueryOptimizer --> PortfolioQuery
+    QueryOptimizer --> ContactQuery
+    QueryOptimizer --> AnalyticsQuery
+    QueryOptimizer --> ReportingQuery
+    
+    %% Query to Read Models
+    PortfolioQuery --> PortfolioReadModel
+    ContactQuery --> ContactReadModel
+    AnalyticsQuery --> AnalyticsReadModel
+    ReportingQuery --> ReportingReadModel
+    
+    %% Event Generation
+    ContactAggregate --> ContactSubmittedEvent
+    ContactAggregate --> ContactProcessedEvent
+    TechnologyAggregate --> TechnologyUpdatedEvent
+    ExperienceAggregate --> ExperienceAddedEvent
+    ServiceAggregate --> ServiceUpdatedEvent
+    AnalyticsAggregate --> PageViewedEvent
+    AnalyticsAggregate --> UserEngagementEvent
+    
+    %% Event Storage
+    ContactSubmittedEvent --> EventStore
+    ContactProcessedEvent --> EventStore
+    TechnologyUpdatedEvent --> EventStore
+    ExperienceAddedEvent --> EventStore
+    ServiceUpdatedEvent --> EventStore
+    PageViewedEvent --> EventStore
+    UserEngagementEvent --> EventStore
+    
+    EventStore --> EventStream
+    EventStore --> Snapshots
+    EventStore --> EventMetadata
+    
+    %% Event Processing
+    EventStore --> EventDispatcher
+    EventDispatcher --> EventRouter
+    EventRouter --> EmailHandler
+    EventRouter --> AnalyticsHandler
+    EventRouter --> AuditHandler
+    EventRouter --> CacheHandler
+    EventRouter --> IntegrationHandler
+    
+    %% Projections & Read Models
+    EventDispatcher --> EventProjector
+    EventProjector --> ContactReadModel
+    EventProjector --> PortfolioReadModel
+    EventProjector --> AnalyticsReadModel
+    EventProjector --> ReportingReadModel
+    
+    %% Saga Orchestration
+    ContactSubmittedEvent --> ContactProcessingSaga
+    ContactProcessedEvent --> NotificationSaga
+    PageViewedEvent --> AnalyticsSaga
+    UserEngagementEvent --> AnalyticsSaga
+    ScheduledEvents --> ReportingSaga
+    
+    %% Analytics Processing
+    AnalyticsHandler --> RealTimeAnalytics
+    AnalyticsHandler --> BusinessMetrics
+    AnalyticsHandler --> UserBehaviorAnalysis
+    AnalyticsHandler --> PerformanceMetrics
+    
+    %% External Events
+    WebhookEvents --> EventDispatcher
+    ScheduledEvents --> EventDispatcher
+    SystemEvents --> EventDispatcher
+    
+    %% Event Replay & Recovery
+    EventReplay --> EventStore
+    EventReplay --> EventProjector
+    
     %% Styling
-    classDef command fill:#e3f2fd,stroke:#2196f3,stroke-width:3px
-    classDef event fill:#e8f5e8,stroke:#4caf50,stroke-width:3px
-    classDef query fill:#fff3e0,stroke:#ff9800,stroke-width:3px
-    classDef processing fill:#f3e5f5,stroke:#9c27b0,stroke-width:2px
-    classDef infrastructure fill:#fce4ec,stroke:#e91e63,stroke-width:2px
-
-    class CH_CONTACT,CH_PORTFOLIO,CH_ANALYTICS,CMD_CONTACT,CMD_PORTFOLIO,CMD_ANALYTICS,CV command
-    class DE_CONTACT,DE_PORTFOLIO,DE_ANALYTICS,DE_SYSTEM,ES,EB event
-    class QH_PORTFOLIO,QH_CONTACT,QH_ANALYTICS,RM_PORTFOLIO,RM_CONTACT,RM_ANALYTICS,MV query
-    class EP_EMAIL,EP_ANALYTICS,EP_CACHE,SAGA processing
-    class API,EA infrastructure
-
-    %% Benefits Annotations
-    ES -.->|"Audit Trail & Replay"| DE_CONTACT
-    EB -.->|"Loose Coupling"| EP_EMAIL
-    MV -.->|"Performance"| QH_ANALYTICS
-    SAGA -.->|"Complex Workflows"| CH_CONTACT
-```
-
-**Improved Events & Commands Benefits:**
-
-1. **CQRS Implementation**: Clear separation of command and query responsibilities
-2. **Event Sourcing**: Complete audit trail with event replay capability
-3. **Event-Driven Architecture**: Loose coupling via event bus
-4. **Business Intelligence**: Comprehensive analytics and metrics
-5. **Async Processing**: Non-blocking operations with saga orchestration
-6. **Performance Optimization**: Materialized views and caching
-
-**Key Improvements:**
-
-**Command Side:**
-- Formal command pattern with validation
-- Business rule enforcement
-- Authorization and rate limiting
-- Command audit trail
-
-**Event System:**
-- Persistent event store for audit
-- Event correlation and replay
-- Real-time event processing
-- Dead letter queue for reliability
-
-**Query Side:**
-- Optimized read models
-- Materialized views for performance
-- Real-time analytics
-- Business intelligence dashboards
-
-**Processing Pipeline:**
-- Asynchronous event processing
-- Saga orchestration for workflows
-- Cache management
-- Error recovery
-
-**Integration:**
-- API gateway for routing
-- External system integration
-- Webhook support
-- Event translation
-
-**Business Value:**
-- **Complete Audit Trail**: Every action tracked and replayable
-- **Real-time Analytics**: Immediate insights into user behavior
-- **Performance**: Optimized queries and caching
-- **Scalability**: Event-driven architecture supports growth
-- **Reliability**: Error handling and recovery mechanisms
-- **Business Intelligence**: Data-driven decision making
+    classDef command fill:#e8f5e8,stroke:#2e7d32,stroke-width:3px
+    classDef query fill:#e3f2fd,stroke:#1565c0,stroke-width:2px
+    classDef event fill:#fff3e0,stroke:#ef6c00,stroke-width:2px
+    classDef aggregate fill:#ffebee,stroke:#c62828,stroke-width:2px
+    classDef storage fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px
+    classDef handler fill:#e0f2f1,stroke:#00695c,stroke-width:2px
+    classDef readmodel fill:#e8eaf6,stroke:#3f51b5,stroke-width:2px
+    classDef saga fill:#fce4ec,stroke:#e91e63,stroke-width:2px
+    classDef analytics fill:#fff8e1,stroke:#f57f17,stroke-width:2px
+    
+    class ContactFormCommand,UpdateTechnologyCommand,UpdateExperienceCommand,UpdateServiceCommand,AnalyticsCommand,CommandBus,CommandValidator command
+    class PortfolioQuery,ContactQuery,AnalyticsQuery,ReportingQuery,QueryBus,QueryOptimizer query
+    class ContactSubmittedEvent,ContactProcessedEvent,TechnologyUpdatedEvent,ExperienceAddedEvent,ServiceUpdatedEvent,PageViewedEvent,UserEngagementEvent event
+    class ContactAggregate,TechnologyAggregate,ExperienceAggregate,ServiceAggregate,AnalyticsAggregate aggregate
+    class EventStore,EventStream,Snapshots,EventMetadata storage
+    class EmailHandler,AnalyticsHandler,AuditHandler,CacheHandler,IntegrationHandler,EventDispatcher,EventRouter,EventReplay,EventProjector handler
+    class ContactReadModel,PortfolioReadModel,AnalyticsReadModel,ReportingReadModel readmodel
+    class ContactProcessingSaga,NotificationSaga,AnalyticsSaga,ReportingSaga saga
+    class RealTimeAnalytics,BusinessMetrics,UserBehaviorAnalysis,PerformanceMetrics analytics
+    
+    %% Success Annotations
+    EventStore -->|✅ Full Event History| EventMetadata
+    ContactAggregate -->|✅ Business Events| ContactSubmittedEvent
+    EventProjector -->|✅ Optimized Queries| PortfolioReadModel
+    AnalyticsHandler -->|✅ Real-time Insights| RealTimeAnalytics
+    ContactProcessingSaga -->|✅ Complex Workflows| NotificationSaga
