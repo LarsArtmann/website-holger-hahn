@@ -2,12 +2,12 @@
 # See https://pre-commit.com for more information
 # See https://pre-commit.com/hooks.html for more hooks
 
-default_stages: [commit]
+default_stages: [pre-commit]
 default_language_version:
   python: python3
 
 repos:
-  # Basic hooks for general file quality 
+  # Basic hooks for general file quality
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v4.6.0
     hooks:
@@ -35,20 +35,20 @@ repos:
         language: system
         files: \.go$
         pass_filenames: true
-      
+
       # Go import organization with gci
       - id: go-imports
         name: gci
         entry: gci
         args: [write, --skip-generated, -s, standard, -s, default, -s, "prefix(holger-hahn-website)"]
-        language: system  
+        language: system
         files: \.go$
         pass_filenames: true
-      
+
       # Go linting with golangci-lint
       - id: golangci-lint
         args: [--config=.golangci.yml]
-        
+
       # Go mod tidy
       - id: go-mod-tidy
 
@@ -63,7 +63,7 @@ repos:
         language: system
         files: \.templ$
         pass_filenames: false
-        
+
       # Go vet for additional static analysis
       - id: go-vet-mod
         name: go vet
