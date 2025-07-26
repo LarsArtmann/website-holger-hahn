@@ -41,7 +41,7 @@ func (s *ContactService) SubmitContactForm(ctx context.Context, req ContactFormR
 			"company": req.Company,
 		})
 
-		return nil, fmt.Errorf("validation failed: %w", err)
+		return nil, fmt.Errorf("%w: %w", domain.ErrValidationFailed, err)
 	}
 
 	// Save to repository.
@@ -51,7 +51,7 @@ func (s *ContactService) SubmitContactForm(ctx context.Context, req ContactFormR
 			"email":      contact.Email,
 		})
 
-		return nil, fmt.Errorf("failed to save contact: %w", err)
+		return nil, fmt.Errorf("%w: %w", domain.ErrSaveContact, err)
 	}
 
 	s.logger.Info(ctx, "Contact saved successfully", map[string]interface{}{
@@ -99,7 +99,7 @@ func (s *ContactService) SubmitContactForm(ctx context.Context, req ContactFormR
 func (s *ContactService) GetContact(ctx context.Context, id string) (*Contact, error) {
 	contact, err := s.contactRepo.FindByID(ctx, id)
 	if err != nil {
-		return nil, fmt.Errorf("failed to find contact: %w", err)
+		return nil, fmt.Errorf("%w: %w", domain.ErrFindContact, err)
 	}
 
 	return &Contact{
@@ -117,7 +117,7 @@ func (s *ContactService) GetContact(ctx context.Context, id string) (*Contact, e
 func (s *ContactService) ListContacts(ctx context.Context, status string, limit, offset int) ([]*Contact, error) {
 	contacts, err := s.contactRepo.FindAll(ctx, domain.ContactStatus(status), limit, offset)
 	if err != nil {
-		return nil, fmt.Errorf("failed to list contacts: %w", err)
+		return nil, fmt.Errorf("%w: %w", domain.ErrListContacts, err)
 	}
 
 	result := make([]*Contact, len(contacts))
@@ -142,9 +142,9 @@ func (s *ContactService) ListContacts(ctx context.Context, status string, limit,
 // ContactFormRequest represents the request payload for contact form submissions,
 // containing all required and optional fields with validation rules.
 type ContactFormRequest struct {
-	Name    string `binding:"required,min=2,max=100"   json:"name"`
-	Company string `binding:"max=100"                  json:"company"`
-	Email   string `binding:"required,email"           json:"email"`
+	Name    string `binding:"required,min=2,max=100" json:"name"`
+	Company string `binding:"max=100" json:"company"`
+	Email   string `binding:"required,email" json:"email"`
 	Project string `binding:"required,min=10,max=2000" json:"project"`
 }
 
