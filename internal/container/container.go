@@ -5,7 +5,6 @@ package container
 
 import (
 	"github.com/samber/do"
-
 	"holger-hahn-website/internal/config"
 	"holger-hahn-website/internal/repository"
 	"holger-hahn-website/internal/service"
