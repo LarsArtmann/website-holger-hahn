@@ -11,26 +11,37 @@ A professional website for Holger M. Hahn, Solution Architect & Test Engineer sp
 
 ## Technology Stack
 
-- **Backend**: Go with Gin web framework
+- **Backend**: Go with Gin web framework and unified DI container (samber/do)
 - **Templates**: Templ for type-safe HTML templates
-- **Styling**: Custom CSS with modern responsive design
-- **Frontend**: HTMX for interactive features
+- **Styling**: TailwindCSS with custom modern responsive design
+- **Frontend**: HTMX for interactive features without heavy JavaScript
 - **Icons**: Heroicons SVG icons
+- **Architecture**: Domain-Driven Design (DDD) with CQRS patterns
 
 ## Project Structure
 
 ```
 .
-├── main.go              # Go web server
+├── main.go              # Unified web server (portfolio + contact)
+├── cmd/build/           # Static site generator
+├── internal/            # Application code (DDD structure)
+│   ├── application/     # Application services
+│   ├── domain/          # Domain entities and interfaces
+│   ├── infrastructure/  # External service implementations
+│   ├── container/       # Unified DI container
+│   ├── handler/         # HTTP handlers
+│   ├── service/         # Business logic services
+│   └── repository/      # Data access patterns
 ├── templates/           # Templ template files
 │   ├── index.templ      # Main page template
 │   └── components.templ # Reusable components
 ├── static/              # Static assets
 │   ├── css/
-│   │   ├── input.css    # Source CSS file
+│   │   ├── input.css    # TailwindCSS source
 │   │   └── styles.css   # Compiled CSS
-│   └── js/              # JavaScript files
-├── run.sh               # Development server script
+│   └── images/          # Images and icons
+├── tests/               # Integration and e2e tests
+├── justfile             # Development task automation
 └── README.md           # This file
 ```
 
@@ -40,35 +51,41 @@ A professional website for Holger M. Hahn, Solution Architect & Test Engineer sp
 
 - Go 1.21 or later
 - Templ CLI tool
+- Bun (for TailwindCSS builds)
+- Just command runner (optional but recommended)
 
 ### Installation
 
-1. Install Templ CLI:
+1. Install required tools:
    ```bash
    go install github.com/a-h/templ/cmd/templ@latest
+   npm install -g bun
    ```
 
-2. Install dependencies:
+2. Setup the project:
    ```bash
-   go mod tidy
+   just setup  # or: bun install && go mod tidy
    ```
 
-3. Generate templates:
+3. Build and run:
    ```bash
-   templ generate
+   just dev    # Development mode with hot reload
+   # or manually:
+   just build && go run .
    ```
 
-4. Run the development server:
-   ```bash
-   ./run.sh
-   ```
+4. Open your browser and visit: http://localhost:8081
 
-   Or manually:
-   ```bash
-   go run main.go
-   ```
+### Available Commands
 
-5. Open your browser and visit: http://localhost:8080
+```bash
+just build      # Build CSS and Go binary
+just dev        # Development mode with hot reload
+just test       # Run all tests
+just lint       # Run comprehensive linting
+just run        # Run production build
+just health     # Check server health
+```
 
 ## Development
 
@@ -80,35 +97,52 @@ A professional website for Holger M. Hahn, Solution Architect & Test Engineer sp
 
 ### Styling
 
-- CSS is located in `static/css/styles.css`
-- The design uses a modern utility-first approach
-- Responsive breakpoints: mobile-first with sm (640px), md (768px), lg (1024px)
+- **TailwindCSS**: Source file `static/css/input.css`, compiled to `static/css/styles.css`
+- **Build CSS**: Run `bun run build-css` or `just build` to compile TailwindCSS
+- **Watch Mode**: Use `bun run watch-css` for development
+- **Modern Design**: Utility-first approach with custom components
+- **Responsive**: Mobile-first with sm (640px), md (768px), lg (1024px) breakpoints
 
-### Content Updates
+### Application Features
 
-Key sections to customize:
-- Contact information (email, LinkedIn)
-- Professional experience details
-- Services offered
-- Educational background
-- Certifications
+**Unified Architecture**:
+- **Portfolio Display**: Dynamic content from service layer with in-memory repositories
+- **Contact Form**: Full contact submission with email notifications
+- **Health Monitoring**: Built-in health check endpoints
+- **API Endpoints**: RESTful API for technologies, experiences, and services
+
+**Key Sections**:
+- Contact information and form submission
+- Professional experience with real client work
+- Services and expertise areas
+- Core technologies and certifications
 
 ## Production Deployment
 
-1. Set Gin to release mode:
-   ```bash
-   export GIN_MODE=release
-   ```
+### Docker Deployment (Recommended)
 
-2. Build the application:
-   ```bash
-   go build -o website main.go
-   ```
+```bash
+# Build and deploy with Docker
+docker build -t holger-hahn-website .
+docker run -p 8080:8080 -e GIN_MODE=release holger-hahn-website
+```
 
-3. Run the compiled binary:
-   ```bash
-   ./website
-   ```
+### Manual Deployment
+
+```bash
+# Production build
+just prod-build  # or: bun run build && go build -o holger-hahn-website .
+
+# Run in production mode
+ENVIRONMENT=production GIN_MODE=release ./holger-hahn-website
+```
+
+### Cloud Run Deployment
+
+```bash
+# Deploy to Google Cloud Run
+just deploy PROJECT_ID="your-project-id" REGION="us-central1"
+```
 
 ## Target Audience
 
