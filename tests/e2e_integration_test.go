@@ -15,19 +15,23 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
-	"github.com/samber/do"
-
 	"holger-hahn-website/internal/application"
 	"holger-hahn-website/internal/constants"
-	"holger-hahn-website/internal/infrastructure"
+	"holger-hahn-website/internal/container"
 	"holger-hahn-website/templates"
 )
 
 // TestEndToEndContactFlow tests the complete contact form workflow.
 func TestEndToEndContactFlow(t *testing.T) {
-	// Setup dependency injection container
-	injector := infrastructure.SetupContainer()
-	contactService := do.MustInvoke[*application.ContactService](injector)
+	// Setup unified dependency injection container
+	di := container.New()
+	defer func() {
+		if err := di.Shutdown(); err != nil {
+			t.Errorf("Failed to shutdown DI container: %v", err)
+		}
+	}()
+
+	contactService := container.MustGet[*application.ContactService](di)
 
 	// Create contact handler
 	contactHandler := &ContactHandler{contactService: contactService}
@@ -291,16 +295,21 @@ func TestSystemIntegration(t *testing.T) {
 	})
 
 	t.Run("Dependency Injection", func(t *testing.T) {
-		// Test that DI container can be set up
-		injector := infrastructure.SetupContainer()
-		if injector == nil {
-			t.Fatal("Failed to setup DI container")
+		// Test that unified DI container can be set up
+		di := container.New()
+		if di == nil {
+			t.Fatal("Failed to setup unified DI container")
 		}
 
 		// Test that services can be resolved
-		contactService := do.MustInvoke[*application.ContactService](injector)
+		contactService := container.MustGet[*application.ContactService](di)
 		if contactService == nil {
-			t.Error("Failed to resolve ContactService from DI container")
+			t.Error("Failed to resolve ContactService from unified DI container")
+		}
+
+		// Cleanup container
+		if err := di.Shutdown(); err != nil {
+			t.Errorf("Failed to shutdown DI container: %v", err)
 		}
 	})
 
@@ -332,8 +341,14 @@ func TestSystemIntegration(t *testing.T) {
 
 // TestPerformanceBasic tests basic performance expectations.
 func TestPerformanceBasic(t *testing.T) {
-	injector := infrastructure.SetupContainer()
-	contactService := do.MustInvoke[*application.ContactService](injector)
+	di := container.New()
+	defer func() {
+		if err := di.Shutdown(); err != nil {
+			t.Errorf("Failed to shutdown DI container: %v", err)
+		}
+	}()
+
+	contactService := container.MustGet[*application.ContactService](di)
 	contactHandler := &ContactHandler{contactService: contactService}
 
 	gin.SetMode(gin.TestMode)
