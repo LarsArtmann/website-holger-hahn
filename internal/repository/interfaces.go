@@ -1,3 +1,6 @@
+// Package repository defines data access interfaces and contracts for the portfolio website.
+// It provides abstractions for data persistence operations, transaction management,
+// and repository patterns that can be implemented by various storage backends.
 package repository
 
 import (

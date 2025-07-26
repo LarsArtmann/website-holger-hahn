@@ -1,3 +1,6 @@
+// Package infrastructure provides concrete implementations of external service interfaces.
+// It contains SMTP email service implementation for sending notifications and confirmations
+// with support for both development logging and production email delivery.
 package infrastructure
 
 import (

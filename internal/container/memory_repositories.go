@@ -267,7 +267,7 @@ func (r *InMemoryExperienceRepository) populateSampleData() {
 	consultingAchievement.ID = "achievement-006"
 
 	consulting.AddAchievement(*consultingAchievement)
-	r.exps[consulting.ID] = consulting
+	r.entities[consulting.ID] = consulting
 
 	// Previous Banking experience with legacy system metrics
 	bankingStart := time.Date(2018, 3, 1, 0, 0, 0, 0, time.UTC)
@@ -299,71 +299,28 @@ func (r *InMemoryExperienceRepository) populateSampleData() {
 	legacyModernizationAchievement.ID = "achievement-007"
 
 	banking.AddAchievement(*legacyModernizationAchievement)
-	r.exps[banking.ID] = banking
+	r.entities[banking.ID] = banking
 }
 
-// Create stores a new experience in the in-memory repository.
-func (r *InMemoryExperienceRepository) Create(ctx context.Context, experience *domain.Experience) error {
-	r.mu.Lock()
-	defer r.mu.Unlock()
-	r.exps[experience.ID] = experience
-
-	return nil
-}
-
-// GetByID retrieves an experience by its ID.
-func (r *InMemoryExperienceRepository) GetByID(ctx context.Context, id string) (*domain.Experience, error) {
-	r.mu.RLock()
-	defer r.mu.RUnlock()
-
-	item, exists := r.exps[id]
-	if !exists {
-		return nil, domain.ErrNotFound("experience")
-	}
-
-	return item, nil
-}
+// Note: Create, GetByID, Update, Delete methods are inherited from InMemoryBaseCRUD
 
 // List retrieves experiences matching the provided filter criteria.
 func (r *InMemoryExperienceRepository) List(ctx context.Context, filter repository.ExperienceFilter) ([]*domain.Experience, error) {
-	r.mu.RLock()
-	defer r.mu.RUnlock()
-
 	var result []*domain.Experience
 
-	for _, exp := range r.exps {
+	for _, exp := range r.GetAll() {
 		result = append(result, exp)
 	}
 
 	return result, nil
 }
 
-// Update modifies an existing experience in the in-memory repository.
-func (r *InMemoryExperienceRepository) Update(ctx context.Context, experience *domain.Experience) error {
-	r.mu.Lock()
-	defer r.mu.Unlock()
-	r.exps[experience.ID] = experience
-
-	return nil
-}
-
-// Delete removes an experience from the in-memory repository by its ID.
-func (r *InMemoryExperienceRepository) Delete(ctx context.Context, id string) error {
-	r.mu.Lock()
-	defer r.mu.Unlock()
-	delete(r.exps, id)
-
-	return nil
-}
 
 // GetCurrent retrieves all experiences that are currently active.
 func (r *InMemoryExperienceRepository) GetCurrent(ctx context.Context) ([]*domain.Experience, error) {
-	r.mu.RLock()
-	defer r.mu.RUnlock()
-
 	var result []*domain.Experience
 
-	for _, exp := range r.exps {
+	for _, exp := range r.GetAll() {
 		if exp.IsCurrent() {
 			result = append(result, exp)
 		}
@@ -374,12 +331,9 @@ func (r *InMemoryExperienceRepository) GetCurrent(ctx context.Context) ([]*domai
 
 // GetByCompany retrieves all experiences associated with the specified company.
 func (r *InMemoryExperienceRepository) GetByCompany(ctx context.Context, companyName string) ([]*domain.Experience, error) {
-	r.mu.RLock()
-	defer r.mu.RUnlock()
-
 	var result []*domain.Experience
 
-	for _, exp := range r.exps {
+	for _, exp := range r.GetAll() {
 		if exp.CompanyName == companyName {
 			result = append(result, exp)
 		}
@@ -390,12 +344,9 @@ func (r *InMemoryExperienceRepository) GetByCompany(ctx context.Context, company
 
 // GetByDateRange retrieves experiences that fall within the specified date range.
 func (r *InMemoryExperienceRepository) GetByDateRange(ctx context.Context, startDate, endDate time.Time) ([]*domain.Experience, error) {
-	r.mu.RLock()
-	defer r.mu.RUnlock()
-
 	var result []*domain.Experience
 
-	for _, exp := range r.exps {
+	for _, exp := range r.GetAll() {
 		if !exp.StartDate.Before(startDate) && (exp.EndDate == nil || !exp.EndDate.After(endDate)) {
 			result = append(result, exp)
 		}
@@ -406,12 +357,9 @@ func (r *InMemoryExperienceRepository) GetByDateRange(ctx context.Context, start
 
 // GetWithTechnology retrieves experiences that utilize the specified technology.
 func (r *InMemoryExperienceRepository) GetWithTechnology(ctx context.Context, technologyName string) ([]*domain.Experience, error) {
-	r.mu.RLock()
-	defer r.mu.RUnlock()
-
 	var result []*domain.Experience
 
-	for _, exp := range r.exps {
+	for _, exp := range r.GetAll() {
 		for _, tech := range exp.Technologies {
 			if tech.Name == technologyName {
 				result = append(result, exp)
@@ -425,45 +373,21 @@ func (r *InMemoryExperienceRepository) GetWithTechnology(ctx context.Context, te
 
 // InMemoryServiceRepository is a simple in-memory implementation for development/testing.
 type InMemoryServiceRepository struct {
-	services map[string]*domain.Service
-	mu       sync.RWMutex
+	*InMemoryBaseCRUD[*domain.Service]
 }
 
 // NewInMemoryServiceRepository creates a new in-memory service repository.
 func NewInMemoryServiceRepository() repository.ServiceRepository {
 	return &InMemoryServiceRepository{
-		services: make(map[string]*domain.Service),
+		InMemoryBaseCRUD: NewInMemoryBaseCRUD[*domain.Service]("service"),
 	}
 }
 
-// Create stores a new service in the in-memory repository.
-func (r *InMemoryServiceRepository) Create(ctx context.Context, service *domain.Service) error {
-	r.mu.Lock()
-	defer r.mu.Unlock()
-	r.services[service.ID] = service
-
-	return nil
-}
-
-// GetByID retrieves a service by its ID.
-func (r *InMemoryServiceRepository) GetByID(ctx context.Context, id string) (*domain.Service, error) {
-	r.mu.RLock()
-	defer r.mu.RUnlock()
-
-	item, exists := r.services[id]
-	if !exists {
-		return nil, domain.ErrNotFound("service")
-	}
-
-	return item, nil
-}
+// Note: Create, GetByID, Update, Delete methods are inherited from InMemoryBaseCRUD
 
 // GetByName finds a service by its name.
 func (r *InMemoryServiceRepository) GetByName(ctx context.Context, name string) (*domain.Service, error) {
-	r.mu.RLock()
-	defer r.mu.RUnlock()
-
-	for _, svc := range r.services {
+	for _, svc := range r.GetAll() {
 		if svc.Name == name {
 			return svc, nil
 		}
@@ -474,12 +398,9 @@ func (r *InMemoryServiceRepository) GetByName(ctx context.Context, name string) 
 
 // List retrieves services matching the provided filter criteria.
 func (r *InMemoryServiceRepository) List(ctx context.Context, filter repository.ServiceFilter) ([]*domain.Service, error) {
-	r.mu.RLock()
-	defer r.mu.RUnlock()
-
 	var result []*domain.Service
 
-	for _, svc := range r.services {
+	for _, svc := range r.GetAll() {
 		if filter.Category != nil && svc.Category != *filter.Category {
 			continue
 		}
@@ -494,32 +415,12 @@ func (r *InMemoryServiceRepository) List(ctx context.Context, filter repository.
 	return result, nil
 }
 
-// Update modifies an existing service in the in-memory repository.
-func (r *InMemoryServiceRepository) Update(ctx context.Context, service *domain.Service) error {
-	r.mu.Lock()
-	defer r.mu.Unlock()
-	r.services[service.ID] = service
-
-	return nil
-}
-
-// Delete removes a service from the in-memory repository by its ID.
-func (r *InMemoryServiceRepository) Delete(ctx context.Context, id string) error {
-	r.mu.Lock()
-	defer r.mu.Unlock()
-	delete(r.services, id)
-
-	return nil
-}
 
 // GetActive retrieves all services that are currently active.
 func (r *InMemoryServiceRepository) GetActive(ctx context.Context) ([]*domain.Service, error) {
-	r.mu.RLock()
-	defer r.mu.RUnlock()
-
 	var result []*domain.Service
 
-	for _, svc := range r.services {
+	for _, svc := range r.GetAll() {
 		if svc.IsActive {
 			result = append(result, svc)
 		}
@@ -530,12 +431,9 @@ func (r *InMemoryServiceRepository) GetActive(ctx context.Context) ([]*domain.Se
 
 // GetByCategory retrieves all services belonging to the specified category.
 func (r *InMemoryServiceRepository) GetByCategory(ctx context.Context, category domain.ServiceType) ([]*domain.Service, error) {
-	r.mu.RLock()
-	defer r.mu.RUnlock()
-
 	var result []*domain.Service
 
-	for _, svc := range r.services {
+	for _, svc := range r.GetAll() {
 		if svc.Category == category {
 			result = append(result, svc)
 		}
@@ -546,12 +444,9 @@ func (r *InMemoryServiceRepository) GetByCategory(ctx context.Context, category 
 
 // GetWithTechnology retrieves services that utilize the specified technology.
 func (r *InMemoryServiceRepository) GetWithTechnology(ctx context.Context, technologyName string) ([]*domain.Service, error) {
-	r.mu.RLock()
-	defer r.mu.RUnlock()
-
 	var result []*domain.Service
 
-	for _, svc := range r.services {
+	for _, svc := range r.GetAll() {
 		for _, tech := range svc.Technologies {
 			if tech.Name == technologyName {
 				result = append(result, svc)
@@ -565,12 +460,9 @@ func (r *InMemoryServiceRepository) GetWithTechnology(ctx context.Context, techn
 
 // GetByPricingType retrieves services that use the specified pricing model.
 func (r *InMemoryServiceRepository) GetByPricingType(ctx context.Context, pricingType domain.PricingType) ([]*domain.Service, error) {
-	r.mu.RLock()
-	defer r.mu.RUnlock()
-
 	var result []*domain.Service
 
-	for _, svc := range r.services {
+	for _, svc := range r.GetAll() {
 		if svc.Pricing != nil && svc.Pricing.Type == pricingType {
 			result = append(result, svc)
 		}

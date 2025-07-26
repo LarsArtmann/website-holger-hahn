@@ -1,3 +1,6 @@
+// Package repository defines data access interfaces and contracts for the portfolio website.
+// It provides technology repository interface with methods for querying, filtering,
+// and managing technology entities by name, category, and proficiency level.
 package repository
 
 import (

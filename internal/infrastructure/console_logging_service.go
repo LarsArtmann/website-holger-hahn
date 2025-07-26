@@ -1,3 +1,6 @@
+// Package infrastructure provides concrete implementations of external service interfaces.
+// It contains console logging service implementation for structured logging with JSON output
+// and support for different log levels (info, warn, error) with contextual fields.
 package infrastructure
 
 import (

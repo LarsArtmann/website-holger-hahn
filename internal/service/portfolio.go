@@ -14,15 +14,26 @@ import (
 
 // PortfolioService handles business logic for service offerings.
 type PortfolioService struct {
-	repo     repository.ServiceRepository
-	techRepo repository.TechnologyRepository
+	repo         repository.ServiceRepository
+	techRepo     repository.TechnologyRepository
+	validator    *CompoundValidator
+	errorHandler *StandardServiceErrorHandlers
 }
 
 // NewPortfolioService creates a new portfolio service.
 func NewPortfolioService(repo repository.ServiceRepository, techRepo repository.TechnologyRepository) *PortfolioService {
+	if repo == nil {
+		panic("service repository cannot be nil")
+	}
+	if techRepo == nil {
+		panic("technology repository cannot be nil")
+	}
+	
 	return &PortfolioService{
-		repo:     repo,
-		techRepo: techRepo,
+		repo:         repo,
+		techRepo:     techRepo,
+		validator:    NewCompoundValidator(),
+		errorHandler: NewStandardServiceErrorHandlers("PortfolioService"),
 	}
 }
 

@@ -56,7 +56,7 @@ func (s *TechnologyService) CreateTechnology(ctx context.Context, name, category
 	tech := domain.NewTechnology(normalizedName, normalizedCategory, level)
 	tech.ID = generateID()
 
-	if err := s.validator.ValidateAndNormalize(ctx, tech); err != nil {
+	if err := tech.Validate(); err != nil {
 		return nil, err
 	}
 
@@ -69,7 +69,7 @@ func (s *TechnologyService) CreateTechnology(ctx context.Context, name, category
 
 // GetTechnology retrieves a technology by ID.
 func (s *TechnologyService) GetTechnology(ctx context.Context, id string) (*domain.Technology, error) {
-	if err := s.validator.ValidateID(id, "technology"); err != nil {
+	if err := s.validator.CommonRequestValidator.ValidateID(id, "technology"); err != nil {
 		return nil, err
 	}
 
@@ -99,7 +99,7 @@ func (s *TechnologyService) ListTechnologies(ctx context.Context, filter Technol
 
 	technologies, err := s.repo.List(ctx, repoFilter)
 	if err != nil {
-		return nil, s.errorHandler.Repository.HandleListError("technologies", err)
+		return nil, s.errorHandler.Basic.HandleRepositoryListError("technologies", err)
 	}
 
 	return technologies, nil
@@ -134,7 +134,7 @@ func (s *TechnologyService) UpdateTechnology(ctx context.Context, id string, upd
 	}
 
 	if err := s.repo.Update(ctx, tech); err != nil {
-		return nil, domain.ErrInternal(fmt.Sprintf("failed to update technology: %v", err))
+		return nil, s.errorHandler.Repository.HandleUpdateError("technology", err)
 	}
 
 	return tech, nil
@@ -142,8 +142,8 @@ func (s *TechnologyService) UpdateTechnology(ctx context.Context, id string, upd
 
 // DeleteTechnology removes a technology.
 func (s *TechnologyService) DeleteTechnology(ctx context.Context, id string) error {
-	if id == "" {
-		return domain.ErrInvalidInput("technology ID cannot be empty")
+	if err := s.validator.CommonRequestValidator.ValidateID(id, "technology"); err != nil {
+		return err
 	}
 
 	// Check if technology exists
@@ -153,7 +153,7 @@ func (s *TechnologyService) DeleteTechnology(ctx context.Context, id string) err
 	}
 
 	if err := s.repo.Delete(ctx, id); err != nil {
-		return domain.ErrInternal(fmt.Sprintf("failed to delete technology: %v", err))
+		return s.errorHandler.Repository.HandleDeleteError("technology", err)
 	}
 
 	return nil
@@ -161,13 +161,13 @@ func (s *TechnologyService) DeleteTechnology(ctx context.Context, id string) err
 
 // GetTechnologiesByCategory retrieves technologies filtered by category.
 func (s *TechnologyService) GetTechnologiesByCategory(ctx context.Context, category string) ([]*domain.Technology, error) {
-	if category == "" {
-		return nil, domain.ErrInvalidInput("category cannot be empty")
+	if err := s.validator.CommonRequestValidator.ValidateNonEmpty(category, "category"); err != nil {
+		return nil, err
 	}
 
 	technologies, err := s.repo.GetByCategory(ctx, category)
 	if err != nil {
-		return nil, domain.ErrInternal(fmt.Sprintf("failed to get technologies by category: %v", err))
+		return nil, s.errorHandler.Repository.HandleCustomOperation("get technologies by category", err)
 	}
 
 	return technologies, nil
@@ -181,7 +181,7 @@ func (s *TechnologyService) GetTechnologiesByLevel(ctx context.Context, level do
 
 	technologies, err := s.repo.GetByLevel(ctx, level)
 	if err != nil {
-		return nil, domain.ErrInternal(fmt.Sprintf("failed to get technologies by level: %v", err))
+		return nil, s.errorHandler.Repository.HandleCustomOperation("get technologies by level", err)
 	}
 
 	return technologies, nil

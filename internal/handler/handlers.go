@@ -7,6 +7,7 @@ import (
 	"context"
 
 	"holger-hahn-website/internal/constants"
+	"holger-hahn-website/internal/domain"
 	"holger-hahn-website/internal/service"
 	"holger-hahn-website/templates"
 
@@ -40,14 +41,14 @@ func (h *PortfolioHandlers) HomeHandler(c *gin.Context) {
 	// Get current experiences
 	experiences, err := h.experienceService.GetCurrentExperiences(ctx)
 	if err != nil {
-		c.JSON(constants.HTTPInternalServerError, gin.H{"error": "Failed to load experiences"})
+		c.JSON(constants.HTTPInternalServerError, gin.H{"error": domain.ErrLoadExperiences.Error()})
 		return
 	}
 
 	// Get active services
 	services, err := h.portfolioService.GetActiveServices(ctx)
 	if err != nil {
-		c.JSON(constants.HTTPInternalServerError, gin.H{"error": "Failed to load services"})
+		c.JSON(constants.HTTPInternalServerError, gin.H{"error": domain.ErrLoadServices.Error()})
 		return
 	}
 
@@ -60,7 +61,7 @@ func (h *PortfolioHandlers) HomeHandler(c *gin.Context) {
 
 	technologies, err := h.technologyService.ListTechnologies(ctx, techFilter)
 	if err != nil {
-		c.JSON(constants.HTTPInternalServerError, gin.H{"error": "Failed to load technologies"})
+		c.JSON(constants.HTTPInternalServerError, gin.H{"error": domain.ErrLoadTechnologies.Error()})
 		return
 	}
 
@@ -87,7 +88,7 @@ func (h *PortfolioHandlers) HomeHandler(c *gin.Context) {
 	c.Header("Content-Type", "text/html")
 
 	if err := component.Render(c.Request.Context(), c.Writer); err != nil {
-		c.JSON(constants.HTTPInternalServerError, gin.H{"error": "Failed to render template"})
+		c.JSON(constants.HTTPInternalServerError, gin.H{"error": domain.ErrRenderTemplate.Error()})
 		return
 	}
 }
@@ -117,7 +118,7 @@ func (h *PortfolioHandlers) TechnologiesHandler(c *gin.Context) {
 
 	technologies, err := h.technologyService.ListTechnologies(ctx, filter)
 	if err != nil {
-		c.JSON(constants.HTTPInternalServerError, gin.H{"error": "Failed to load technologies"})
+		c.JSON(constants.HTTPInternalServerError, gin.H{"error": domain.ErrLoadTechnologies.Error()})
 		return
 	}
 
@@ -130,7 +131,7 @@ func (h *PortfolioHandlers) ExperiencesHandler(c *gin.Context) {
 
 	experiences, err := h.experienceService.ListExperiences(ctx, service.ExperienceFilter{})
 	if err != nil {
-		c.JSON(constants.HTTPInternalServerError, gin.H{"error": "Failed to load experiences"})
+		c.JSON(constants.HTTPInternalServerError, gin.H{"error": domain.ErrLoadExperiences.Error()})
 		return
 	}
 
@@ -143,7 +144,7 @@ func (h *PortfolioHandlers) ServicesHandler(c *gin.Context) {
 
 	services, err := h.portfolioService.ListServices(ctx, service.ServiceFilter{})
 	if err != nil {
-		c.JSON(constants.HTTPInternalServerError, gin.H{"error": "Failed to load services"})
+		c.JSON(constants.HTTPInternalServerError, gin.H{"error": domain.ErrLoadServices.Error()})
 		return
 	}
 

@@ -1,3 +1,6 @@
+// Package repository defines data access interfaces and contracts for the portfolio website.
+// It provides service repository interface with methods for managing professional services,
+// filtering by category, pricing, technology, and active status for service offerings.
 package repository
 
 import (
@@ -7,24 +10,12 @@ import (
 )
 
 // ServiceRepository defines the interface for service data access.
+// It extends the base Filterable interface with service-specific operations.
 type ServiceRepository interface {
-	// Create creates a new service
-	Create(ctx context.Context, service *domain.Service) error
-
-	// GetByID retrieves a service by its ID
-	GetByID(ctx context.Context, id string) (*domain.Service, error)
+	Filterable[*domain.Service, ServiceFilter]
 
 	// GetByName retrieves a service by its name
 	GetByName(ctx context.Context, name string) (*domain.Service, error)
-
-	// List retrieves all services with optional filtering
-	List(ctx context.Context, filter ServiceFilter) ([]*domain.Service, error)
-
-	// Update updates an existing service
-	Update(ctx context.Context, service *domain.Service) error
-
-	// Delete removes a service by ID
-	Delete(ctx context.Context, id string) error
 
 	// GetActive retrieves all active services
 	GetActive(ctx context.Context) ([]*domain.Service, error)

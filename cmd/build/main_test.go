@@ -1,3 +1,6 @@
+// Package main provides unit tests for the build utility.
+// It contains tests for path validation, security checks, and file copying operations
+// to ensure the build process is secure and functions correctly.
 package main
 
 import (

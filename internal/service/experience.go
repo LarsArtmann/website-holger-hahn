@@ -1,9 +1,11 @@
+// Package service provides business logic and application services for the portfolio website.
+// It contains experience management services that handle professional experience data,
+// achievements, metrics tracking, and comprehensive career history operations.
 package service
 
 import (
 	"context"
 	"fmt"
-	"strings"
 	"time"
 
 	"holger-hahn-website/internal/domain"
@@ -12,39 +14,65 @@ import (
 
 // ExperienceService handles business logic for experiences.
 type ExperienceService struct {
-	repo     repository.ExperienceRepository
-	techRepo repository.TechnologyRepository
+	repo         repository.ExperienceRepository
+	techRepo     repository.TechnologyRepository
+	validator    *CompoundValidator
+	errorHandler *StandardServiceErrorHandlers
 }
 
 // NewExperienceService creates a new experience service.
 func NewExperienceService(repo repository.ExperienceRepository, techRepo repository.TechnologyRepository) *ExperienceService {
+	if repo == nil {
+		panic("experience repository cannot be nil")
+	}
+	if techRepo == nil {
+		panic("technology repository cannot be nil")
+	}
+	
 	return &ExperienceService{
-		repo:     repo,
-		techRepo: techRepo,
+		repo:         repo,
+		techRepo:     techRepo,
+		validator:    NewCompoundValidator(),
+		errorHandler: NewStandardServiceErrorHandlers("ExperienceService"),
 	}
 }
 
 // CreateExperience creates a new experience with validation.
 func (s *ExperienceService) CreateExperience(ctx context.Context, req CreateExperienceRequest) (*domain.Experience, error) {
-	// Normalize input
-	req.CompanyName = strings.TrimSpace(req.CompanyName)
-	req.Position = strings.TrimSpace(req.Position)
-	req.Location = strings.TrimSpace(req.Location)
-
-	if req.CompanyName == "" {
-		return nil, domain.ErrInvalidInput("company name cannot be empty")
+	// Validate and normalize company name
+	normalizedCompanyName, err := NewStringField("company name", req.CompanyName).Required().MinLength(2).MaxLength(100).Validate()
+	if err != nil {
+		return nil, err
 	}
 
-	if req.Position == "" {
-		return nil, domain.ErrInvalidInput("position cannot be empty")
+	// Validate and normalize position
+	normalizedPosition, err := NewStringField("position", req.Position).Required().MinLength(2).MaxLength(100).Validate()
+	if err != nil {
+		return nil, err
+	}
+
+	// Validate and normalize optional fields
+	normalizedLocation, err := NewStringField("location", req.Location).MaxLength(100).Validate()
+	if err != nil {
+		return nil, err
+	}
+
+	normalizedDescription, err := NewStringField("description", req.Description).MaxLength(2000).Validate()
+	if err != nil {
+		return nil, err
+	}
+
+	// Validate dates
+	if err := s.validator.ValidateStartEndDates(req.StartDate, req.EndDate); err != nil {
+		return nil, err
 	}
 
 	// Create new experience
 	experience := domain.NewExperience(
-		req.CompanyName,
-		req.Position,
-		req.Description,
-		req.Location,
+		normalizedCompanyName,
+		normalizedPosition,
+		normalizedDescription,
+		normalizedLocation,
 		req.StartDate,
 		req.IsRemote,
 	)
@@ -62,7 +90,7 @@ func (s *ExperienceService) CreateExperience(ctx context.Context, req CreateExpe
 	}
 
 	if err := s.repo.Create(ctx, experience); err != nil {
-		return nil, domain.ErrInternal(fmt.Sprintf("failed to create experience: %v", err))
+		return nil, s.errorHandler.Repository.HandleCreateError("experience", err)
 	}
 
 	return experience, nil
@@ -70,13 +98,13 @@ func (s *ExperienceService) CreateExperience(ctx context.Context, req CreateExpe
 
 // GetExperience retrieves an experience by ID.
 func (s *ExperienceService) GetExperience(ctx context.Context, id string) (*domain.Experience, error) {
-	if id == "" {
-		return nil, domain.ErrInvalidInput("experience ID cannot be empty")
+	if err := s.validator.CommonRequestValidator.ValidateID(id, "experience"); err != nil {
+		return nil, err
 	}
 
 	experience, err := s.repo.GetByID(ctx, id)
 	if err != nil {
-		return nil, domain.ErrNotFound("experience")
+		return nil, s.errorHandler.Repository.HandleNotFound("experience", id)
 	}
 
 	return experience, nil

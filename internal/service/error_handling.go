@@ -75,6 +75,14 @@ func (e *ErrorHandler) HandleCustomOperation(operationName string, err error) er
 	return domain.ErrInternal(fmt.Sprintf("failed to %s: %v", operationName, err))
 }
 
+// HandleListError standardizes list operation error handling.
+func (e *ErrorHandler) HandleRepositoryListError(entityType string, err error) error {
+	if err == nil {
+		return nil
+	}
+	return domain.ErrInternal(fmt.Sprintf("failed to list %s: %v", entityType, err))
+}
+
 // ServiceErrorContext provides contextual error information.
 type ServiceErrorContext struct {
 	ServiceName string

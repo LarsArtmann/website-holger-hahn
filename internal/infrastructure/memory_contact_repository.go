@@ -1,8 +1,10 @@
+// Package infrastructure provides concrete implementations of external service interfaces.
+// It contains in-memory contact repository implementation for development and testing
+// with thread-safe operations and CRUD functionality for contact management.
 package infrastructure
 
 import (
 	"context"
-	"errors"
 	"fmt"
 	"sort"
 	"sync"
@@ -26,11 +28,11 @@ func NewMemoryContactRepository() *MemoryContactRepository {
 // Save stores a contact submission.
 func (r *MemoryContactRepository) Save(ctx context.Context, contact *domain.Contact) error {
 	if contact == nil {
-		return errors.New("contact cannot be nil")
+		return fmt.Errorf("%w", domain.ErrContactNil)
 	}
 
 	if err := contact.IsValid(); err != nil {
-		return fmt.Errorf("invalid contact: %w", err)
+		return fmt.Errorf("%w: %w", domain.ErrInvalidContact, err)
 	}
 
 	r.mu.Lock()
@@ -46,7 +48,7 @@ func (r *MemoryContactRepository) Save(ctx context.Context, contact *domain.Cont
 // FindByID retrieves a contact by ID.
 func (r *MemoryContactRepository) FindByID(ctx context.Context, id string) (*domain.Contact, error) {
 	if id == "" {
-		return nil, errors.New("id cannot be empty")
+		return nil, fmt.Errorf("%w", domain.ErrIDEmpty)
 	}
 
 	r.mu.RLock()
@@ -54,7 +56,7 @@ func (r *MemoryContactRepository) FindByID(ctx context.Context, id string) (*dom
 
 	contact, exists := r.contacts[id]
 	if !exists {
-		return nil, errors.New("contact not found")
+		return nil, fmt.Errorf("%w", domain.ErrContactNotFound)
 	}
 
 	// Return a copy to avoid external mutations
@@ -104,18 +106,18 @@ func (r *MemoryContactRepository) FindAll(ctx context.Context, status domain.Con
 // Update updates an existing contact.
 func (r *MemoryContactRepository) Update(ctx context.Context, contact *domain.Contact) error {
 	if contact == nil {
-		return errors.New("contact cannot be nil")
+		return fmt.Errorf("%w", domain.ErrContactNil)
 	}
 
 	if err := contact.IsValid(); err != nil {
-		return fmt.Errorf("invalid contact: %w", err)
+		return fmt.Errorf("%w: %w", domain.ErrInvalidContact, err)
 	}
 
 	r.mu.Lock()
 	defer r.mu.Unlock()
 
 	if _, exists := r.contacts[contact.ID]; !exists {
-		return errors.New("contact not found")
+		return fmt.Errorf("%w", domain.ErrContactNotFound)
 	}
 
 	// Create a copy to avoid external mutations
@@ -128,14 +130,14 @@ func (r *MemoryContactRepository) Update(ctx context.Context, contact *domain.Co
 // Delete removes a contact (for GDPR compliance).
 func (r *MemoryContactRepository) Delete(ctx context.Context, id string) error {
 	if id == "" {
-		return errors.New("id cannot be empty")
+		return fmt.Errorf("%w", domain.ErrIDEmpty)
 	}
 
 	r.mu.Lock()
 	defer r.mu.Unlock()
 
 	if _, exists := r.contacts[id]; !exists {
-		return errors.New("contact not found")
+		return fmt.Errorf("%w", domain.ErrContactNotFound)
 	}
 
 	delete(r.contacts, id)

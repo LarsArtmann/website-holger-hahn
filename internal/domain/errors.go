@@ -87,6 +87,30 @@ func ErrInvalidInput(message string) error {
 	}
 }
 
+// IsValidationError checks if an error is a validation error
+func IsValidationError(err error) bool {
+	if domErr, ok := err.(*DomainError); ok {
+		return domErr.Type == ErrorTypeValidation
+	}
+	return false
+}
+
+// IsNotFoundError checks if an error is a not found error
+func IsNotFoundError(err error) bool {
+	if domErr, ok := err.(*DomainError); ok {
+		return domErr.Type == ErrorTypeNotFound
+	}
+	return false
+}
+
+// IsConflictError checks if an error is a conflict error
+func IsConflictError(err error) bool {
+	if domErr, ok := err.(*DomainError); ok {
+		return domErr.Type == ErrorTypeConflict
+	}
+	return false
+}
+
 // ErrNotFound creates a not found error with context.
 func ErrNotFound(resource string) error {
 	return &DomainError{
@@ -109,30 +133,6 @@ func ErrInternal(message string) error {
 		Type:    ErrorTypeInternal,
 		Message: message,
 	}
-}
-
-// IsValidationError checks if the error is a validation error.
-func IsValidationError(err error) bool {
-	if domainErr, ok := err.(*DomainError); ok {
-		return domainErr.Type == ErrorTypeValidation
-	}
-	return false
-}
-
-// IsNotFoundError checks if the error is a not found error.
-func IsNotFoundError(err error) bool {
-	if domainErr, ok := err.(*DomainError); ok {
-		return domainErr.Type == ErrorTypeNotFound
-	}
-	return false
-}
-
-// IsConflictError checks if the error is a conflict error.
-func IsConflictError(err error) bool {
-	if domainErr, ok := err.(*DomainError); ok {
-		return domainErr.Type == ErrorTypeConflict
-	}
-	return false
 }
 
 // IsInternalError checks if the error is an internal error.

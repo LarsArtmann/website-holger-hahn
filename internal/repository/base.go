@@ -1,3 +1,6 @@
+// Package repository defines data access interfaces and contracts for the portfolio website.
+// It provides base repository functionality, common validation logic, and shared utilities
+// for implementing repository patterns across different storage backends.
 package repository
 
 import (

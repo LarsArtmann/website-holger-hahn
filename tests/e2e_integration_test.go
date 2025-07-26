@@ -1,3 +1,6 @@
+// Package tests provides end-to-end integration tests for the portfolio website.
+// It contains comprehensive tests that verify the complete functionality of the application
+// including HTTP handlers, business logic, and infrastructure integration.
 package tests
 
 import (
@@ -47,7 +50,7 @@ func TestEndToEndContactFlow(t *testing.T) {
 
 	router.POST("/contact", contactHandler.SubmitContactForm)
 	router.GET("/health", func(c *gin.Context) {
-		c.JSON(http.StatusOK, gin.H{"status": "healthy"})
+		c.JSON(constants.HTTPOKStatus, gin.H{"status": "healthy"})
 	})
 
 	// Create test server
@@ -62,7 +65,7 @@ func TestEndToEndContactFlow(t *testing.T) {
 		defer resp.Body.Close()
 
 		if resp.StatusCode != http.StatusOK {
-			t.Errorf("Expected status 200, got %d", resp.StatusCode)
+			t.Errorf("Expected status %d, got %d", constants.HTTPOKStatus, resp.StatusCode)
 		}
 
 		var healthResp map[string]interface{}
@@ -83,7 +86,7 @@ func TestEndToEndContactFlow(t *testing.T) {
 		defer resp.Body.Close()
 
 		if resp.StatusCode != http.StatusOK {
-			t.Errorf("Expected status 200, got %d", resp.StatusCode)
+			t.Errorf("Expected status %d, got %d", constants.HTTPOKStatus, resp.StatusCode)
 		}
 
 		contentType := resp.Header.Get("Content-Type")
@@ -203,7 +206,7 @@ func TestEndToEndContactFlow(t *testing.T) {
 				defer resp.Body.Close()
 
 				if resp.StatusCode != http.StatusBadRequest {
-					t.Errorf("Expected status 400, got %d", resp.StatusCode)
+					t.Errorf("Expected status %d, got %d", constants.HTTPBadRequestStatus, resp.StatusCode)
 				}
 
 				var errorResp map[string]interface{}
@@ -353,11 +356,11 @@ func TestPerformanceBasic(t *testing.T) {
 		defer resp.Body.Close()
 
 		// Homepage should load in under 100ms for local testing
-		if elapsed > 100*time.Millisecond {
+		if elapsed > constants.FastResponseThreshold {
 			t.Logf("Homepage took %v to load (acceptable but monitoring)", elapsed)
 		}
 
-		if elapsed > 500*time.Millisecond {
+		if elapsed > constants.SlowResponseThreshold {
 			t.Errorf("Homepage took too long to load: %v", elapsed)
 		}
 	})
@@ -382,11 +385,11 @@ func TestPerformanceBasic(t *testing.T) {
 		defer resp.Body.Close()
 
 		// Contact form should process in under 200ms for local testing
-		if elapsed > 200*time.Millisecond {
+		if elapsed > constants.AcceptableResponseThreshold {
 			t.Logf("Contact form took %v to process (acceptable but monitoring)", elapsed)
 		}
 
-		if elapsed > 1*time.Second {
+		if elapsed > constants.UnacceptableResponseThreshold {
 			t.Errorf("Contact form took too long to process: %v", elapsed)
 		}
 	})

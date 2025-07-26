@@ -4,7 +4,6 @@
 package domain
 
 import (
-	"errors"
 	"fmt"
 	"regexp"
 	"strings"
@@ -85,11 +84,11 @@ func (c *Contact) IsValid() error {
 func validateName(name string) error {
 	name = strings.TrimSpace(name)
 	if len(name) < 2 {
-		return errors.New("name must be at least 2 characters long")
+		return ErrNameTooShort
 	}
 
 	if len(name) > 100 {
-		return errors.New("name must be less than 100 characters")
+		return ErrNameTooLong
 	}
 
 	return nil
@@ -98,12 +97,12 @@ func validateName(name string) error {
 func validateEmail(email string) error {
 	email = strings.TrimSpace(email)
 	if email == "" {
-		return errors.New("email is required")
+		return ErrEmailRequired
 	}
 
 	emailRegex := regexp.MustCompile(`^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$`)
 	if !emailRegex.MatchString(email) {
-		return errors.New("invalid email format")
+		return ErrEmailInvalidFormat
 	}
 
 	return nil
@@ -112,11 +111,11 @@ func validateEmail(email string) error {
 func validateProject(project string) error {
 	project = strings.TrimSpace(project)
 	if len(project) < 10 {
-		return errors.New("project description must be at least 10 characters long")
+		return ErrProjectTooShort
 	}
 
 	if len(project) > 2000 {
-		return errors.New("project description must be less than 2000 characters")
+		return ErrProjectTooLong
 	}
 
 	return nil

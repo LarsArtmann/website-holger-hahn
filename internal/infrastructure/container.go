@@ -1,3 +1,6 @@
+// Package infrastructure provides concrete implementations of external service interfaces.
+// It handles dependency injection setup, logging, email services, and other infrastructure
+// concerns that support the application and domain layers.
 package infrastructure
 
 import (

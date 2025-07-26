@@ -1,3 +1,6 @@
+// Package repository defines data access interfaces and contracts for the portfolio website.
+// It provides experience repository interface with methods for managing professional
+// experience data, filtering by company, date ranges, and technology associations.
 package repository
 
 import (
@@ -8,21 +11,9 @@ import (
 )
 
 // ExperienceRepository defines the interface for experience data access.
+// It extends the base Filterable interface with experience-specific operations.
 type ExperienceRepository interface {
-	// Create creates a new experience
-	Create(ctx context.Context, experience *domain.Experience) error
-
-	// GetByID retrieves an experience by its ID
-	GetByID(ctx context.Context, id string) (*domain.Experience, error)
-
-	// List retrieves all experiences with optional filtering and sorting
-	List(ctx context.Context, filter ExperienceFilter) ([]*domain.Experience, error)
-
-	// Update updates an existing experience
-	Update(ctx context.Context, experience *domain.Experience) error
-
-	// Delete removes an experience by ID
-	Delete(ctx context.Context, id string) error
+	Filterable[*domain.Experience, ExperienceFilter]
 
 	// GetCurrent retrieves current experiences (where end_date is null)
 	GetCurrent(ctx context.Context) ([]*domain.Experience, error)

@@ -52,7 +52,9 @@
       "Bash(./scripts/quick-status.sh:*)",
       "WebFetch(domain:seeklogo.com)",
       "Bash(./main build)",
-      "Bash(./main)"
+      "Bash(./main)",
+      "WebFetch(domain:www.hal-privatbank.com)",
+      "Bash(pre-commit:*)"
     ]
   },
   "enableAllProjectMcpServers": true,
