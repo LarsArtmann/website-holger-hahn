@@ -1,3 +1,6 @@
+// Package domain provides core business domain entities and value objects for the portfolio website.
+// It defines professional experience entities with quantified achievements and business metrics
+// to showcase career progression and measurable impact across different roles.
 package domain
 
 import (
@@ -32,11 +35,11 @@ type Achievement struct {
 
 // Metrics represents quantified business impact metrics for achievements.
 type Metrics struct {
-	TestCoverage     *CoverageMetric     `json:"test_coverage,omitempty"`
-	DeploymentTime   *TimeMetric         `json:"deployment_time,omitempty"`
-	SystemReliability *ReliabilityMetric `json:"system_reliability,omitempty"`
-	Productivity     *ProductivityMetric `json:"productivity,omitempty"`
-	CostSavings      *CostMetric         `json:"cost_savings,omitempty"`
+	TestCoverage      *CoverageMetric     `json:"test_coverage,omitempty"`
+	DeploymentTime    *TimeMetric         `json:"deployment_time,omitempty"`
+	SystemReliability *ReliabilityMetric  `json:"system_reliability,omitempty"`
+	Productivity      *ProductivityMetric `json:"productivity,omitempty"`
+	CostSavings       *CostMetric         `json:"cost_savings,omitempty"`
 }
 
 // CoverageMetric represents test coverage improvements.
@@ -57,29 +60,29 @@ type TimeMetric struct {
 
 // ReliabilityMetric represents system reliability improvements.
 type ReliabilityMetric struct {
-	Uptime       float64 `json:"uptime"`       // Uptime percentage
-	MTBF         int     `json:"mtbf"`         // Mean time between failures (hours)
-	MTTR         int     `json:"mttr"`         // Mean time to recovery (minutes)
-	Incidents    int     `json:"incidents"`    // Number of incidents per month
-	Unit         string  `json:"unit"`         // e.g., "%", "hours", "minutes"
+	Uptime    float64 `json:"uptime"`    // Uptime percentage
+	MTBF      int     `json:"mtbf"`      // Mean time between failures (hours)
+	MTTR      int     `json:"mttr"`      // Mean time to recovery (minutes)
+	Incidents int     `json:"incidents"` // Number of incidents per month
+	Unit      string  `json:"unit"`      // e.g., "%", "hours", "minutes"
 }
 
 // ProductivityMetric represents team productivity improvements.
 type ProductivityMetric struct {
 	DeploymentFrequency int     `json:"deployment_frequency"` // Deployments per week
-	LeadTime           int     `json:"lead_time"`             // Lead time in hours
-	CycleTime          int     `json:"cycle_time"`            // Cycle time in hours
-	Efficiency         float64 `json:"efficiency"`            // Team efficiency improvement %
-	Unit               string  `json:"unit"`                  // e.g., "per week", "hours", "%"
+	LeadTime            int     `json:"lead_time"`            // Lead time in hours
+	CycleTime           int     `json:"cycle_time"`           // Cycle time in hours
+	Efficiency          float64 `json:"efficiency"`           // Team efficiency improvement %
+	Unit                string  `json:"unit"`                 // e.g., "per week", "hours", "%"
 }
 
 // CostMetric represents cost savings and ROI.
 type CostMetric struct {
-	MonthlySavings   float64 `json:"monthly_savings"`   // Monthly cost savings in USD
-	AnnualSavings    float64 `json:"annual_savings"`    // Annual cost savings in USD
-	ROI              float64 `json:"roi"`               // Return on investment %
-	PaybackPeriod    int     `json:"payback_period"`    // Payback period in months
-	Unit             string  `json:"unit"`              // e.g., "USD", "%", "months"
+	MonthlySavings float64 `json:"monthly_savings"` // Monthly cost savings in USD
+	AnnualSavings  float64 `json:"annual_savings"`  // Annual cost savings in USD
+	ROI            float64 `json:"roi"`             // Return on investment %
+	PaybackPeriod  int     `json:"payback_period"`  // Payback period in months
+	Unit           string  `json:"unit"`            // e.g., "USD", "%", "months"
 }
 
 // NewExperience creates a new Experience instance.
@@ -158,10 +161,10 @@ func NewReliabilityMetric(uptime float64, mtbf, mttr, incidents int) *Reliabilit
 func NewProductivityMetric(deploymentFreq, leadTime, cycleTime int, efficiency float64) *ProductivityMetric {
 	return &ProductivityMetric{
 		DeploymentFrequency: deploymentFreq,
-		LeadTime:           leadTime,
-		CycleTime:          cycleTime,
-		Efficiency:         efficiency,
-		Unit:               "per week",
+		LeadTime:            leadTime,
+		CycleTime:           cycleTime,
+		Efficiency:          efficiency,
+		Unit:                "per week",
 	}
 }
 
@@ -222,6 +225,11 @@ func (e *Experience) AddTechnology(tech Technology) {
 func (e *Experience) AddAchievement(achievement Achievement) {
 	e.Achievements = append(e.Achievements, achievement)
 	e.UpdatedAt = time.Now()
+}
+
+// GetID returns the experience ID.
+func (e *Experience) GetID() string {
+	return e.ID
 }
 
 // SetEndDate sets the end date for the experience.

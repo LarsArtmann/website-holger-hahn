@@ -1,3 +1,6 @@
+// Package domain provides core business domain entities and value objects for the portfolio website.
+// It defines the fundamental data structures and business rules for services, technologies,
+// experiences, and their relationships without any external dependencies.
 package domain
 
 import (
@@ -166,6 +169,11 @@ func (s *Service) SetPricing(pricing PricingInfo) error {
 func (s *Service) Activate() {
 	s.IsActive = true
 	s.UpdatedAt = time.Now()
+}
+
+// GetID returns the service ID.
+func (s *Service) GetID() string {
+	return s.ID
 }
 
 // Deactivate deactivates the service.

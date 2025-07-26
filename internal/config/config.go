@@ -96,7 +96,7 @@ func (s *ServerConfig) IsProduction() bool {
 
 // Validate validates the configuration.
 func (c *Config) Validate() error {
-	if c.Server.Port <= 0 || c.Server.Port > 65535 {
+	if c.Server.Port < constants.MinValidPort || c.Server.Port > constants.MaxValidPort {
 		return fmt.Errorf("%w: %d", ErrInvalidServerPort, c.Server.Port)
 	}
 

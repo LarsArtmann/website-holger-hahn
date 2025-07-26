@@ -4,6 +4,34 @@ import (
 	"context"
 )
 
+// Entity represents a generic entity interface
+type Entity interface {
+	GetID() string
+}
+
+// Repository defines common repository operations for any entity type
+type Repository[T Entity] interface {
+	// Create creates a new entity
+	Create(ctx context.Context, entity T) error
+
+	// GetByID retrieves an entity by its ID
+	GetByID(ctx context.Context, id string) (T, error)
+
+	// Update updates an existing entity
+	Update(ctx context.Context, entity T) error
+
+	// Delete removes an entity by ID
+	Delete(ctx context.Context, id string) error
+}
+
+// Filterable defines interface for entities that support filtering
+type Filterable[T Entity, F any] interface {
+	Repository[T]
+	
+	// List retrieves entities with optional filtering
+	List(ctx context.Context, filter F) ([]T, error)
+}
+
 // UnitOfWork defines a unit of work pattern for transactional operations.
 type UnitOfWork interface {
 	// Begin starts a new transaction

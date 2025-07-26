@@ -7,6 +7,8 @@ import (
 	"strings"
 	"testing"
 
+	"holger-hahn-website/internal/constants"
+
 	"github.com/gin-gonic/gin"
 )
 
@@ -34,7 +36,7 @@ func TestContactLinksPresent(t *testing.T) {
 	</footer>
 </body>
 </html>`
-		c.Data(http.StatusOK, "text/html; charset=utf-8", []byte(html))
+		c.Data(constants.HTTPOKStatus, "text/html; charset=utf-8", []byte(html))
 	})
 
 	// Create test server
@@ -48,8 +50,8 @@ func TestContactLinksPresent(t *testing.T) {
 	}
 	defer resp.Body.Close()
 
-	if resp.StatusCode != http.StatusOK {
-		t.Errorf("Expected status 200, got %d", resp.StatusCode)
+	if resp.StatusCode != constants.HTTPOKStatus {
+		t.Errorf("Expected status %d, got %d", constants.HTTPOKStatus, resp.StatusCode)
 	}
 
 	body, err := io.ReadAll(resp.Body)
@@ -119,7 +121,7 @@ func TestContactLinksReachable(t *testing.T) {
 		{
 			name:        "LinkedIn Profile",
 			url:         "https://www.linkedin.com/in/holger-hahn-1b258ba3/",
-			expectCode:  200,
+			expectCode:  constants.HTTPOKStatus,
 			description: "LinkedIn profile should be reachable",
 		},
 	}
@@ -141,7 +143,7 @@ func TestContactLinksReachable(t *testing.T) {
 			defer resp.Body.Close()
 
 			// LinkedIn typically returns 200 or redirects (3xx), both are acceptable
-			if resp.StatusCode >= 200 && resp.StatusCode < 400 {
+			if resp.StatusCode >= constants.HTTPSuccessRangeStart && resp.StatusCode < constants.HTTPClientErrorRangeStart {
 				t.Logf("PASS: %s - URL %s returned status %d", tc.description, tc.url, resp.StatusCode)
 			} else {
 				t.Errorf("FAIL: %s - URL %s returned unexpected status %d", tc.description, tc.url, resp.StatusCode)

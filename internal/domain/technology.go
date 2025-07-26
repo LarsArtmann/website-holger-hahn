@@ -1,3 +1,6 @@
+// Package domain provides core business domain entities and value objects for the portfolio website.
+// It defines the fundamental data structures and business rules for technologies, proficiency levels,
+// and validation logic without any external dependencies.
 package domain
 
 import (
@@ -69,6 +72,11 @@ func (t *Technology) Validate() error {
 	}
 
 	return nil
+}
+
+// GetID returns the technology ID.
+func (t *Technology) GetID() string {
+	return t.ID
 }
 
 // UpdateLevel updates the proficiency level.

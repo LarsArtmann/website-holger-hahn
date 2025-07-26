@@ -1221,6 +1221,119 @@ templ MetricsGrid(metrics *domain.Metrics) {
 	</div>
 }
 
+// QuantifiedAchievements displays key achievements with quantified metrics
+templ QuantifiedAchievements() {
+	<div class="modern-card">
+		<h3 class="subsection-title component-margin-medium">Quantified Business Impact</h3>
+		<div class="space-y-8">
+			<!-- Test Coverage Achievement -->
+			<div class="achievement-card">
+				<div class="flex items-start gap-4 mb-4">
+					<div class="w-8 h-8 bg-green-100 border border-green-300 flex items-center justify-center flex-shrink-0">
+						<svg class="w-4 h-4 text-green-600" fill="currentColor" viewBox="0 0 20 20">
+							<path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+						</svg>
+					</div>
+					<div class="flex-1">
+						<h4 class="font-semibold text-primary component-margin-tiny">Test Coverage: 70% → 95%</h4>
+						<p class="text-secondary text-spacing-comfortable mb-3">Implemented comprehensive test automation strategy across critical financial systems</p>
+						<div class="bg-gray-100 rounded-full h-2 mb-2">
+							<div class="bg-gradient-to-r from-blue-500 to-green-500 h-2 rounded-full" style="width: 95%"></div>
+						</div>
+						<div class="flex justify-between text-xs text-gray-500">
+							<span>0%</span>
+							<span class="font-medium text-green-600">+25% improvement</span>
+							<span>100%</span>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- Deployment Time Achievement -->
+			<div class="achievement-card">
+				<div class="flex items-start gap-4 mb-4">
+					<div class="w-8 h-8 bg-blue-100 border border-blue-300 flex items-center justify-center flex-shrink-0">
+						<svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+						</svg>
+					</div>
+					<div class="flex-1">
+						<h4 class="font-semibold text-primary component-margin-tiny">Deployment Time: 2h → 15min</h4>
+						<p class="text-secondary text-spacing-comfortable mb-3">Automated CI/CD pipeline with zero-downtime deployments</p>
+						<div class="grid grid-cols-2 gap-3">
+							<div class="bg-red-50 p-3 rounded border border-red-200 text-center">
+								<div class="text-sm text-red-600">Before</div>
+								<div class="text-xl font-bold text-red-700">2.0h</div>
+							</div>
+							<div class="bg-green-50 p-3 rounded border border-green-200 text-center">
+								<div class="text-sm text-green-600">After</div>
+								<div class="text-xl font-bold text-green-700">15min</div>
+							</div>
+						</div>
+						<div class="mt-2 text-center text-sm font-medium text-blue-600">87% faster deployments</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- System Reliability Achievement -->
+			<div class="achievement-card">
+				<div class="flex items-start gap-4 mb-4">
+					<div class="w-8 h-8 bg-purple-100 border border-purple-300 flex items-center justify-center flex-shrink-0">
+						<svg class="w-4 h-4 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+						</svg>
+					</div>
+					<div class="flex-1">
+						<h4 class="font-semibold text-primary component-margin-tiny">System Reliability: 99.9% Uptime</h4>
+						<p class="text-secondary text-spacing-comfortable mb-3">Implemented robust monitoring and automated failover mechanisms</p>
+						<div class="grid grid-cols-3 gap-2 text-center">
+							<div class="bg-green-50 p-2 rounded border border-green-200">
+								<div class="text-xs text-green-600">Uptime</div>
+								<div class="text-lg font-bold text-green-700">99.9%</div>
+							</div>
+							<div class="bg-blue-50 p-2 rounded border border-blue-200">
+								<div class="text-xs text-blue-600">MTTR</div>
+								<div class="text-lg font-bold text-blue-700">5min</div>
+							</div>
+							<div class="bg-purple-50 p-2 rounded border border-purple-200">
+								<div class="text-xs text-purple-600">Incidents</div>
+								<div class="text-lg font-bold text-purple-700">2/mo</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- Cost Savings Achievement -->
+			<div class="achievement-card border-2 border-green-200 bg-gradient-to-r from-green-50 to-emerald-50">
+				<div class="flex items-start gap-4 mb-4">
+					<div class="w-8 h-8 bg-green-500 flex items-center justify-center flex-shrink-0 rounded">
+						<svg class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+							<path d="M8.433 7.418c.155-.103.346-.196.567-.267v1.698a2.305 2.305 0 01-.567-.267C8.07 8.34 8 8.114 8 8c0-.114.07-.34.433-.582zM11 12.849v-1.698c.22.071.412.164.567.267.364.243.433.468.433.582 0 .114-.07.34-.433.582a2.305 2.305 0 01-.567.267z"/>
+							<path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-13a1 1 0 10-2 0v.092a4.535 4.535 0 00-1.676.662C6.602 6.234 6 7.009 6 8c0 .99.602 1.765 1.324 2.246.48.32 1.054.545 1.676.662v1.941c-.391-.127-.68-.317-.843-.504a1 1 0 10-1.51 1.31c.562.649 1.413 1.076 2.353 1.253V15a1 1 0 102 0v-.092a4.535 4.535 0 001.676-.662C13.398 13.766 14 12.991 14 12c0-.99-.602-1.765-1.324-2.246A4.535 4.535 0 0011 9.092V7.151c.391.127.68.317.843.504a1 1 0 101.51-1.31c-.562-.649-1.413-1.076-2.353-1.253V5z" clip-rule="evenodd"/>
+						</svg>
+					</div>
+					<div class="flex-1">
+						<h4 class="font-semibold text-primary component-margin-tiny">Financial Impact: $2.4M Annual Savings</h4>
+						<p class="text-secondary text-spacing-comfortable mb-3">Generated significant cost reductions through automation and process improvements</p>
+						<div class="grid grid-cols-2 gap-3">
+							<div class="bg-white p-3 rounded border border-green-100 text-center">
+								<div class="text-sm text-green-600">Annual Savings</div>
+								<div class="text-2xl font-bold text-green-700">$2.4M</div>
+							</div>
+							<div class="bg-white p-3 rounded border border-green-100 text-center">
+								<div class="text-sm text-green-600">ROI</div>
+								<div class="text-2xl font-bold text-green-700">300%</div>
+							</div>
+						</div>
+						<div class="mt-2 text-center text-sm font-medium text-green-600">4-month payback period</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+}
+
 templ Footer() {
 	<footer class="bg-gray-900 text-white section-padding">
 		<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

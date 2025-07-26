@@ -1,3 +1,6 @@
+// Package domain provides core business domain entities and value objects for the portfolio website.
+// It defines repository interfaces and service contracts that abstract data persistence
+// and external system interactions following clean architecture principles.
 package domain
 
 import "context"

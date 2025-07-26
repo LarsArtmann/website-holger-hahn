@@ -50,7 +50,9 @@
       "mcp__github__create_issue",
       "Bash(./scripts/monitor-quality.sh:*)",
       "Bash(./scripts/quick-status.sh:*)",
-      "WebFetch(domain:seeklogo.com)"
+      "WebFetch(domain:seeklogo.com)",
+      "Bash(./main build)",
+      "Bash(./main)"
     ]
   },
   "enableAllProjectMcpServers": true,

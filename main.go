@@ -151,7 +151,7 @@ func main() {
 		if shutdownErr := di.Shutdown(); shutdownErr != nil {
 			log.Printf("Error shutting down DI container: %v", shutdownErr)
 		}
-		os.Exit(1)
+		os.Exit(constants.ExitFailure)
 	}
 
 	// Normal shutdown - cleanup DI containers

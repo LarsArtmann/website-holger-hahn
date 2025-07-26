@@ -138,6 +138,9 @@ func (s *ContactService) ListContacts(ctx context.Context, status string, limit,
 }
 
 // DTOs for application layer.
+
+// ContactFormRequest represents the request payload for contact form submissions,
+// containing all required and optional fields with validation rules.
 type ContactFormRequest struct {
 	Name    string `binding:"required,min=2,max=100"   json:"name"`
 	Company string `binding:"max=100"                  json:"company"`
@@ -145,12 +148,16 @@ type ContactFormRequest struct {
 	Project string `binding:"required,min=10,max=2000" json:"project"`
 }
 
+// ContactFormResponse represents the response payload after contact form submission,
+// including success status and relevant messaging for client feedback.
 type ContactFormResponse struct {
 	ID      string `json:"id"`
 	Message string `json:"message"`
 	Success bool   `json:"success"`
 }
 
+// Contact represents the application layer contact entity for API responses,
+// providing a simplified view of contact data for client consumption.
 type Contact struct {
 	SubmittedAt interface{} `json:"submitted_at"`
 	ID          string      `json:"id"`

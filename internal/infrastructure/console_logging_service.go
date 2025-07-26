@@ -70,6 +70,6 @@ func (l *ConsoleLoggingService) logWithLevel(level, message string, err error, f
 		return
 	}
 
-	// Output the structured log
-	fmt.Println(string(jsonBytes))
+	// Output the structured log using log.Printf for consistency
+	log.Printf("%s", string(jsonBytes))
 }

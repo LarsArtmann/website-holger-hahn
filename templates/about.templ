@@ -1,5 +1,7 @@
 package templates
 
+import "holger-hahn-website/internal/domain"
+
 templ About() {
 	<section id="about" class="section-padding bg-surface">
 		<div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -95,44 +97,7 @@ templ About() {
 						</div>
 					</div>
 				</div>
-				<div class="modern-card">
-				<h3 class="subsection-title component-margin-medium">Key Achievements</h3>
-					<div class="space-y-6">
-						<div class="flex items-start gap-4">
-							<div class="w-8 h-8 bg-surface border border-default flex items-center justify-center flex-shrink-0">
-								<svg class="w-4 h-4 text-primary" fill="currentColor" viewBox="0 0 20 20">
-									<path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
-								</svg>
-							</div>
-							<div>
-								<h4 class="font-semibold text-primary component-margin-tiny">Eliminated Operational Risk</h4>
-								<p class="text-secondary text-spacing-comfortable">Replaced Excel-based custody operations with automated Fireblocks solution</p>
-							</div>
-						</div>
-						<div class="flex items-start gap-4">
-							<div class="w-8 h-8 bg-surface border border-default flex items-center justify-center flex-shrink-0">
-								<svg class="w-4 h-4 text-primary" fill="currentColor" viewBox="0 0 20 20">
-									<path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
-								</svg>
-							</div>
-							<div>
-								<h4 class="font-semibold text-primary component-margin-tiny">Production Smart Contracts</h4>
-								<p class="text-secondary text-spacing-comfortable">Built audit-approved smart contracts now operating in production</p>
-							</div>
-						</div>
-						<div class="flex items-start gap-4">
-							<div class="w-8 h-8 bg-surface border border-default flex items-center justify-center flex-shrink-0">
-								<svg class="w-4 h-4 text-primary" fill="currentColor" viewBox="0 0 20 20">
-									<path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
-								</svg>
-							</div>
-							<div>
-								<h4 class="font-semibold text-primary component-margin-tiny">80%+ Test Coverage</h4>
-								<p class="text-secondary text-spacing-comfortable">Improved development culture with comprehensive automated testing</p>
-							</div>
-						</div>
-					</div>
-				</div>
+				@QuantifiedAchievements()
 			</div>
 		</div>
 	</section>

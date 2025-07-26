@@ -94,7 +94,7 @@ func copyFile(cleanSrcPath, cleanDstPath string) error {
 // It validates paths and either creates a directory or copies a file.
 func processFileOrDir(path, src, dst string, info os.FileInfo) error {
 	// Validate source path.
-	cleanPath, err := validatePath(path, src, false)
+	cleanPath, err := security.ValidateFilePath(path, src)
 	if err != nil {
 		return err
 	}
@@ -108,7 +108,7 @@ func processFileOrDir(path, src, dst string, info os.FileInfo) error {
 	dstPath := filepath.Join(dst, relPath)
 
 	// Validate destination path.
-	cleanDstPath, err := validatePath(dstPath, dst, true)
+	cleanDstPath, err := security.ValidateDestinationPath(dstPath, dst)
 	if err != nil {
 		return err
 	}

@@ -5,12 +5,79 @@ package container
 
 import (
 	"context"
+	"fmt"
 	"sync"
 	"time"
 
 	"holger-hahn-website/internal/domain"
 	"holger-hahn-website/internal/repository"
 )
+
+// InMemoryBaseCRUD provides common CRUD operations for in-memory repositories.
+type InMemoryBaseCRUD[T repository.Entity] struct {
+	entities map[string]T
+	mu       sync.RWMutex
+	typeName string
+}
+
+// NewInMemoryBaseCRUD creates a new base CRUD repository.
+func NewInMemoryBaseCRUD[T repository.Entity](typeName string) *InMemoryBaseCRUD[T] {
+	return &InMemoryBaseCRUD[T]{
+		entities: make(map[string]T),
+		typeName: typeName,
+	}
+}
+
+// Create stores a new entity in the in-memory repository.
+func (r *InMemoryBaseCRUD[T]) Create(ctx context.Context, entity T) error {
+	r.mu.Lock()
+	defer r.mu.Unlock()
+	r.entities[entity.GetID()] = entity
+	return nil
+}
+
+// GetByID retrieves an entity by its ID.
+func (r *InMemoryBaseCRUD[T]) GetByID(ctx context.Context, id string) (T, error) {
+	r.mu.RLock()
+	defer r.mu.RUnlock()
+
+	var zero T
+	item, exists := r.entities[id]
+	if !exists {
+		return zero, domain.ErrNotFound(r.typeName)
+	}
+
+	return item, nil
+}
+
+// Update modifies an existing entity in the in-memory repository.
+func (r *InMemoryBaseCRUD[T]) Update(ctx context.Context, entity T) error {
+	r.mu.Lock()
+	defer r.mu.Unlock()
+	r.entities[entity.GetID()] = entity
+	return nil
+}
+
+// Delete removes an entity from the in-memory repository by its ID.
+func (r *InMemoryBaseCRUD[T]) Delete(ctx context.Context, id string) error {
+	r.mu.Lock()
+	defer r.mu.Unlock()
+	delete(r.entities, id)
+	return nil
+}
+
+// GetAll returns all entities in the repository (for filtering operations).
+func (r *InMemoryBaseCRUD[T]) GetAll() map[string]T {
+	r.mu.RLock()
+	defer r.mu.RUnlock()
+	
+	// Return a copy to prevent concurrent access issues
+	result := make(map[string]T, len(r.entities))
+	for k, v := range r.entities {
+		result[k] = v
+	}
+	return result
+}
 
 // InMemoryTechnologyRepository is a simple in-memory implementation for development/testing.
 type InMemoryTechnologyRepository struct {
@@ -162,7 +229,11 @@ func (r *InMemoryExperienceRepository) populateSampleData() {
 		true,
 	)
 	fireblocks.ID = "fireblocks-001"
-	fireblocks.SetEndDate(fireblocksEnd)
+	// Error handling for SetEndDate: In data seeding context, date validation errors
+	// indicate programming errors in test data, which should cause immediate failure
+	if err := fireblocks.SetEndDate(fireblocksEnd); err != nil {
+		panic(fmt.Sprintf("invalid fireblocks end date in test data: %v", err))
+	}
 
 	// Add achievements with quantified metrics
 	testCoverageAchievement := domain.NewAchievementWithMetrics(
@@ -262,14 +333,18 @@ func (r *InMemoryExperienceRepository) populateSampleData() {
 		false,
 	)
 	banking.ID = "banking-001"
-	banking.SetEndDate(bankingEnd)
+	// Error handling for SetEndDate: In data seeding context, date validation errors
+	// indicate programming errors in test data, which should cause immediate failure
+	if err := banking.SetEndDate(bankingEnd); err != nil {
+		panic(fmt.Sprintf("invalid banking end date in test data: %v", err))
+	}
 
 	legacyModernizationAchievement := domain.NewAchievementWithMetrics(
 		"Modernized Legacy Systems with 50% Performance Gain",
 		"Refactored critical payment processing systems to improve reliability and performance",
 		"Reduced transaction processing time and improved customer experience",
 		&domain.Metrics{
-			SystemReliability: domain.NewReliabilityMetric(99.5, 480, 15, 5), // 99.5%, 480h MTBF, 15min MTTR, 5 incidents/month
+			SystemReliability: domain.NewReliabilityMetric(99.5, 480, 15, 5),   // 99.5%, 480h MTBF, 15min MTTR, 5 incidents/month
 			CostSavings:       domain.NewCostMetric(150000, 1800000, 250.0, 6), // $150k monthly, $1.8M annual, 250% ROI, 6 months payback
 		},
 	)

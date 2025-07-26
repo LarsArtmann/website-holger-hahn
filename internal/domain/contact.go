@@ -1,3 +1,6 @@
+// Package domain provides core business domain entities and value objects for the portfolio website.
+// It defines the contact entity with comprehensive validation logic and business rules
+// for handling contact form submissions and contact lifecycle management.
 package domain
 
 import (
