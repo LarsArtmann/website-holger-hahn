@@ -4,11 +4,11 @@
 package container
 
 import (
+	"github.com/samber/do"
+
 	"holger-hahn-website/internal/config"
 	"holger-hahn-website/internal/repository"
 	"holger-hahn-website/internal/service"
-
-	"github.com/samber/do"
 )
 
 // Container wraps the DI container with our application-specific setup.
