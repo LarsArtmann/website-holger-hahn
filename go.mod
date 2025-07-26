@@ -5,6 +5,7 @@ go 1.24.4
 require (
 	github.com/a-h/templ v0.3.920
 	github.com/gin-gonic/gin v1.10.1
+	github.com/mattn/go-sqlite3 v1.14.29
 	github.com/samber/do v1.6.0
 	github.com/samber/lo v1.51.0
 	github.com/samber/mo v1.14.0

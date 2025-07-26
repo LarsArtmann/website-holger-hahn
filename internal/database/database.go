@@ -17,19 +17,19 @@ import (
 type Config struct {
 	// DatabasePath is the path to the SQLite database file
 	DatabasePath string
-	
+
 	// MaxOpenConns is the maximum number of open connections
 	MaxOpenConns int
-	
+
 	// MaxIdleConns is the maximum number of idle connections
 	MaxIdleConns int
-	
+
 	// ConnMaxLifetime is the maximum amount of time a connection may be reused
 	ConnMaxLifetime time.Duration
-	
+
 	// EnableWAL enables Write-Ahead Logging for better concurrency
 	EnableWAL bool
-	
+
 	// BusyTimeout sets how long to wait for locked database
 	BusyTimeout time.Duration
 }
@@ -81,7 +81,7 @@ func NewDatabaseManager(config *Config) (*DatabaseManager, error) {
 	// Test connection
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
-	
+
 	if err := db.PingContext(ctx); err != nil {
 		db.Close()
 		return nil, fmt.Errorf("failed to ping database: %w", err)
@@ -132,7 +132,7 @@ func ensureDirectoryExists(dbPath string) error {
 		return nil // Current directory
 	}
 
-	return os.MkdirAll(dir, 0755)
+	return os.MkdirAll(dir, 0o755)
 }
 
 // DB returns the underlying database connection.
@@ -160,7 +160,7 @@ func (dm *DatabaseManager) WithTx(ctx context.Context, fn func(*Queries) error) 
 	}()
 
 	queries := dm.queries.WithTx(tx)
-	
+
 	if err := fn(queries); err != nil {
 		if rbErr := tx.Rollback(); rbErr != nil {
 			return fmt.Errorf("transaction error: %w, rollback error: %v", err, rbErr)

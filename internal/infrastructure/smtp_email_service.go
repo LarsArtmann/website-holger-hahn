@@ -72,7 +72,7 @@ Please respond within 24 hours.
 		contact.Name,
 		contact.Company,
 		contact.Email,
-		contact.Project,
+		contact.Message,
 		contact.SubmittedAt.Format("2006-01-02 15:04:05 UTC"),
 		contact.ID,
 	)
@@ -106,7 +106,7 @@ Dear %s,
 Thank you for reaching out! I've received your message about your digital asset project.
 
 Here's a summary of your submission:
-- Project: %s
+- Message: %s
 - Submitted: %s
 
 I'll review your requirements and get back to you within 24 hours with next steps.
@@ -120,7 +120,7 @@ This is an automated confirmation. Please don't reply to this email.
 For urgent matters, contact me directly at hello@holger-hahn.net
 `,
 		contact.Name,
-		contact.Project,
+		contact.Message,
 		contact.SubmittedAt.Format("January 2, 2006"),
 	)
 

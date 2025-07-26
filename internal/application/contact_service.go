@@ -79,7 +79,7 @@ func (s *ContactService) SubmitContactForm(ctx context.Context, req ContactFormR
 	}
 
 	// Mark as processed.
-	contact.MarkAsProcessed()
+	contact.MarkAsRead()
 
 	if err := s.contactRepo.Update(ctx, contact); err != nil {
 		s.logger.Error(ctx, "Failed to mark contact as processed", err, map[string]interface{}{
@@ -107,7 +107,7 @@ func (s *ContactService) GetContact(ctx context.Context, id string) (*Contact, e
 		Name:        contact.Name,
 		Company:     contact.Company,
 		Email:       contact.Email,
-		Project:     contact.Project,
+		Project:     contact.Message,
 		Status:      contact.Status,
 		SubmittedAt: contact.SubmittedAt,
 	}, nil
@@ -128,7 +128,7 @@ func (s *ContactService) ListContacts(ctx context.Context, status string, limit,
 			Name:        contact.Name,
 			Company:     contact.Company,
 			Email:       contact.Email,
-			Project:     contact.Project,
+			Project:     contact.Message,
 			Status:      contact.Status,
 			SubmittedAt: contact.SubmittedAt,
 		}

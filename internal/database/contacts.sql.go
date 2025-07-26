@@ -128,8 +128,8 @@ func (q *Queries) GetContactByEmail(ctx context.Context, email string) (Contact,
 }
 
 const ListContacts = `-- name: ListContacts :many
-SELECT id, name, email, company, message, subject, created_at, updated_at, status, source FROM contacts 
-ORDER BY created_at DESC 
+SELECT id, name, email, company, message, subject, created_at, updated_at, status, source FROM contacts
+ORDER BY created_at DESC
 LIMIT ? OFFSET ?
 `
 
@@ -173,9 +173,9 @@ func (q *Queries) ListContacts(ctx context.Context, arg ListContactsParams) ([]C
 }
 
 const ListContactsByStatus = `-- name: ListContactsByStatus :many
-SELECT id, name, email, company, message, subject, created_at, updated_at, status, source FROM contacts 
+SELECT id, name, email, company, message, subject, created_at, updated_at, status, source FROM contacts
 WHERE status = ?
-ORDER BY created_at DESC 
+ORDER BY created_at DESC
 LIMIT ? OFFSET ?
 `
 
@@ -220,7 +220,7 @@ func (q *Queries) ListContactsByStatus(ctx context.Context, arg ListContactsBySt
 }
 
 const UpdateContactStatus = `-- name: UpdateContactStatus :one
-UPDATE contacts 
+UPDATE contacts
 SET status = ?, updated_at = CURRENT_TIMESTAMP
 WHERE id = ?
 RETURNING id, name, email, company, message, subject, created_at, updated_at, status, source

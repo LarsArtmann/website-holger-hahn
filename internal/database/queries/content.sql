@@ -1,16 +1,16 @@
 -- Technologies queries
 -- name: ListTechnologies :many
-SELECT * FROM technologies 
+SELECT * FROM technologies
 WHERE is_active = TRUE
 ORDER BY category, sort_order, name;
 
 -- name: ListTechnologiesByCategory :many
-SELECT * FROM technologies 
+SELECT * FROM technologies
 WHERE category = ? AND is_active = TRUE
 ORDER BY sort_order, name;
 
 -- name: ListTechnologiesByLevel :many
-SELECT * FROM technologies 
+SELECT * FROM technologies
 WHERE proficiency_level = ? AND is_active = TRUE
 ORDER BY category, sort_order, name;
 
@@ -28,8 +28,8 @@ INSERT INTO technologies (
 ) RETURNING *;
 
 -- name: UpdateTechnology :one
-UPDATE technologies 
-SET name = ?, category = ?, proficiency_level = ?, icon_class = ?, color_scheme = ?, 
+UPDATE technologies
+SET name = ?, category = ?, proficiency_level = ?, icon_class = ?, color_scheme = ?,
     description = ?, sort_order = ?, updated_at = CURRENT_TIMESTAMP
 WHERE id = ?
 RETURNING *;
@@ -39,7 +39,7 @@ DELETE FROM technologies WHERE id = ?;
 
 -- Services queries
 -- name: ListServices :many
-SELECT * FROM services 
+SELECT * FROM services
 WHERE is_active = TRUE
 ORDER BY sort_order, title;
 
@@ -54,8 +54,8 @@ INSERT INTO services (
 ) RETURNING *;
 
 -- name: UpdateService :one
-UPDATE services 
-SET title = ?, description = ?, features = ?, icon_svg = ?, 
+UPDATE services
+SET title = ?, description = ?, features = ?, icon_svg = ?,
     color_scheme = ?, sort_order = ?, updated_at = CURRENT_TIMESTAMP
 WHERE id = ?
 RETURNING *;
@@ -65,7 +65,7 @@ DELETE FROM services WHERE id = ?;
 
 -- Experience queries
 -- name: ListExperiences :many
-SELECT * FROM experiences 
+SELECT * FROM experiences
 WHERE is_active = TRUE
 ORDER BY is_current DESC, start_date DESC, sort_order;
 
@@ -73,22 +73,22 @@ ORDER BY is_current DESC, start_date DESC, sort_order;
 SELECT * FROM experiences WHERE id = ?;
 
 -- name: GetCurrentExperience :one
-SELECT * FROM experiences 
+SELECT * FROM experiences
 WHERE is_current = TRUE AND is_active = TRUE
 LIMIT 1;
 
 -- name: CreateExperience :one
 INSERT INTO experiences (
-    company, position, description, achievements, technologies, 
+    company, position, description, achievements, technologies,
     start_date, end_date, is_current, sort_order
 ) VALUES (
     ?, ?, ?, ?, ?, ?, ?, ?, ?
 ) RETURNING *;
 
 -- name: UpdateExperience :one
-UPDATE experiences 
-SET company = ?, position = ?, description = ?, achievements = ?, 
-    technologies = ?, start_date = ?, end_date = ?, is_current = ?, 
+UPDATE experiences
+SET company = ?, position = ?, description = ?, achievements = ?,
+    technologies = ?, start_date = ?, end_date = ?, is_current = ?,
     sort_order = ?, updated_at = CURRENT_TIMESTAMP
 WHERE id = ?
 RETURNING *;

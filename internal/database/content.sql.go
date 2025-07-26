@@ -13,7 +13,7 @@ import (
 
 const CreateExperience = `-- name: CreateExperience :one
 INSERT INTO experiences (
-    company, position, description, achievements, technologies, 
+    company, position, description, achievements, technologies,
     start_date, end_date, is_current, sort_order
 ) VALUES (
     ?, ?, ?, ?, ?, ?, ?, ?, ?
@@ -178,7 +178,7 @@ func (q *Queries) DeleteTechnology(ctx context.Context, id string) error {
 }
 
 const GetCurrentExperience = `-- name: GetCurrentExperience :one
-SELECT id, company, position, description, achievements, technologies, start_date, end_date, is_current, sort_order, is_active, created_at, updated_at FROM experiences 
+SELECT id, company, position, description, achievements, technologies, start_date, end_date, is_current, sort_order, is_active, created_at, updated_at FROM experiences
 WHERE is_current = TRUE AND is_active = TRUE
 LIMIT 1
 `
@@ -298,7 +298,7 @@ func (q *Queries) GetTechnologyByName(ctx context.Context, name string) (Technol
 }
 
 const ListExperiences = `-- name: ListExperiences :many
-SELECT id, company, position, description, achievements, technologies, start_date, end_date, is_current, sort_order, is_active, created_at, updated_at FROM experiences 
+SELECT id, company, position, description, achievements, technologies, start_date, end_date, is_current, sort_order, is_active, created_at, updated_at FROM experiences
 WHERE is_active = TRUE
 ORDER BY is_current DESC, start_date DESC, sort_order
 `
@@ -342,7 +342,7 @@ func (q *Queries) ListExperiences(ctx context.Context) ([]Experience, error) {
 }
 
 const ListServices = `-- name: ListServices :many
-SELECT id, title, description, features, icon_svg, color_scheme, sort_order, is_active, created_at, updated_at FROM services 
+SELECT id, title, description, features, icon_svg, color_scheme, sort_order, is_active, created_at, updated_at FROM services
 WHERE is_active = TRUE
 ORDER BY sort_order, title
 `
@@ -383,7 +383,7 @@ func (q *Queries) ListServices(ctx context.Context) ([]Service, error) {
 }
 
 const ListTechnologies = `-- name: ListTechnologies :many
-SELECT id, name, category, proficiency_level, icon_class, color_scheme, description, sort_order, is_active, created_at, updated_at FROM technologies 
+SELECT id, name, category, proficiency_level, icon_class, color_scheme, description, sort_order, is_active, created_at, updated_at FROM technologies
 WHERE is_active = TRUE
 ORDER BY category, sort_order, name
 `
@@ -425,7 +425,7 @@ func (q *Queries) ListTechnologies(ctx context.Context) ([]Technology, error) {
 }
 
 const ListTechnologiesByCategory = `-- name: ListTechnologiesByCategory :many
-SELECT id, name, category, proficiency_level, icon_class, color_scheme, description, sort_order, is_active, created_at, updated_at FROM technologies 
+SELECT id, name, category, proficiency_level, icon_class, color_scheme, description, sort_order, is_active, created_at, updated_at FROM technologies
 WHERE category = ? AND is_active = TRUE
 ORDER BY sort_order, name
 `
@@ -466,7 +466,7 @@ func (q *Queries) ListTechnologiesByCategory(ctx context.Context, category strin
 }
 
 const ListTechnologiesByLevel = `-- name: ListTechnologiesByLevel :many
-SELECT id, name, category, proficiency_level, icon_class, color_scheme, description, sort_order, is_active, created_at, updated_at FROM technologies 
+SELECT id, name, category, proficiency_level, icon_class, color_scheme, description, sort_order, is_active, created_at, updated_at FROM technologies
 WHERE proficiency_level = ? AND is_active = TRUE
 ORDER BY category, sort_order, name
 `
@@ -507,9 +507,9 @@ func (q *Queries) ListTechnologiesByLevel(ctx context.Context, proficiencyLevel 
 }
 
 const UpdateExperience = `-- name: UpdateExperience :one
-UPDATE experiences 
-SET company = ?, position = ?, description = ?, achievements = ?, 
-    technologies = ?, start_date = ?, end_date = ?, is_current = ?, 
+UPDATE experiences
+SET company = ?, position = ?, description = ?, achievements = ?,
+    technologies = ?, start_date = ?, end_date = ?, is_current = ?,
     sort_order = ?, updated_at = CURRENT_TIMESTAMP
 WHERE id = ?
 RETURNING id, company, position, description, achievements, technologies, start_date, end_date, is_current, sort_order, is_active, created_at, updated_at
@@ -561,8 +561,8 @@ func (q *Queries) UpdateExperience(ctx context.Context, arg UpdateExperiencePara
 }
 
 const UpdateService = `-- name: UpdateService :one
-UPDATE services 
-SET title = ?, description = ?, features = ?, icon_svg = ?, 
+UPDATE services
+SET title = ?, description = ?, features = ?, icon_svg = ?,
     color_scheme = ?, sort_order = ?, updated_at = CURRENT_TIMESTAMP
 WHERE id = ?
 RETURNING id, title, description, features, icon_svg, color_scheme, sort_order, is_active, created_at, updated_at
@@ -605,8 +605,8 @@ func (q *Queries) UpdateService(ctx context.Context, arg UpdateServiceParams) (S
 }
 
 const UpdateTechnology = `-- name: UpdateTechnology :one
-UPDATE technologies 
-SET name = ?, category = ?, proficiency_level = ?, icon_class = ?, color_scheme = ?, 
+UPDATE technologies
+SET name = ?, category = ?, proficiency_level = ?, icon_class = ?, color_scheme = ?,
     description = ?, sort_order = ?, updated_at = CURRENT_TIMESTAMP
 WHERE id = ?
 RETURNING id, name, category, proficiency_level, icon_class, color_scheme, description, sort_order, is_active, created_at, updated_at

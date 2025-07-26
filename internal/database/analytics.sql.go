@@ -54,7 +54,7 @@ func (q *Queries) CreateAnalyticsEvent(ctx context.Context, arg CreateAnalyticsE
 }
 
 const DeleteOldAnalyticsEvents = `-- name: DeleteOldAnalyticsEvents :exec
-DELETE FROM analytics_events 
+DELETE FROM analytics_events
 WHERE created_at < datetime('now', '-90 days')
 `
 
@@ -85,11 +85,11 @@ func (q *Queries) GetAnalyticsEvent(ctx context.Context, id string) (AnalyticsEv
 }
 
 const GetEventCountsByType = `-- name: GetEventCountsByType :many
-SELECT 
+SELECT
     event_type,
     COUNT(*) as event_count,
     DATE(created_at) as date
-FROM analytics_events 
+FROM analytics_events
 WHERE created_at >= datetime('now', '-30 days')
 GROUP BY event_type, DATE(created_at)
 ORDER BY date DESC, event_count DESC
@@ -125,12 +125,12 @@ func (q *Queries) GetEventCountsByType(ctx context.Context) ([]GetEventCountsByT
 }
 
 const GetPageViewStats = `-- name: GetPageViewStats :many
-SELECT 
+SELECT
     page_path,
     COUNT(*) as view_count,
     COUNT(DISTINCT session_id) as unique_visitors,
     DATE(created_at) as date
-FROM analytics_events 
+FROM analytics_events
 WHERE event_type = 'page_view'
     AND created_at >= datetime('now', '-30 days')
 GROUP BY page_path, DATE(created_at)
@@ -173,8 +173,8 @@ func (q *Queries) GetPageViewStats(ctx context.Context) ([]GetPageViewStatsRow, 
 }
 
 const ListAnalyticsEvents = `-- name: ListAnalyticsEvents :many
-SELECT id, event_type, page_path, user_agent, ip_address, session_id, referrer, metadata, created_at FROM analytics_events 
-ORDER BY created_at DESC 
+SELECT id, event_type, page_path, user_agent, ip_address, session_id, referrer, metadata, created_at FROM analytics_events
+ORDER BY created_at DESC
 LIMIT ? OFFSET ?
 `
 
@@ -217,9 +217,9 @@ func (q *Queries) ListAnalyticsEvents(ctx context.Context, arg ListAnalyticsEven
 }
 
 const ListAnalyticsEventsByType = `-- name: ListAnalyticsEventsByType :many
-SELECT id, event_type, page_path, user_agent, ip_address, session_id, referrer, metadata, created_at FROM analytics_events 
+SELECT id, event_type, page_path, user_agent, ip_address, session_id, referrer, metadata, created_at FROM analytics_events
 WHERE event_type = ?
-ORDER BY created_at DESC 
+ORDER BY created_at DESC
 LIMIT ? OFFSET ?
 `
 
