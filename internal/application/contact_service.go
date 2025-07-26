@@ -142,9 +142,9 @@ func (s *ContactService) ListContacts(ctx context.Context, status string, limit,
 // ContactFormRequest represents the request payload for contact form submissions,
 // containing all required and optional fields with validation rules.
 type ContactFormRequest struct {
-	Name    string `binding:"required,min=2,max=100"   json:"name"`
-	Company string `binding:"max=100"                  json:"company"`
-	Email   string `binding:"required,email"           json:"email"`
+	Name    string `binding:"required,min=2,max=100" json:"name"`
+	Company string `binding:"max=100" json:"company"`
+	Email   string `binding:"required,email" json:"email"`
 	Project string `binding:"required,min=10,max=2000" json:"project"`
 }
 

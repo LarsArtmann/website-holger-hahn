@@ -19,7 +19,6 @@ import (
 	"holger-hahn-website/internal/handler"
 	"holger-hahn-website/internal/infrastructure"
 	"holger-hahn-website/internal/service"
-	"holger-hahn-website/templates"
 )
 
 // ContactHandler handles HTTP requests for contact operations.
@@ -73,17 +72,8 @@ func setupRoutes(r *gin.Engine, portfolioHandlers *handler.PortfolioHandlers, co
 	// Serve static files
 	r.Static("/static", "./static")
 
-	// Main portfolio page
-	r.GET("/", func(c *gin.Context) {
-		component := templates.Index()
-
-		c.Header("Content-Type", "text/html")
-
-		if err := component.Render(c.Request.Context(), c.Writer); err != nil {
-			c.JSON(constants.HTTPInternalServerError, gin.H{"error": "Failed to render template"})
-			return
-		}
-	})
+	// Main portfolio page with dynamic data
+	r.GET("/", portfolioHandlers.HomeHandler)
 
 	// Contact form API endpoint
 	r.POST("/contact", contactHandler.SubmitContactForm)
