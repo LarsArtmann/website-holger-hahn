@@ -16,12 +16,12 @@ lint:
     go vet ./...
     @echo "Running golangci-lint with strict configuration..."
     golangci-lint run --config .golangci.yml || echo "golangci-lint not installed, install with: go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest"
-    
+
 # Run architectural linting
 arch-lint:
     @echo "Running architectural linting..."
     go-arch-lint check || echo "go-arch-lint not installed, install with: go install github.com/fe3dback/go-arch-lint@latest"
-    
+
 # Install all linting tools
 install-linters:
     @echo "Installing linting tools..."
@@ -29,11 +29,11 @@ install-linters:
     go install github.com/fe3dback/go-arch-lint@latest
     go install github.com/golangci/dupl@latest
     @echo "All linters installed successfully"
-    
+
 # Run comprehensive linting (all checks)
 lint-all: lint arch-lint find-duplicates
     @echo "All linting checks completed"
-    
+
 # Fix auto-fixable linting issues
 lint-fix:
     @echo "Fixing auto-fixable linting issues..."
@@ -45,18 +45,18 @@ find-duplicates:
     @echo "📁 Analyzing Go files in internal/ directory..."
     dupl -t 60 -v internal/ || echo "❌ dupl not installed, install with: go install github.com/golangci/dupl@latest"
     @echo "✅ Duplicate code analysis completed"
-    
-# Generate detailed HTML report of duplicates  
+
+# Generate detailed HTML report of duplicates
 find-duplicates-html:
     @echo "🔍 Generating HTML duplicate code report..."
     dupl -t 60 -html internal/ > duplicates-report.html || echo "❌ dupl not installed"
     @echo "📊 HTML report generated: duplicates-report.html"
-    
+
 # Find duplicates with strict threshold (15 tokens)
 find-duplicates-strict:
     @echo "🔍 Scanning for duplicate code (strict mode: 15 tokens)..."
     dupl -t 15 -v internal/ || echo "❌ dupl not installed"
-    
+
 # Quick duplicate scan (alias)
 fd: find-duplicates
 
@@ -78,10 +78,10 @@ run:
         just build && ./holger-hahn-website; \
     fi
 
-# Run the server using cmd/server entry point
+# Run the unified server (same as run-dev)
 run-server:
-    @echo "🚀 Starting server (cmd/server/main.go)..."
-    go run cmd/server/main.go
+    @echo "🚀 Starting unified server..."
+    go run .
 
 # Run the development server
 dev:
@@ -97,7 +97,7 @@ test:
 restart:
     @echo "🔄 Restarting development server..."
     @pkill -f "go run" || true
-    @pkill -f "air" || true  
+    @pkill -f "air" || true
     @pkill -f "holger-hahn-website" || true
     @sleep 1
     just dev
@@ -173,6 +173,6 @@ quality-baseline:
     @echo "📊 Establishing quality baseline..."
     @echo "Baseline established on $(date)" >> docs/quality-baseline.log
     just test || echo "Tests failing"
-    just build || echo "Build failing" 
+    just build || echo "Build failing"
     just lint || echo "Linting failing"
     just fd || echo "Duplicates detected"
