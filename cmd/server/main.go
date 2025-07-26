@@ -23,11 +23,6 @@ import (
 func main() {
 	// Initialize DI container.
 	di := container.New()
-	defer func() {
-		if err := di.Shutdown(); err != nil {
-			log.Printf("Error shutting down DI container: %v", err)
-		}
-	}()
 
 	// Get configuration.
 	cfg := container.MustGet[*config.Config](di)
@@ -70,11 +65,16 @@ func main() {
 
 	if err := server.ListenAndServe(); err != nil && !errors.Is(err, http.ErrServerClosed) {
 		log.Printf("Failed to start server: %v", err)
-		// Ensure deferred cleanup runs before exit
+		// Cleanup DI container before exit
 		if shutdownErr := di.Shutdown(); shutdownErr != nil {
 			log.Printf("Error shutting down DI container: %v", shutdownErr)
 		}
 		os.Exit(1)
+	}
+	
+	// Normal shutdown - also cleanup DI container
+	if err := di.Shutdown(); err != nil {
+		log.Printf("Error shutting down DI container: %v", err)
 	}
 }
 
