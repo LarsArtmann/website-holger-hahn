@@ -1,15 +1,87 @@
 package templates
 
+import "fmt"
+import "holger-hahn-website/internal/domain"
+
 templ Experience() {
 	<section id="experience" class="section-padding bg-white">
 		<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 			<div class="text-center component-margin-large">
 				<h2 class="section-title">
-					Proven Track Record
+					Proven Track Record in Financial Services & Digital Assets
 				</h2>
 				<p class="section-subtitle text-spacing-comfortable">
-					15+ years of experience delivering critical infrastructure for regulated financial environments
+					5+ years specializing in blockchain technology for regulated financial institutions including major German banks, stock exchanges, and digital asset custody providers
 				</p>
+				
+				<!-- Financial Services Progression -->
+				<div class="max-w-4xl mx-auto mt-8 bg-gradient-to-r from-blue-50 to-indigo-50 p-6 border-l-4 border-primary">
+					<h3 class="font-semibold text-primary mb-4">Financial Services Industry Expertise Progression</h3>
+					<div class="grid md:grid-cols-3 gap-6 text-sm">
+						<div class="text-center">
+							<div class="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-3">
+								<svg class="w-6 h-6 text-primary" fill="currentColor" viewBox="0 0 20 20">
+									<path d="M4 4a2 2 0 00-2 2v1h16V6a2 2 0 00-2-2H4zM18 9H2v5a2 2 0 002 2h12a2 2 0 002-2V9zM4 13a1 1 0 011-1h1a1 1 0 110 2H5a1 1 0 01-1-1zm5-1a1 1 0 100 2h1a1 1 0 100-2H9z"/>
+								</svg>
+							</div>
+							<h4 class="font-semibold text-gray-800 mb-2">Digital Banking</h4>
+							<p class="text-gray-600">Open Banking platforms, regulatory compliance, payment processing</p>
+						</div>
+						<div class="text-center">
+							<div class="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-3">
+								<svg class="w-6 h-6 text-primary" fill="currentColor" viewBox="0 0 20 20">
+									<path fill-rule="evenodd" d="M10 2L3 7v11a1 1 0 001 1h12a1 1 0 001-1V7l-7-5zM9 18v-6h2v6H9z" clip-rule="evenodd"/>
+								</svg>
+							</div>
+							<h4 class="font-semibold text-gray-800 mb-2">Stock Exchanges</h4>
+							<p class="text-gray-600">Digital asset custody, trading platforms, regulatory compliance</p>
+						</div>
+						<div class="text-center">
+							<div class="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-3">
+								<svg class="w-6 h-6 text-primary" fill="currentColor" viewBox="0 0 20 20">
+									<path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+								</svg>
+							</div>
+							<h4 class="font-semibold text-gray-800 mb-2">Digital Asset Custody</h4>
+							<p class="text-gray-600">Institutional custody, BaFin compliance, risk management</p>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+			<!-- Blockchain/Web3 Expertise Progression -->
+			<div class="max-w-6xl mx-auto mb-16 bg-gray-900 text-white p-8 lg:p-12">
+				<h3 class="section-title text-white text-center mb-8">Blockchain/Web3 Expertise Evolution</h3>
+				<div class="grid lg:grid-cols-4 gap-6">
+					<div class="text-center">
+						<div class="w-16 h-16 bg-white/10 rounded-full flex items-center justify-center mx-auto mb-4">
+							<span class="text-2xl font-bold text-white">2020</span>
+						</div>
+						<h4 class="font-semibold text-white mb-2">Testing Foundation</h4>
+						<p class="text-white/80 text-sm">Built multi-chain testing infrastructure for Stuttgart Stock Exchange custody platform</p>
+					</div>
+					<div class="text-center">
+						<div class="w-16 h-16 bg-white/10 rounded-full flex items-center justify-center mx-auto mb-4">
+							<span class="text-2xl font-bold text-white">2022</span>
+						</div>
+						<h4 class="font-semibold text-white mb-2">Smart Contracts</h4>
+						<p class="text-white/80 text-sm">Developed audit-approved smart contracts and operated Cosmos validators</p>
+					</div>
+					<div class="text-center">
+						<div class="w-16 h-16 bg-white/10 rounded-full flex items-center justify-center mx-auto mb-4">
+							<span class="text-2xl font-bold text-white">2023</span>
+						</div>
+						<h4 class="font-semibold text-white mb-2">Enterprise Integration</h4>
+						<p class="text-white/80 text-sm">Led Fireblocks migration and automated institutional custody operations</p>
+					</div>
+					<div class="text-center">
+						<div class="w-16 h-16 bg-accent-green/20 border-2 border-accent-green rounded-full flex items-center justify-center mx-auto mb-4">
+							<span class="text-2xl font-bold text-accent-green">2024</span>
+						</div>
+						<h4 class="font-semibold text-white mb-2">Industry Leadership</h4>
+						<p class="text-white/80 text-sm">Recognized expert in regulatory-compliant digital asset architecture</p>
+					</div>
+				</div>
 			</div>
 
 			<div class="space-y-12">
@@ -307,6 +379,36 @@ templ Experience() {
 									<li><strong>Platform stability improved</strong> - 99.9% uptime maintained for banking operations</li>
 								</ul>
 							</div>
+							
+							<!-- Client Benefit Section -->
+							<div class="bg-gradient-to-r from-purple-50 to-violet-50 border-l-4 border-primary p-6 mt-6">
+								<h4 class="font-semibold text-primary mb-4 flex items-center">
+									<svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+										<path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+									</svg>
+									What This Means For You:
+								</h4>
+								<div class="grid md:grid-cols-2 gap-6 text-sm">
+									<div>
+										<p class="font-semibold text-gray-800 mb-2">Quality Transformation:</p>
+										<ul class="text-gray-700 space-y-1">
+											<li>• 80% faster bug detection</li>
+											<li>• 70% reduction in production issues</li>
+											<li>• Automated regression testing</li>
+											<li>• Continuous quality assurance</li>
+										</ul>
+									</div>
+									<div>
+										<p class="font-semibold text-gray-800 mb-2">Business Impact:</p>
+										<ul class="text-gray-700 space-y-1">
+											<li>• Accelerated feature delivery</li>
+											<li>• Enhanced customer confidence</li>
+											<li>• Reduced maintenance costs</li>
+											<li>• Scalable testing framework</li>
+										</ul>
+									</div>
+								</div>
+							</div>
 						</div>
 						<div class="flex flex-wrap gap-3 sm:gap-2">
 							<span class="tech-badge">
@@ -366,6 +468,36 @@ templ Experience() {
 									<li><strong>International stakeholder alignment</strong> - Coordinated teams across 15+ countries</li>
 									<li><strong>Enterprise data quality improved</strong> - 40% improvement in business intelligence capabilities</li>
 								</ul>
+							</div>
+							
+							<!-- Client Benefit Section -->
+							<div class="bg-gradient-to-r from-indigo-50 to-blue-50 border-l-4 border-primary p-6 mt-6">
+								<h4 class="font-semibold text-primary mb-4 flex items-center">
+									<svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+										<path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+									</svg>
+									What This Means For You:
+								</h4>
+								<div class="grid md:grid-cols-2 gap-6 text-sm">
+									<div>
+										<p class="font-semibold text-gray-800 mb-2">Enterprise Scalability:</p>
+										<ul class="text-gray-700 space-y-1">
+											<li>• Multi-million unit production capability</li>
+											<li>• Global market penetration strategy</li>
+											<li>• Cross-domain technical integration</li>
+											<li>• International team coordination</li>
+										</ul>
+									</div>
+									<div>
+										<p class="font-semibold text-gray-800 mb-2">Strategic Advantage:</p>
+										<ul class="text-gray-700 space-y-1">
+											<li>• Market-leading product innovation</li>
+											<li>• Enhanced business intelligence</li>
+											<li>• Streamlined stakeholder alignment</li>
+											<li>• Data-driven decision making</li>
+										</ul>
+									</div>
+								</div>
 							</div>
 						</div>
 						<div class="flex flex-wrap gap-3 sm:gap-2">
@@ -907,6 +1039,186 @@ templ Contact() {
 			</div>
 		</div>
 	</section>
+}
+
+// MetricProgressBar displays a visual progress bar for metrics
+templ MetricProgressBar(label string, before, after float64, unit string) {
+	<div class="metric-progress-bar mb-4">
+		<div class="flex justify-between items-center mb-2">
+			<span class="text-sm font-medium text-gray-700">{ label }</span>
+			<div class="text-right">
+				<span class="text-lg font-bold text-green-600">{ fmt.Sprintf("%.1f%s", after, unit) }</span>
+				<span class="text-sm text-gray-500 ml-2">({ fmt.Sprintf("%.1f%s", before, unit) } → { fmt.Sprintf("%.1f%s", after, unit) })</span>
+			</div>
+		</div>
+		<div class="relative">
+			<div class="bg-gray-200 rounded-full h-3">
+				<div 
+					class="bg-gradient-to-r from-blue-500 to-green-500 h-3 rounded-full transition-all duration-1000 ease-out"
+					style={ fmt.Sprintf("width: %.1f%%", (after/100)*100) }
+				></div>
+			</div>
+			<div class="flex justify-between text-xs text-gray-500 mt-1">
+				<span>0{ unit }</span>
+				<span>100{ unit }</span>
+			</div>
+		</div>
+		<div class="text-sm text-green-600 font-medium mt-2">
+			↗ +{ fmt.Sprintf("%.1f", after-before) }{ unit } improvement
+		</div>
+	</div>
+}
+
+// TimeMetricCard displays time-based improvements
+templ TimeMetricCard(title string, beforeMinutes, afterMinutes int, unit string) {
+	<div class="bg-white p-6 rounded-lg border border-gray-200 shadow-sm">
+		<h4 class="font-semibold text-gray-900 mb-3">{ title }</h4>
+		<div class="grid grid-cols-2 gap-4">
+			<div class="bg-red-50 p-4 rounded-lg border border-red-200">
+				<div class="text-sm text-red-600 font-medium mb-1">Before</div>
+				<div class="text-2xl font-bold text-red-700">
+					if unit == "minutes" && beforeMinutes >= 60 {
+						{ fmt.Sprintf("%.1fh", float64(beforeMinutes)/60) }
+					} else {
+						{ fmt.Sprintf("%d%s", beforeMinutes, unit) }
+					}
+				</div>
+			</div>
+			<div class="bg-green-50 p-4 rounded-lg border border-green-200">
+				<div class="text-sm text-green-600 font-medium mb-1">After</div>
+				<div class="text-2xl font-bold text-green-700">
+					if unit == "minutes" && afterMinutes >= 60 {
+						{ fmt.Sprintf("%.1fh", float64(afterMinutes)/60) }
+					} else {
+						{ fmt.Sprintf("%d%s", afterMinutes, unit) }
+					}
+				</div>
+			</div>
+		</div>
+		<div class="mt-4 p-3 bg-blue-50 rounded-lg border border-blue-200">
+			<div class="text-sm text-blue-600 font-medium">Improvement</div>
+			<div class="text-xl font-bold text-blue-700">
+				{ fmt.Sprintf("%.0f%% faster", float64(beforeMinutes-afterMinutes)/float64(beforeMinutes)*100) }
+			</div>
+		</div>
+	</div>
+}
+
+// SystemReliabilityCard displays reliability metrics
+templ SystemReliabilityCard(uptime float64, mtbf, mttr, incidents int) {
+	<div class="bg-white p-6 rounded-lg border border-gray-200 shadow-sm">
+		<h4 class="font-semibold text-gray-900 mb-4">System Reliability</h4>
+		<div class="grid grid-cols-2 gap-4">
+			<div class="bg-green-50 p-4 rounded-lg border border-green-200">
+				<div class="text-sm text-green-600 font-medium mb-1">Uptime</div>
+				<div class="text-3xl font-bold text-green-700">{ fmt.Sprintf("%.1f%%", uptime) }</div>
+			</div>
+			<div class="bg-blue-50 p-4 rounded-lg border border-blue-200">
+				<div class="text-sm text-blue-600 font-medium mb-1">MTBF</div>
+				<div class="text-3xl font-bold text-blue-700">{ fmt.Sprintf("%dh", mtbf) }</div>
+			</div>
+			<div class="bg-orange-50 p-4 rounded-lg border border-orange-200">
+				<div class="text-sm text-orange-600 font-medium mb-1">MTTR</div>
+				<div class="text-3xl font-bold text-orange-700">{ fmt.Sprintf("%dm", mttr) }</div>
+			</div>
+			<div class="bg-purple-50 p-4 rounded-lg border border-purple-200">
+				<div class="text-sm text-purple-600 font-medium mb-1">Incidents/Month</div>
+				<div class="text-3xl font-bold text-purple-700">{ fmt.Sprintf("%d", incidents) }</div>
+			</div>
+		</div>
+	</div>
+}
+
+// ProductivityMetricCard displays team productivity improvements
+templ ProductivityMetricCard(deploymentFreq, leadTime, cycleTime int, efficiency float64) {
+	<div class="bg-white p-6 rounded-lg border border-gray-200 shadow-sm">
+		<h4 class="font-semibold text-gray-900 mb-4">Team Productivity</h4>
+		<div class="space-y-4">
+			<div class="flex justify-between items-center">
+				<span class="text-sm text-gray-600">Deployments/Week</span>
+				<span class="text-lg font-bold text-blue-600">{ fmt.Sprintf("%d", deploymentFreq) }</span>
+			</div>
+			<div class="flex justify-between items-center">
+				<span class="text-sm text-gray-600">Lead Time</span>
+				<span class="text-lg font-bold text-orange-600">{ fmt.Sprintf("%dh", leadTime) }</span>
+			</div>
+			<div class="flex justify-between items-center">
+				<span class="text-sm text-gray-600">Cycle Time</span>
+				<span class="text-lg font-bold text-purple-600">{ fmt.Sprintf("%dh", cycleTime) }</span>
+			</div>
+			<div class="pt-3 border-t border-gray-200">
+				<div class="flex justify-between items-center">
+					<span class="text-sm text-gray-600">Efficiency Improvement</span>
+					<span class="text-xl font-bold text-green-600">+{ fmt.Sprintf("%.0f%%", efficiency) }</span>
+				</div>
+			</div>
+		</div>
+	</div>
+}
+
+// CostSavingsCard displays financial impact metrics
+templ CostSavingsCard(monthlySavings, annualSavings, roi float64, paybackPeriod int) {
+	<div class="bg-gradient-to-br from-green-50 to-emerald-50 p-6 rounded-lg border border-green-200 shadow-sm">
+		<h4 class="font-semibold text-gray-900 mb-4">Financial Impact</h4>
+		<div class="grid grid-cols-2 gap-4">
+			<div class="bg-white p-4 rounded-lg border border-green-100">
+				<div class="text-sm text-green-600 font-medium mb-1">Annual Savings</div>
+				<div class="text-2xl font-bold text-green-700">${ fmt.Sprintf("%.1fM", annualSavings/1000000) }</div>
+			</div>
+			<div class="bg-white p-4 rounded-lg border border-green-100">
+				<div class="text-sm text-green-600 font-medium mb-1">ROI</div>
+				<div class="text-2xl font-bold text-green-700">{ fmt.Sprintf("%.0f%%", roi) }</div>
+			</div>
+		</div>
+		<div class="mt-4 grid grid-cols-2 gap-4">
+			<div class="text-center">
+				<div class="text-sm text-gray-600">Monthly Savings</div>
+				<div class="text-lg font-bold text-gray-800">${ fmt.Sprintf("%.0fK", monthlySavings/1000) }</div>
+			</div>
+			<div class="text-center">
+				<div class="text-sm text-gray-600">Payback Period</div>
+				<div class="text-lg font-bold text-gray-800">{ fmt.Sprintf("%d mo", paybackPeriod) }</div>
+			</div>
+		</div>
+	</div>
+}
+
+// MetricsGrid displays all metrics in a comprehensive grid layout
+templ MetricsGrid(metrics *domain.Metrics) {
+	<div class="mt-8 p-6 bg-gray-50 rounded-lg border border-gray-200">
+		<h4 class="font-semibold text-gray-900 mb-6 flex items-center">
+			<svg class="w-5 h-5 mr-2 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+				<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+			</svg>
+			Quantified Business Impact
+		</h4>
+		
+		<div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+			if metrics.TestCoverage != nil {
+				<div class="col-span-full">
+					@MetricProgressBar("Test Coverage", metrics.TestCoverage.Before, metrics.TestCoverage.After, metrics.TestCoverage.Unit)
+				</div>
+			}
+			
+			if metrics.DeploymentTime != nil {
+				@TimeMetricCard("Deployment Time", metrics.DeploymentTime.Before, metrics.DeploymentTime.After, metrics.DeploymentTime.Unit)
+			}
+			
+			if metrics.SystemReliability != nil {
+				@SystemReliabilityCard(metrics.SystemReliability.Uptime, metrics.SystemReliability.MTBF, metrics.SystemReliability.MTTR, metrics.SystemReliability.Incidents)
+			}
+			
+			if metrics.Productivity != nil {
+				@ProductivityMetricCard(metrics.Productivity.DeploymentFrequency, metrics.Productivity.LeadTime, metrics.Productivity.CycleTime, metrics.Productivity.Efficiency)
+			}
+			
+			if metrics.CostSavings != nil {
+				<div class="col-span-full md:col-span-2 lg:col-span-3">
+					@CostSavingsCard(metrics.CostSavings.MonthlySavings, metrics.CostSavings.AnnualSavings, metrics.CostSavings.ROI, metrics.CostSavings.PaybackPeriod)
+				</div>
+			}
+		</div>
+	</div>
 }
 
 templ Footer() {

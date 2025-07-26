@@ -17,14 +17,14 @@ func TestValidatePath(t *testing.T) {
 
 	// Create a subdirectory
 	subDir := filepath.Join(tmpDir, "subdir")
-	err = os.MkdirAll(subDir, 0755)
+	err = os.MkdirAll(subDir, 0o755)
 	if err != nil {
 		t.Fatal(err)
 	}
 
 	// Create a test file
 	testFile := filepath.Join(subDir, "test.txt")
-	err = os.WriteFile(testFile, []byte("test content"), 0644)
+	err = os.WriteFile(testFile, []byte("test content"), 0o644)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -115,7 +115,7 @@ func TestCopyFile(t *testing.T) {
 	// Create source file
 	srcFile := filepath.Join(srcDir, "test.txt")
 	testContent := "test file content\nwith multiple lines"
-	err = os.WriteFile(srcFile, []byte(testContent), 0644)
+	err = os.WriteFile(srcFile, []byte(testContent), 0o644)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -198,14 +198,14 @@ func TestProcessFileOrDir(t *testing.T) {
 	// Create test file
 	testFile := filepath.Join(srcDir, "test.txt")
 	testContent := "test file content"
-	err = os.WriteFile(testFile, []byte(testContent), 0644)
+	err = os.WriteFile(testFile, []byte(testContent), 0o644)
 	if err != nil {
 		t.Fatal(err)
 	}
 
 	// Create test directory
 	testSubDir := filepath.Join(srcDir, "subdir")
-	err = os.MkdirAll(testSubDir, 0755)
+	err = os.MkdirAll(testSubDir, 0o755)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -307,10 +307,10 @@ func TestCopyDir(t *testing.T) {
 
 	// Create test structure
 	testFiles := map[string]string{
-		"file1.txt":           "content of file1",
-		"file2.txt":           "content of file2",
-		"subdir/file3.txt":    "content of file3",
-		"subdir/file4.txt":    "content of file4",
+		"file1.txt":             "content of file1",
+		"file2.txt":             "content of file2",
+		"subdir/file3.txt":      "content of file3",
+		"subdir/file4.txt":      "content of file4",
 		"subdir/sub2/file5.txt": "content of file5",
 	}
 
@@ -318,13 +318,13 @@ func TestCopyDir(t *testing.T) {
 	for filePath, content := range testFiles {
 		fullPath := filepath.Join(srcDir, filePath)
 		dir := filepath.Dir(fullPath)
-		
-		err = os.MkdirAll(dir, 0755)
+
+		err = os.MkdirAll(dir, 0o755)
 		if err != nil {
 			t.Fatal(err)
 		}
-		
-		err = os.WriteFile(fullPath, []byte(content), 0644)
+
+		err = os.WriteFile(fullPath, []byte(content), 0o644)
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -332,7 +332,7 @@ func TestCopyDir(t *testing.T) {
 
 	// Create empty directory
 	emptyDir := filepath.Join(srcDir, "emptydir")
-	err = os.MkdirAll(emptyDir, 0755)
+	err = os.MkdirAll(emptyDir, 0o755)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -389,7 +389,7 @@ func TestCopyDir(t *testing.T) {
 					}
 
 					if string(dstContent) != expectedContent {
-						t.Errorf("file content mismatch for %s. Expected %q, got %q", 
+						t.Errorf("file content mismatch for %s. Expected %q, got %q",
 							filePath, expectedContent, string(dstContent))
 					}
 				}

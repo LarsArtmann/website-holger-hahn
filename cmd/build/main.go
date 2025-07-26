@@ -5,22 +5,13 @@ package main
 
 import (
 	"context"
-	"errors"
 	"log"
 	"os"
 	"path/filepath"
-	"strings"
 
 	"holger-hahn-website/internal/constants"
+	"holger-hahn-website/internal/security"
 	"holger-hahn-website/templates"
-)
-
-// Static error variables to avoid dynamic error creation.
-var (
-	// ErrPathTraversal indicates a path traversal attempt was detected.
-	ErrPathTraversal = errors.New("path traversal attempt detected")
-	// ErrDestinationPathTraversal indicates a destination path traversal attempt was detected.
-	ErrDestinationPathTraversal = errors.New("destination path traversal attempt detected")
 )
 
 func main() {
@@ -69,32 +60,6 @@ func main() {
 	}
 
 	log.Printf("Build completed! Files generated in public/ directory")
-}
-
-// validatePath validates that a path is safe and within the expected base directory.
-// It returns the cleaned absolute path if validation succeeds.
-func validatePath(path, basePath string, isDestination bool) (string, error) {
-	// Clean and get absolute path to prevent path traversal.
-	cleanPath, err := filepath.Abs(filepath.Clean(path))
-	if err != nil {
-		return "", err
-	}
-
-	// Get clean base path for validation.
-	cleanBasePath, err := filepath.Abs(filepath.Clean(basePath))
-	if err != nil {
-		return "", err
-	}
-
-	// Ensure the path is within the base directory (prevent directory traversal).
-	if !strings.HasPrefix(cleanPath, cleanBasePath) {
-		if isDestination {
-			return "", ErrDestinationPathTraversal
-		}
-		return "", ErrPathTraversal
-	}
-
-	return cleanPath, nil
 }
 
 // copyFile copies a single file from cleanSrcPath to cleanDstPath.
