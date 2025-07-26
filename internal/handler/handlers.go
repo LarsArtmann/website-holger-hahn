@@ -5,6 +5,7 @@ package handler
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/gin-gonic/gin"
 
@@ -34,25 +35,27 @@ func NewPortfolioHandlers(
 	}
 }
 
-// HomeHandler renders the main portfolio page.
+// HomeHandler renders the main portfolio page with graceful error handling.
 func (h *PortfolioHandlers) HomeHandler(c *gin.Context) {
-	ctx := context.Background()
+	ctx := c.Request.Context()
 
-	// Get current experiences
+	// Get current experiences with fallback on error
 	experiences, err := h.experienceService.GetCurrentExperiences(ctx)
 	if err != nil {
-		c.JSON(constants.HTTPInternalServerError, gin.H{"error": domain.ErrLoadExperiences.Error()})
-		return
+		// Log error for debugging but continue with empty data
+		gin.DefaultWriter.Write([]byte(fmt.Sprintf("Warning: Failed to load experiences: %v\n", err)))
+		experiences = []*domain.Experience{} // Fallback to empty slice
 	}
 
-	// Get active services
+	// Get active services with fallback on error
 	services, err := h.portfolioService.GetActiveServices(ctx)
 	if err != nil {
-		c.JSON(constants.HTTPInternalServerError, gin.H{"error": domain.ErrLoadServices.Error()})
-		return
+		// Log error for debugging but continue with empty data
+		gin.DefaultWriter.Write([]byte(fmt.Sprintf("Warning: Failed to load services: %v\n", err)))
+		services = []*domain.Service{} // Fallback to empty slice
 	}
 
-	// Get technologies (example: showing expert level technologies)
+	// Get technologies with fallback on error
 	expertLevel := "expert"
 	techFilter := service.TechnologyFilter{
 		OrderBy:  &[]string{"name"}[0],
@@ -61,8 +64,9 @@ func (h *PortfolioHandlers) HomeHandler(c *gin.Context) {
 
 	technologies, err := h.technologyService.ListTechnologies(ctx, techFilter)
 	if err != nil {
-		c.JSON(constants.HTTPInternalServerError, gin.H{"error": domain.ErrLoadTechnologies.Error()})
-		return
+		// Log error for debugging but continue with empty data
+		gin.DefaultWriter.Write([]byte(fmt.Sprintf("Warning: Failed to load technologies: %v\n", err)))
+		technologies = []*domain.Technology{} // Fallback to empty slice
 	}
 
 	// Filter for expert technologies for the front page
@@ -81,12 +85,14 @@ func (h *PortfolioHandlers) HomeHandler(c *gin.Context) {
 		Technologies: expertTechnologies,
 	}
 
-	// Render template with dynamic data
+	// Render template with dynamic data (even if some data failed to load)
 	component := templates.IndexWithData(experiences)
 
 	c.Header("Content-Type", "text/html")
 
 	if err := component.Render(c.Request.Context(), c.Writer); err != nil {
+		// Template rendering failure is a critical error that should return HTTP error
+		gin.DefaultWriter.Write([]byte(fmt.Sprintf("Error: Failed to render template: %v\n", err)))
 		c.JSON(constants.HTTPInternalServerError, gin.H{"error": domain.ErrRenderTemplate.Error()})
 		return
 	}
