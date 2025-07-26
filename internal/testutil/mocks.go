@@ -469,7 +469,7 @@ func (m *MockServiceRepository) GetByName(ctx context.Context, name string) (*do
 }
 
 func (m *MockServiceRepository) GetActive(ctx context.Context) ([]*domain.Service, error) {
-	m.callLog = append(m.callLog, "GetActive()")
+	m.callLog = append(m.callLog, "GetActiveServices()")
 	if m.errorMode {
 		return nil, errors.New(m.errorMsg)
 	}
