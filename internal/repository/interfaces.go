@@ -27,7 +27,7 @@ type Repository[T Entity] interface {
 // Filterable defines interface for entities that support filtering
 type Filterable[T Entity, F any] interface {
 	Repository[T]
-	
+
 	// List retrieves entities with optional filtering
 	List(ctx context.Context, filter F) ([]T, error)
 }

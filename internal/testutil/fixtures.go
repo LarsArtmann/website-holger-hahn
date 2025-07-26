@@ -184,30 +184,30 @@ func (f *ExperienceFixtures) ExperiencesList() []*domain.Experience {
 func (f *ExperienceFixtures) ExperienceWithTechnologies() *domain.Experience {
 	exp := f.ValidExperience()
 	techFixtures := NewTechnologyFixtures()
-	
+
 	// Add some technologies
 	exp.AddTechnology(*techFixtures.TechnologiesList()[0]) // Go
 	exp.AddTechnology(*techFixtures.TechnologiesList()[1]) // TypeScript
 	exp.AddTechnology(*techFixtures.TechnologiesList()[3]) // Docker
-	
+
 	return exp
 }
 
 // ExperienceWithAchievements returns an experience with achievements
 func (f *ExperienceFixtures) ExperienceWithAchievements() *domain.Experience {
 	exp := f.ValidExperience()
-	
+
 	// Add achievements with metrics
 	testCoverage := domain.NewTestCoverageMetric(45.0, 85.0)
 	deploymentTime := domain.NewDeploymentTimeMetric(120, 15)
 	reliability := domain.NewReliabilityMetric(99.5, 720, 5, 2)
-	
+
 	metrics1 := &domain.Metrics{
 		TestCoverage:      testCoverage,
 		DeploymentTime:    deploymentTime,
 		SystemReliability: reliability,
 	}
-	
+
 	achievement1 := domain.NewAchievementWithMetrics(
 		"Improved Test Coverage",
 		"Implemented comprehensive testing strategy",
@@ -215,15 +215,15 @@ func (f *ExperienceFixtures) ExperienceWithAchievements() *domain.Experience {
 		metrics1,
 	)
 	achievement1.ID = "ach-001"
-	
+
 	productivity := domain.NewProductivityMetric(5, 48, 24, 30.0)
 	costSavings := domain.NewCostMetric(5000, 60000, 250.0, 6)
-	
+
 	metrics2 := &domain.Metrics{
 		Productivity: productivity,
 		CostSavings:  costSavings,
 	}
-	
+
 	achievement2 := domain.NewAchievementWithMetrics(
 		"Automated Deployment Pipeline",
 		"Built CI/CD pipeline with automated testing",
@@ -231,10 +231,10 @@ func (f *ExperienceFixtures) ExperienceWithAchievements() *domain.Experience {
 		metrics2,
 	)
 	achievement2.ID = "ach-002"
-	
+
 	exp.AddAchievement(*achievement1)
 	exp.AddAchievement(*achievement2)
-	
+
 	return exp
 }
 

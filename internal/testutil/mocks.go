@@ -86,7 +86,7 @@ func (m *MockTechnologyRepository) List(ctx context.Context, filter repository.T
 	if m.errorMode {
 		return nil, fmt.Errorf(m.errorMsg)
 	}
-	
+
 	var result []*domain.Technology
 	for _, tech := range m.technologies {
 		// Apply filters
@@ -98,7 +98,7 @@ func (m *MockTechnologyRepository) List(ctx context.Context, filter repository.T
 		}
 		result = append(result, tech)
 	}
-	
+
 	// Apply pagination
 	if filter.Offset != nil && filter.Limit != nil {
 		offset := *filter.Offset
@@ -112,7 +112,7 @@ func (m *MockTechnologyRepository) List(ctx context.Context, filter repository.T
 		}
 		result = result[offset:end]
 	}
-	
+
 	return result, nil
 }
 
@@ -139,7 +139,7 @@ func (m *MockTechnologyRepository) GetByCategory(ctx context.Context, category s
 	if m.errorMode {
 		return nil, fmt.Errorf(m.errorMsg)
 	}
-	
+
 	var result []*domain.Technology
 	for _, tech := range m.technologies {
 		if tech.Category == category {
@@ -154,7 +154,7 @@ func (m *MockTechnologyRepository) GetByLevel(ctx context.Context, level domain.
 	if m.errorMode {
 		return nil, fmt.Errorf(m.errorMsg)
 	}
-	
+
 	var result []*domain.Technology
 	for _, tech := range m.technologies {
 		if tech.Level == level {
@@ -229,7 +229,7 @@ func (m *MockExperienceRepository) List(ctx context.Context, filter repository.E
 	if m.errorMode {
 		return nil, fmt.Errorf(m.errorMsg)
 	}
-	
+
 	var result []*domain.Experience
 	for _, exp := range m.experiences {
 		// Apply filters
@@ -247,7 +247,7 @@ func (m *MockExperienceRepository) List(ctx context.Context, filter repository.E
 		}
 		result = append(result, exp)
 	}
-	
+
 	// Apply pagination
 	if filter.Offset != nil && filter.Limit != nil {
 		offset := *filter.Offset
@@ -261,7 +261,7 @@ func (m *MockExperienceRepository) List(ctx context.Context, filter repository.E
 		}
 		result = result[offset:end]
 	}
-	
+
 	return result, nil
 }
 
@@ -288,7 +288,7 @@ func (m *MockExperienceRepository) GetCurrent(ctx context.Context) ([]*domain.Ex
 	if m.errorMode {
 		return nil, fmt.Errorf(m.errorMsg)
 	}
-	
+
 	var result []*domain.Experience
 	for _, exp := range m.experiences {
 		if exp.IsCurrent() {
@@ -303,7 +303,7 @@ func (m *MockExperienceRepository) GetByCompany(ctx context.Context, companyName
 	if m.errorMode {
 		return nil, fmt.Errorf(m.errorMsg)
 	}
-	
+
 	var result []*domain.Experience
 	for _, exp := range m.experiences {
 		if exp.CompanyName == companyName {

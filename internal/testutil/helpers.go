@@ -159,18 +159,18 @@ func AssertInternalError(t *testing.T, err error) {
 // WithEnv temporarily sets environment variables for testing
 func WithEnv(t *testing.T, env map[string]string, test func()) {
 	t.Helper()
-	
+
 	// Store original values
 	original := make(map[string]string)
 	for key := range env {
 		original[key] = os.Getenv(key)
 	}
-	
+
 	// Set test values
 	for key, value := range env {
 		os.Setenv(key, value)
 	}
-	
+
 	// Restore original values after test
 	defer func() {
 		for key, value := range original {
@@ -181,7 +181,7 @@ func WithEnv(t *testing.T, env map[string]string, test func()) {
 			}
 		}
 	}()
-	
+
 	test()
 }
 
@@ -196,7 +196,7 @@ func TestContext(t *testing.T) context.Context {
 // MockTime sets a fixed time for testing
 func MockTime(t *testing.T, mockTime time.Time) func() {
 	t.Helper()
-	
+
 	// This is a simple approach - in a real app you might use dependency injection
 	// for time.Now() or a time interface
 	return func() {
@@ -207,10 +207,10 @@ func MockTime(t *testing.T, mockTime time.Time) func() {
 // AssertEventuallyTrue retries a condition with backoff until it's true or timeout
 func AssertEventuallyTrue(t *testing.T, condition func() bool, timeout time.Duration, message string) {
 	t.Helper()
-	
+
 	deadline := time.Now().Add(timeout)
 	interval := 10 * time.Millisecond
-	
+
 	for time.Now().Before(deadline) {
 		if condition() {
 			return
@@ -221,7 +221,7 @@ func AssertEventuallyTrue(t *testing.T, condition func() bool, timeout time.Dura
 			interval = 100 * time.Millisecond
 		}
 	}
-	
+
 	t.Fatalf("Condition never became true within %v: %s", timeout, message)
 }
 

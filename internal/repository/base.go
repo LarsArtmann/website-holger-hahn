@@ -51,15 +51,15 @@ func (b *BaseRepository[T]) ValidateFilter(ctx context.Context, filter FilterVal
 	if filter.Limit != nil && *filter.Limit < 0 {
 		return domain.ErrInvalidInput("limit cannot be negative")
 	}
-	
+
 	if filter.Offset != nil && *filter.Offset < 0 {
 		return domain.ErrInvalidInput("offset cannot be negative")
 	}
-	
+
 	if filter.Limit != nil && *filter.Limit > 1000 {
 		return domain.ErrInvalidInput("limit cannot exceed 1000")
 	}
-	
+
 	return nil
 }
 

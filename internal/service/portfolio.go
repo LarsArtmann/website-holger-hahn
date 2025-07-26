@@ -1,3 +1,6 @@
+// Package service provides business logic and application services for the portfolio website.
+// It contains domain services that coordinate business operations, enforce business rules,
+// and orchestrate interactions between domain entities and repositories.
 package service
 
 import (

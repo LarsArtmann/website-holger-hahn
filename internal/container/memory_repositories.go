@@ -70,7 +70,7 @@ func (r *InMemoryBaseCRUD[T]) Delete(ctx context.Context, id string) error {
 func (r *InMemoryBaseCRUD[T]) GetAll() map[string]T {
 	r.mu.RLock()
 	defer r.mu.RUnlock()
-	
+
 	// Return a copy to prevent concurrent access issues
 	result := make(map[string]T, len(r.entities))
 	for k, v := range r.entities {
@@ -81,38 +81,17 @@ func (r *InMemoryBaseCRUD[T]) GetAll() map[string]T {
 
 // InMemoryTechnologyRepository is a simple in-memory implementation for development/testing.
 type InMemoryTechnologyRepository struct {
-	techs map[string]*domain.Technology
-	mu    sync.RWMutex
+	*InMemoryBaseCRUD[*domain.Technology]
 }
 
 // NewInMemoryTechnologyRepository creates a new in-memory technology repository.
 func NewInMemoryTechnologyRepository() repository.TechnologyRepository {
 	return &InMemoryTechnologyRepository{
-		techs: make(map[string]*domain.Technology),
+		InMemoryBaseCRUD: NewInMemoryBaseCRUD[*domain.Technology]("technology"),
 	}
 }
 
-// Create stores a new technology in the in-memory repository.
-func (r *InMemoryTechnologyRepository) Create(ctx context.Context, technology *domain.Technology) error {
-	r.mu.Lock()
-	defer r.mu.Unlock()
-	r.techs[technology.ID] = technology
-
-	return nil
-}
-
-// GetByID retrieves a technology by its ID.
-func (r *InMemoryTechnologyRepository) GetByID(ctx context.Context, id string) (*domain.Technology, error) {
-	r.mu.RLock()
-	defer r.mu.RUnlock()
-
-	item, exists := r.techs[id]
-	if !exists {
-		return nil, domain.ErrNotFound("technology")
-	}
-
-	return item, nil
-}
+// Note: Create, GetByID, Update, Delete methods are inherited from InMemoryBaseCRUD
 
 // GetByName finds a technology by its name.
 func (r *InMemoryTechnologyRepository) GetByName(ctx context.Context, name string) (*domain.Technology, error) {
