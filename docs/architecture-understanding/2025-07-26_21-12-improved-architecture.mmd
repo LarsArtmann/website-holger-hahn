@@ -1,332 +1,199 @@
-```mermaid
+%% Improved App Architecture - Holger Hahn Website
+%% Shows unified container, database persistence, connected analytics
+%% Clean architecture with proper DDD layers
+%% Created: 2025-07-26 21:12
+
 graph TB
-    %% Improved Application Architecture - Unified, Clean, and Persistent
-
-    subgraph "HTTP Layer"
-        HTTP["`**HTTP Server**
-        *Gin Router + Middleware*
-        - Single Entry Point
-        - Rate Limiting
-        - Analytics Middleware
-        - Static File Serving
-        - Health Monitoring`"]
+    %% External Systems
+    Client[fa:fa-laptop Client Browser]
+    ExternalAPIs[fa:fa-cloud External APIs<br/>Email, Analytics]
+    
+    %% Main Application Layer
+    subgraph "HTTP Server & API Gateway"
+        MainApp[fa:fa-server Main Application<br/>Gin Router + Middleware]
+        ContactHandler[fa:fa-envelope Contact Handler]
+        PortfolioHandlers[fa:fa-briefcase Portfolio Handlers]
+        AnalyticsHandler[fa:fa-chart-line Analytics Handler]
+        HealthHandler[fa:fa-heartbeat Health Check Handler]
     end
-
-    subgraph "Handler Layer - Clean Separation"
-        PH["`**Portfolio Handlers**
-        *Presentation Layer*
-        - Home Page Rendering
-        - Technologies API
-        - Experiences API
-        - Services API
-        - Health & Metrics`"]
-
-        CH["`**Contact Handler**
-        *Presentation Layer*
-        - Form Submission
-        - Validation
-        - Response Building
-        - Rate Limiting`"]
-
-        AH["`**Analytics Handler**
-        *NEW - Metrics Layer*
-        - Event Tracking
-        - Dashboard API
-        - Performance Metrics`"]
+    
+    %% Unified DI Container (Improved)
+    subgraph "Unified DI Container"
+        DIContainer[fa:fa-cogs Enhanced DI Container<br/>Service Registry]
+        ConfigService[fa:fa-gear Config Service<br/>Environment-based]
+        MetricsService[fa:fa-tachometer-alt Metrics Service]
     end
-
-    subgraph "✅ UNIFIED CONTAINER SYSTEM"
-        UC["`**Unified DI Container**
-        *Single Source of Truth*
-        - Configuration Management
-        - Service Registration
-        - Repository Registration
-        - Infrastructure Registration
-        - Lifecycle Management`"]
+    
+    %% Application Services Layer (Enhanced)
+    subgraph "Application Services - Clean Architecture"
+        ContactService[fa:fa-envelope-o Contact Service<br/>Email + Persistence + Events]
+        TechnologyService[fa:fa-code Technology Service<br/>CRUD + Caching]
+        ExperienceService[fa:fa-user-tie Experience Service<br/>CRUD + Analytics]
+        PortfolioService[fa:fa-briefcase Portfolio Service<br/>CRUD + Business Logic]
+        AnalyticsService[fa:fa-chart-bar Analytics Service<br/>Event Processing]
+        CacheService[fa:fa-memory Cache Service<br/>Redis/In-Memory]
     end
-
-    subgraph "Application Layer - Use Cases"
-        subgraph "Portfolio Use Cases"
-            PUC["`**Portfolio Use Cases**
-            *Application Services*
-            - Technology Management
-            - Experience Showcase
-            - Service Portfolio
-            - Content Management`"]
-        end
-
-        subgraph "Contact Use Cases"
-            CUC["`**Contact Use Cases**
-            *Application Services*
-            - Form Processing
-            - Email Workflows
-            - Lead Management
-            - CRM Integration`"]
-        end
-
-        subgraph "Analytics Use Cases"
-            AUC["`**Analytics Use Cases**
-            *NEW - Business Intelligence*
-            - Event Processing
-            - Metrics Aggregation
-            - Performance Tracking
-            - Business Insights`"]
-        end
+    
+    %% Domain Layer (DDD Implementation)
+    subgraph "Domain Layer - DDD"
+        ContactAggregate[fa:fa-id-card Contact Aggregate<br/>Business Rules + Events]
+        TechnologyAggregate[fa:fa-laptop-code Technology Aggregate<br/>Validation + State]
+        ExperienceAggregate[fa:fa-timeline Experience Aggregate<br/>Timeline + Metrics]
+        ServiceAggregate[fa:fa-handshake Service Aggregate<br/>Pricing + Deliverables]
+        DomainEvents[fa:fa-broadcast-tower Domain Events<br/>Event Publishing]
     end
-
-    subgraph "Domain Layer - Business Logic"
-        subgraph "Domain Services"
-            TDS["`**Technology Domain**
-            *Business Logic*
-            - Skill Assessment
-            - Technology Evolution
-            - Expertise Validation`"]
-
-            EDS["`**Experience Domain**
-            *Business Logic*
-            - Career Progression
-            - Achievement Metrics
-            - Impact Calculation`"]
-
-            SDS["`**Service Domain**
-            *Business Logic*
-            - Service Definition
-            - Pricing Strategy
-            - Delivery Planning`"]
-
-            CDS["`**Contact Domain**
-            *Business Logic*
-            - Lead Qualification
-            - Communication Rules
-            - Follow-up Logic`"]
-        end
-
-        subgraph "Domain Events"
-            DE["`**Domain Events**
-            *Event-Driven Architecture*
-            - Contact Submitted
-            - Service Viewed
-            - Technology Updated
-            - Experience Added`"]
+    
+    %% Repository Layer (Unified Database)
+    subgraph "Repository Layer - UNIFIED DATABASE"
+        ContactRepo[fa:fa-database Contact Repository<br/>SQLC + Transactions]
+        TechRepo[fa:fa-database Technology Repository<br/>SQLC + Caching]
+        ExpRepo[fa:fa-database Experience Repository<br/>SQLC + Full Implementation]
+        ServiceRepo[fa:fa-database Service Repository<br/>SQLC + Full Implementation]
+        AnalyticsRepo[fa:fa-database Analytics Repository<br/>Event Storage]
+        UnitOfWork[fa:fa-transaction Unit of Work<br/>Transaction Management]
+    end
+    
+    %% Infrastructure Layer (Enhanced)
+    subgraph "Infrastructure Layer"
+        SMTPService[fa:fa-paper-plane Enhanced SMTP Service<br/>Templates + Retry]
+        StructuredLogger[fa:fa-file-text Structured Logger<br/>JSON + Levels]
+        EventBus[fa:fa-share-alt Event Bus<br/>In-Process Events]
+        CacheProvider[fa:fa-hdd Cache Provider<br/>Redis/Memory]
+        MetricsCollector[fa:fa-chart-area Metrics Collector<br/>Prometheus]
+    end
+    
+    %% Fully Utilized Database System
+    subgraph "Active Database Infrastructure"
+        DatabaseManager[fa:fa-server Database Manager<br/>SQLite + Connection Pool]
+        SQLiteDB[(fa:fa-database SQLite Database<br/>Production Ready)]
+        SQLCQueries[fa:fa-sql SQLC Generated Queries<br/>Type-Safe SQL]
+        MigrationSystem[fa:fa-arrow-up Migration System<br/>Versioned Schema]
+        
+        %% All Database Tables Active
+        subgraph "Active Database Schema"
+            ContactsTable[(fa:fa-table contacts<br/>✅ Active)]
+            TechnologiesTable[(fa:fa-table technologies<br/>✅ Active)]
+            ServicesTable[(fa:fa-table services<br/>✅ Active)]
+            ExperiencesTable[(fa:fa-table experiences<br/>✅ Active)]
+            AnalyticsTable[(fa:fa-table analytics_events<br/>✅ Active)]
         end
     end
-
-    subgraph "Repository Layer - Unified Data Access"
-        subgraph "Database Repositories"
-            TR["`**Technology Repository**
-            *SQLite + SQLC*
-            - CRUD Operations
-            - Category Queries
-            - Skill Level Filtering
-            - Performance Optimized`"]
-
-            ER["`**Experience Repository**
-            *SQLite + SQLC*
-            - Career Timeline
-            - Achievement Tracking
-            - Technology Mapping
-            - Metric Calculations`"]
-
-            SR["`**Service Repository**
-            *SQLite + SQLC*
-            - Service Catalog
-            - Pricing Management
-            - Availability Tracking
-            - Category Organization`"]
-
-            CR["`**Contact Repository**
-            *SQLite + SQLC*
-            - Lead Management
-            - Communication History
-            - Status Tracking
-            - Follow-up Scheduling`"]
-
-            AR["`**Analytics Repository**
-            *SQLite + SQLC*
-            - Event Storage
-            - Metrics Aggregation
-            - Performance Tracking
-            - Insight Generation`"]
-        end
-
-        subgraph "Unit of Work Pattern"
-            UOW["`**Unit of Work**
-            *Transaction Management*
-            - Cross-Repository Transactions
-            - Data Consistency
-            - Rollback Support
-            - Performance Optimization`"]
-        end
+    
+    %% Event-Driven Architecture
+    subgraph "Event-Driven Architecture"
+        CommandBus[fa:fa-terminal Command Bus<br/>CQRS Commands]
+        QueryBus[fa:fa-search Query Bus<br/>CQRS Queries]
+        EventStore[fa:fa-archive Event Store<br/>Domain Events]
+        EventHandlers[fa:fa-cogs Event Handlers<br/>Side Effects]
     end
-
-    subgraph "Infrastructure Layer - External Services"
-        subgraph "Database System"
-            DM["`**Database Manager**
-            *SQLite + Connection Pool*
-            - Connection Management
-            - Transaction Coordination
-            - Migration Support
-            - Health Monitoring
-            - Performance Metrics`"]
-
-            DB[("`**SQLite Database**
-            *Persistent Storage*
-            - ACID Transactions
-            - WAL Mode
-            - Full-Text Search
-            - Backup Support
-            - Analytics Tables`")]
-        end
-
-        subgraph "External Services"
-            ES_SMTP["`**Email Service**
-            *SMTP + Templates*
-            - Transactional Emails
-            - Template Management
-            - Delivery Tracking
-            - Error Handling`"]
-
-            LS["`**Logging Service**
-            *Structured Logging*
-            - Event Correlation
-            - Error Tracking
-            - Performance Monitoring
-            - Alert Management`"]
-
-            CS_CACHE["`**Cache Service**
-            *NEW - Performance*
-            - Response Caching
-            - Database Query Cache
-            - Static Asset Cache
-            - CDN Integration`"]
-        end
-
-        subgraph "Event System"
-            EB["`**Event Bus**
-            *NEW - Event Processing*
-            - Event Publishing
-            - Subscriber Management
-            - Error Handling
-            - Async Processing`"]
-        end
-    end
-
-    subgraph "Template & Asset System"
-        TEMPL["`**Templ Templates**
-        *Server-Side Rendering*
-        - Type-Safe HTML
-        - Component System
-        - Performance Optimized
-        - SEO Friendly`"]
-
-        CSS["`**Optimized CSS**
-        *TailwindCSS + Build*
-        - Purged Styles
-        - Minified Output
-        - Component Classes
-        - Responsive Design`"]
-
-        IMG["`**Asset Pipeline**
-        *Optimized Delivery*
-        - Image Optimization
-        - Lazy Loading
-        - CDN Integration
-        - Format Selection`"]
-    end
-
-    %% Connections - Improved Flow
-    HTTP --> PH
-    HTTP --> CH
-    HTTP --> AH
-
-    PH --> UC
-    CH --> UC
-    AH --> UC
-
-    UC --> PUC
-    UC --> CUC
-    UC --> AUC
-
-    PUC --> TDS
-    PUC --> EDS
-    PUC --> SDS
-    CUC --> CDS
-    AUC --> DE
-
-    TDS --> TR
-    EDS --> ER
-    SDS --> SR
-    CDS --> CR
-    AUC --> AR
-
-    TR --> UOW
-    ER --> UOW
-    SR --> UOW
-    CR --> UOW
-    AR --> UOW
-
-    UOW --> DM
-    DM --> DB
-
-    CUC --> ES_SMTP
-    PUC --> LS
-    CUC --> LS
-    AUC --> LS
-
-    DE --> EB
-    EB --> AUC
-
-    PUC --> CS_CACHE
-    AUC --> CS_CACHE
-
-    PH --> TEMPL
-    HTTP --> CSS
-    HTTP --> IMG
-
-    %% Analytics Flow
-    HTTP -.->|"Event Tracking"| AUC
-    PH -.->|"Page Views"| AUC
-    CH -.->|"Form Events"| AUC
-
+    
+    %% Static Assets (Enhanced)
+    StaticFiles[fa:fa-file-code Static Assets<br/>CSS, JS, Templates, Images]
+    CDN[fa:fa-cloud CDN<br/>Asset Delivery]
+    
+    %% Connection Flows
+    Client -->|HTTPS Requests| MainApp
+    MainApp --> ContactHandler
+    MainApp --> PortfolioHandlers
+    MainApp --> AnalyticsHandler
+    MainApp --> HealthHandler
+    MainApp --> StaticFiles
+    StaticFiles --> CDN
+    
+    %% DI Container Connections (Enhanced)
+    ContactHandler --> DIContainer
+    PortfolioHandlers --> DIContainer
+    AnalyticsHandler --> DIContainer
+    HealthHandler --> DIContainer
+    
+    DIContainer --> ContactService
+    DIContainer --> TechnologyService
+    DIContainer --> ExperienceService
+    DIContainer --> PortfolioService
+    DIContainer --> AnalyticsService
+    DIContainer --> CacheService
+    DIContainer --> ConfigService
+    DIContainer --> MetricsService
+    
+    %% Service to Domain Connections (Clean Architecture)
+    ContactService --> ContactAggregate
+    TechnologyService --> TechnologyAggregate
+    ExperienceService --> ExperienceAggregate
+    PortfolioService --> ServiceAggregate
+    
+    %% Domain Events
+    ContactAggregate --> DomainEvents
+    TechnologyAggregate --> DomainEvents
+    ExperienceAggregate --> DomainEvents
+    ServiceAggregate --> DomainEvents
+    
+    %% Repository Connections (All Database)
+    ContactService --> ContactRepo
+    TechnologyService --> TechRepo
+    ExperienceService --> ExpRepo
+    PortfolioService --> ServiceRepo
+    AnalyticsService --> AnalyticsRepo
+    
+    %% Caching Layer
+    TechnologyService --> CacheService
+    ExperienceService --> CacheService
+    PortfolioService --> CacheService
+    CacheService --> CacheProvider
+    
+    %% Infrastructure Connections
+    ContactService --> SMTPService
+    ContactService --> StructuredLogger
+    AnalyticsService --> EventBus
+    AnalyticsService --> MetricsCollector
+    
+    %% Database Connections (Full Implementation)
+    ContactRepo --> DatabaseManager
+    TechRepo --> DatabaseManager
+    ExpRepo --> DatabaseManager
+    ServiceRepo --> DatabaseManager
+    AnalyticsRepo --> DatabaseManager
+    UnitOfWork --> DatabaseManager
+    
+    DatabaseManager --> SQLiteDB
+    DatabaseManager --> SQLCQueries
+    DatabaseManager --> MigrationSystem
+    
+    %% Active Database Tables
+    SQLCQueries --> ContactsTable
+    SQLCQueries --> TechnologiesTable
+    SQLCQueries --> ServicesTable
+    SQLCQueries --> ExperiencesTable
+    SQLCQueries --> AnalyticsTable
+    
+    %% Event-Driven Connections
+    DomainEvents --> EventBus
+    EventBus --> EventHandlers
+    EventBus --> EventStore
+    ContactService --> CommandBus
+    PortfolioService --> QueryBus
+    
+    %% External Services
+    SMTPService --> ExternalAPIs
+    MetricsCollector --> ExternalAPIs
+    
     %% Styling
-    classDef improved fill:#e8f5e8,stroke:#4caf50,stroke-width:3px
-    classDef new fill:#e3f2fd,stroke:#2196f3,stroke-width:2px
-    classDef unified fill:#fff3e0,stroke:#ff9800,stroke-width:2px
-    classDef infrastructure fill:#f3e5f5,stroke:#9c27b0,stroke-width:2px
-
-    class UC,UOW,DM,DB improved
-    class AH,AUC,AR,EB,CS_CACHE new
-    class PUC,CUC,TDS,EDS,SDS,CDS unified
-    class ES_SMTP,LS,TEMPL,CSS,IMG infrastructure
-
-    %% Annotations with Benefits
-    UC -.->|"Single Source of Truth"| PUC
-    UC -.->|"Consistent Configuration"| CUC
-    UOW -.->|"Data Consistency"| DB
-    DE -.->|"Loose Coupling"| EB
-```
-
-**Improved Architecture Benefits:**
-
-1. **Unified Container**: Single DI container eliminates dual container problems
-2. **Full Database Integration**: SQLite infrastructure actively used for persistence
-3. **Event-Driven Design**: Domain events enable loose coupling and extensibility
-4. **Analytics Integration**: Complete user behavior tracking and business insights
-5. **Performance Optimization**: Caching, connection pooling, and query optimization
-6. **Clean Architecture**: Clear separation of concerns with DDD principles
-
-**Key Improvements:**
-- **Data Persistence**: All data survives restarts and scales
-- **Business Intelligence**: Analytics provide actionable insights
-- **Maintainability**: Clean separation makes changes easier
-- **Performance**: Optimized data access and caching
-- **Scalability**: Event-driven architecture supports growth
-- **Reliability**: Transaction management ensures data consistency
-
-**Architecture Patterns Applied:**
-- **Clean Architecture**: Clear layer separation
-- **Domain-Driven Design**: Business logic in domain layer
-- **Repository Pattern**: Data access abstraction
-- **Unit of Work**: Transaction management
-- **Event-Driven**: Loose coupling via events
-- **Dependency Injection**: IoC container management
+    classDef improved fill:#e8f5e8,stroke:#2e7d32,stroke-width:3px
+    classDef database fill:#e3f2fd,stroke:#1565c0,stroke-width:2px
+    classDef domain fill:#fff3e0,stroke:#ef6c00,stroke-width:2px
+    classDef infrastructure fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px
+    classDef events fill:#ffebee,stroke:#c62828,stroke-width:2px
+    classDef cache fill:#e0f2f1,stroke:#00695c,stroke-width:2px
+    
+    class MainApp,ContactHandler,PortfolioHandlers,AnalyticsHandler,DIContainer improved
+    class ContactRepo,TechRepo,ExpRepo,ServiceRepo,AnalyticsRepo,UnitOfWork,DatabaseManager,SQLCQueries database
+    class ContactAggregate,TechnologyAggregate,ExperienceAggregate,ServiceAggregate,DomainEvents domain
+    class SMTPService,StructuredLogger,EventBus,CacheProvider,MetricsCollector infrastructure
+    class CommandBus,QueryBus,EventStore,EventHandlers events
+    class CacheService,CacheProvider cache
+    
+    %% Success Annotations
+    ContactRepo -->|✅ Persistent Data| ContactsTable
+    TechRepo -->|✅ Persistent Data| TechnologiesTable
+    ExpRepo -->|✅ Persistent Data| ExperiencesTable
+    ServiceRepo -->|✅ Persistent Data| ServicesTable
+    AnalyticsRepo -->|✅ Business Intelligence| AnalyticsTable
