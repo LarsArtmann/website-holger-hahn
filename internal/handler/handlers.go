@@ -81,9 +81,8 @@ func (h *PortfolioHandlers) HomeHandler(c *gin.Context) {
 		Technologies: expertTechnologies,
 	}
 
-	// Render template with data (using existing template for now)
-	// TODO: Create IndexWithData template that accepts portfolioData
-	component := templates.Index()
+	// Render template with dynamic data
+	component := templates.IndexWithData(experiences)
 
 	c.Header("Content-Type", "text/html")
 

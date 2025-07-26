@@ -3,6 +3,67 @@ package templates
 import "fmt"
 import "holger-hahn-website/internal/domain"
 
+// Dynamic Experience template that accepts data
+templ ExperienceWithData(experiences []*domain.Experience) {
+	<section id="experience" class="py-20 bg-bg">
+		<div class="container mx-auto px-6">
+			<div class="text-center mb-16">
+				<h2 class="text-4xl md:text-5xl font-bold text-primary mb-6">Professional Experience</h2>
+				<p class="text-xl text-secondary max-w-3xl mx-auto">5+ years specializing in blockchain technology for regulated financial institutions</p>
+			</div>
+
+			<div class="space-y-12">
+				for _, exp := range experiences {
+					<div class="lg:grid lg:grid-cols-12 lg:gap-8">
+						<div class="lg:col-span-3">
+							<div class="experience-date">
+								{ exp.StartDate.Format("Jan 2006") }
+								if exp.EndDate != nil {
+									{ " - " + exp.EndDate.Format("Jan 2006") }
+								} else {
+									{ " - Present" }
+								}
+							</div>
+							<div class="experience-title">{ exp.Position }</div>
+							<div class="experience-company">{ exp.CompanyName }</div>
+						</div>
+						<div class="lg:col-span-9 mt-4 lg:mt-0">
+							<div class="space-y-6">
+								<div class="prose prose-lg max-w-none">
+									<p class="text-secondary">{ exp.Description }</p>
+								</div>
+
+								if len(exp.Achievements) > 0 {
+									<div class="space-y-4">
+										for _, achievement := range exp.Achievements {
+											<div class="border-l-4 border-accent-blue pl-4">
+												<h4 class="font-semibold text-primary mb-2">{ achievement.Title }</h4>
+												<p class="text-secondary">{ achievement.Description }</p>
+												if achievement.Impact != "" {
+													<p class="text-sm text-accent-green font-medium mt-2">{ achievement.Impact }</p>
+												}
+											</div>
+										}
+									</div>
+								}
+
+								if len(exp.Technologies) > 0 {
+									<div class="flex flex-wrap gap-2 mt-4">
+										for _, tech := range exp.Technologies {
+											<span class="px-3 py-1 bg-accent-blue text-white text-sm rounded-full">{ tech.Name }</span>
+										}
+									</div>
+								}
+							</div>
+						</div>
+					</div>
+				}
+			</div>
+		</div>
+	</section>
+}
+
+// Legacy hardcoded Experience template (to be deprecated)
 templ Experience() {
 	<section id="experience" class="section-padding bg-white">
 		<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -13,7 +74,7 @@ templ Experience() {
 				<p class="section-subtitle text-spacing-comfortable">
 					5+ years specializing in blockchain technology for regulated financial institutions including major German banks, stock exchanges, and digital asset custody providers
 				</p>
-				
+
 				<!-- Financial Services Progression -->
 				<div class="max-w-4xl mx-auto mt-8 bg-gradient-to-r from-blue-50 to-indigo-50 p-6 border-l-4 border-primary">
 					<h3 class="font-semibold text-primary mb-4">Financial Services Industry Expertise Progression</h3>
@@ -48,7 +109,7 @@ templ Experience() {
 					</div>
 				</div>
 			</div>
-			
+
 			<!-- Blockchain/Web3 Expertise Progression -->
 			<div class="max-w-6xl mx-auto mb-16 bg-gray-900 text-white p-8 lg:p-12">
 				<h3 class="section-title text-white text-center mb-8">Blockchain/Web3 Expertise Evolution</h3>
@@ -97,7 +158,7 @@ templ Experience() {
 								<h4 class="font-semibold text-primary mb-2">Challenge: Critical Risk in Manual Digital Asset Operations</h4>
 								<p class="text-secondary mb-3">Hauck Aufhäuser's digital custody platform faced massive operational risks with Excel-based workflows handling €100M+ in client digital assets, creating compliance vulnerabilities under strict BaFin and MiCAR regulations. Manual processes posed existential risks for high-value institutional transactions like the €100M KfW blockchain bond issuance.</p>
 							</div>
-							
+
 							<div class="border-l-4 border-accent-green pl-4">
 								<h4 class="font-semibold text-primary mb-2">Solution: Enterprise-Grade Automation & Infrastructure Migration</h4>
 								<ul class="list-bulleted text-secondary space-y-2">
@@ -107,7 +168,7 @@ templ Experience() {
 									<li>Implemented multi-signature approval workflows and real-time monitoring for €100M+ institutional transactions</li>
 								</ul>
 							</div>
-							
+
 							<div class="border-l-4 border-accent-orange pl-4">
 								<h4 class="font-semibold text-primary mb-2">Results: Eliminated Operational Risk & Enhanced Compliance</h4>
 								<ul class="list-bulleted text-secondary space-y-2">
@@ -117,7 +178,7 @@ templ Experience() {
 									<li><strong>Platform scalability unlocked</strong> - System now supports 10x transaction volume with institutional-grade security</li>
 								</ul>
 							</div>
-							
+
 							<!-- Client Benefit Section -->
 							<div class="bg-gradient-to-r from-blue-50 to-indigo-50 border-l-4 border-primary p-6 mt-6">
 								<h4 class="font-semibold text-primary mb-4 flex items-center">
@@ -185,7 +246,7 @@ templ Experience() {
 								<h4 class="font-semibold text-primary mb-2">Challenge: Bridging Physical Assets with Blockchain Technology</h4>
 								<p class="text-secondary mb-3">Talis needed to create a revolutionary NFT marketplace that could seamlessly connect digital ownership with real-world physical services, requiring bulletproof smart contracts and enterprise-grade infrastructure to handle high-value asset tokenization.</p>
 							</div>
-							
+
 							<div class="border-l-4 border-accent-green pl-4">
 								<h4 class="font-semibold text-primary mb-2">Solution: Full-Stack Blockchain Architecture & Smart Contract Engineering</h4>
 								<ul class="list-bulleted text-secondary space-y-2">
@@ -195,7 +256,7 @@ templ Experience() {
 									<li>Designed tokenomics and minting mechanisms for sustainable marketplace economics</li>
 								</ul>
 							</div>
-							
+
 							<div class="border-l-4 border-accent-orange pl-4">
 								<h4 class="font-semibold text-primary mb-2">Results: Production Marketplace with Proven Asset Bridge</h4>
 								<ul class="list-bulleted text-secondary space-y-2">
@@ -205,7 +266,7 @@ templ Experience() {
 									<li><strong>Revenue-generating marketplace</strong> - Platform generating consistent transaction fees</li>
 								</ul>
 							</div>
-							
+
 							<!-- Client Benefit Section -->
 							<div class="bg-gradient-to-r from-green-50 to-emerald-50 border-l-4 border-accent-green p-6 mt-6">
 								<h4 class="font-semibold text-primary mb-4 flex items-center">
@@ -273,7 +334,7 @@ templ Experience() {
 								<h4 class="font-semibold text-primary mb-2">Challenge: Mission-Critical Testing for €1B+ Digital Asset Custody</h4>
 								<p class="text-secondary mb-3">Stuttgart Stock Exchange Group's blocknox needed bulletproof testing infrastructure for their fiduciary cryptocurrency custody platform serving BISON app and BSDEX exchange users, where any failure could result in massive financial losses and regulatory violations.</p>
 							</div>
-							
+
 							<div class="border-l-4 border-accent-green pl-4">
 								<h4 class="font-semibold text-primary mb-2">Solution: Advanced Multi-Chain Test Automation Platform</h4>
 								<ul class="list-bulleted text-secondary space-y-2">
@@ -283,7 +344,7 @@ templ Experience() {
 									<li>Established continuous testing pipeline for custody operations and wallet management</li>
 								</ul>
 							</div>
-							
+
 							<div class="border-l-4 border-accent-orange pl-4">
 								<h4 class="font-semibold text-primary mb-2">Results: Zero-Downtime Platform with Enterprise Security</h4>
 								<ul class="list-bulleted text-secondary space-y-2">
@@ -293,7 +354,7 @@ templ Experience() {
 									<li><strong>Regulatory compliance ensured</strong> - Met Stuttgart Stock Exchange Group's strict security standards</li>
 								</ul>
 							</div>
-							
+
 							<!-- Client Benefit Section -->
 							<div class="bg-gradient-to-r from-orange-50 to-amber-50 border-l-4 border-accent-orange p-6 mt-6">
 								<h4 class="font-semibold text-primary mb-4 flex items-center">
@@ -361,7 +422,7 @@ templ Experience() {
 								<h4 class="font-semibold text-primary mb-2">Challenge: Ensuring Reliability for Critical Banking Platform</h4>
 								<p class="text-secondary mb-3">C24 Bank's Open Banking platform required bulletproof reliability and stability to serve thousands of customers with secure banking and financial optimization services, demanding comprehensive testing infrastructure to prevent costly downtime.</p>
 							</div>
-							
+
 							<div class="border-l-4 border-accent-green pl-4">
 								<h4 class="font-semibold text-primary mb-2">Solution: Enterprise Test Automation & Quality Framework</h4>
 								<ul class="list-bulleted text-secondary space-y-2">
@@ -371,7 +432,7 @@ templ Experience() {
 									<li>Implemented Domain-Driven Design principles with PHP/Zend framework integration</li>
 								</ul>
 							</div>
-							
+
 							<div class="border-l-4 border-accent-orange pl-4">
 								<h4 class="font-semibold text-primary mb-2">Results: Achieved 80%+ Test Coverage & Zero Critical Failures</h4>
 								<ul class="list-bulleted text-secondary space-y-2">
@@ -381,7 +442,7 @@ templ Experience() {
 									<li><strong>Platform stability improved</strong> - 99.9% uptime maintained for banking operations</li>
 								</ul>
 							</div>
-							
+
 							<!-- Client Benefit Section -->
 							<div class="bg-gradient-to-r from-purple-50 to-violet-50 border-l-4 border-primary p-6 mt-6">
 								<h4 class="font-semibold text-primary mb-4 flex items-center">
@@ -451,7 +512,7 @@ templ Experience() {
 								<h4 class="font-semibold text-primary mb-2">Challenge: Architecting Next-Generation Smart Kitchen Appliance</h4>
 								<p class="text-secondary mb-3">Vorwerk International needed to architect revolutionary new features for the TM6 Thermomix food processor, requiring complex cross-domain integration between hardware, software, data systems, and business stakeholders across multiple international markets.</p>
 							</div>
-							
+
 							<div class="border-l-4 border-accent-green pl-4">
 								<h4 class="font-semibold text-primary mb-2">Solution: Enterprise-Scale Cross-Domain Architecture & Stakeholder Alignment</h4>
 								<ul class="list-bulleted text-secondary space-y-2">
@@ -461,7 +522,7 @@ templ Experience() {
 									<li>Implemented scalable technical infrastructure supporting millions of connected devices worldwide</li>
 								</ul>
 							</div>
-							
+
 							<div class="border-l-4 border-accent-orange pl-4">
 								<h4 class="font-semibold text-primary mb-2">Results: Successful Global Product Launch & Market Leadership</h4>
 								<ul class="list-bulleted text-secondary space-y-2">
@@ -471,7 +532,7 @@ templ Experience() {
 									<li><strong>Enterprise data quality improved</strong> - 40% improvement in business intelligence capabilities</li>
 								</ul>
 							</div>
-							
+
 							<!-- Client Benefit Section -->
 							<div class="bg-gradient-to-r from-indigo-50 to-blue-50 border-l-4 border-primary p-6 mt-6">
 								<h4 class="font-semibold text-primary mb-4 flex items-center">
@@ -563,8 +624,8 @@ templ Education() {
 						<div class="bg-white p-6 border border-default">
 							<div class="flex items-start mb-4">
 								<div class="w-16 h-12 mr-4 flex-shrink-0">
-									<img src="https://www.isaqb.org/wp-content/uploads/2020/05/CPSA-F_CertifiedProfessional_for_SWArchitecture_4c_300.jpg" 
-									alt="iSAQB CPSA-F Certification - Certified Professional for Software Architecture Foundation Level" 
+									<img src="https://www.isaqb.org/wp-content/uploads/2020/05/CPSA-F_CertifiedProfessional_for_SWArchitecture_4c_300.jpg"
+									alt="iSAQB CPSA-F Certification - Certified Professional for Software Architecture Foundation Level"
 									class="w-full h-full object-contain"
 							     loading="lazy"
 							     decoding="async"/>
@@ -628,7 +689,7 @@ templ Contact() {
 					Ready to Transform Your Digital Asset Operations?
 				</h2>
 				<p class="section-subtitle text-white max-w-3xl mx-auto">
-					Let's discuss how I can help your organization navigate the complexities of digital asset custody, 
+					Let's discuss how I can help your organization navigate the complexities of digital asset custody,
 					regulatory compliance, and blockchain integration.
 				</p>
 			</div>
@@ -690,24 +751,24 @@ templ Contact() {
 					<div class="contact-form">
 						<h3 class="subsection-title component-margin-medium">Get Started Today</h3>
 						<p class="text-white/80 mb-4">Use this contact form to reach out about your digital asset project.</p>
-						
+
 						<!-- Success/Error Messages -->
 						<div id="form-message" class="hidden form-message" role="alert" aria-live="polite"></div>
-						
+
 						<form id="contact-form" class="space-y-6" novalidate>
 							<div class="form-group">
 								<label for="name" class="form-label">
 									Name
 									<span class="required-asterisk" aria-label="required">*</span>
 								</label>
-								<input 
-									type="text" 
-									id="name" 
-									name="name" 
-									required 
-									minlength="2" 
-									maxlength="100" 
-									class="form-input" 
+								<input
+									type="text"
+									id="name"
+									name="name"
+									required
+									minlength="2"
+									maxlength="100"
+									class="form-input"
 									placeholder="Your Name"
 									aria-describedby="name-error name-help"
 									autocomplete="name"
@@ -715,33 +776,33 @@ templ Contact() {
 								<div class="field-description" id="name-help">Enter your full name (minimum 2 characters)</div>
 								<div id="name-error" class="field-error hidden" role="alert"></div>
 							</div>
-							
+
 							<div class="form-group">
 								<label for="company" class="form-label">Company</label>
-								<input 
-									type="text" 
-									id="company" 
-									name="company" 
-									maxlength="100" 
-									class="form-input" 
+								<input
+									type="text"
+									id="company"
+									name="company"
+									maxlength="100"
+									class="form-input"
 									placeholder="Your Company"
 									aria-describedby="company-help"
 									autocomplete="organization"
 								/>
 								<div class="field-description" id="company-help">Optional: Your organization or company name</div>
 							</div>
-							
+
 							<div class="form-group">
 								<label for="email" class="form-label">
 									Email Address
 									<span class="required-asterisk" aria-label="required">*</span>
 								</label>
-								<input 
-									type="email" 
-									id="email" 
-									name="email" 
-									required 
-									class="form-input" 
+								<input
+									type="email"
+									id="email"
+									name="email"
+									required
+									class="form-input"
 									placeholder="your@email.com"
 									aria-describedby="email-error email-help"
 									autocomplete="email"
@@ -749,20 +810,20 @@ templ Contact() {
 								<div class="field-description" id="email-help">We'll use this to contact you about your project</div>
 								<div id="email-error" class="field-error hidden" role="alert"></div>
 							</div>
-							
+
 							<div class="form-group">
 								<label for="project" class="form-label">
 									Project Description
 									<span class="required-asterisk" aria-label="required">*</span>
 								</label>
-								<textarea 
-									id="project" 
-									name="project" 
-									rows="5" 
-									required 
-									minlength="10" 
-									maxlength="2000" 
-									class="form-input form-textarea" 
+								<textarea
+									id="project"
+									name="project"
+									rows="5"
+									required
+									minlength="10"
+									maxlength="2000"
+									class="form-input form-textarea"
 									placeholder="Tell me about your digital asset project..."
 									aria-describedby="project-error project-help project-count"
 								></textarea>
@@ -772,10 +833,10 @@ templ Contact() {
 								</div>
 								<div id="project-error" class="field-error hidden" role="alert"></div>
 							</div>
-							
-							<button 
-								type="submit" 
-								id="submit-btn" 
+
+							<button
+								type="submit"
+								id="submit-btn"
 								class="btn-primary w-full py-4 disabled:opacity-50 disabled:cursor-not-allowed"
 								aria-describedby="submit-help"
 							>
@@ -790,7 +851,7 @@ templ Contact() {
 							</button>
 							<div class="field-description text-center" id="submit-help">Your message will be sent securely and we'll respond within 24 hours</div>
 						</form>
-						
+
 						<script>
 							// Professional Contact Form with Validation and Accessibility
 							(function() {
@@ -801,7 +862,7 @@ templ Contact() {
 								const messageDiv = document.getElementById('form-message');
 								const projectTextarea = document.getElementById('project');
 								const projectCount = document.getElementById('project-count');
-								
+
 								// Form validation rules
 								const validationRules = {
 									name: {
@@ -823,19 +884,19 @@ templ Contact() {
 										message: 'Please describe your project (10-2000 characters)'
 									}
 								};
-								
+
 								// Real-time validation function
 								function validateField(field) {
 									const fieldName = field.name;
 									const value = field.value.trim();
 									const rules = validationRules[fieldName];
 									const errorDiv = document.getElementById(`${fieldName}-error`);
-									
+
 									if (!rules) return true;
-									
+
 									let isValid = true;
 									let errorMessage = '';
-									
+
 									// Required field check
 									if (rules.required && !value) {
 										isValid = false;
@@ -855,7 +916,7 @@ templ Contact() {
 										isValid = false;
 										errorMessage = rules.message;
 									}
-									
+
 									// Update UI
 									if (isValid) {
 										field.classList.remove('error');
@@ -873,15 +934,15 @@ templ Contact() {
 											${errorMessage}
 										`;
 									}
-									
+
 									return isValid;
 								}
-								
+
 								// Character counter for project description
 								function updateCharacterCount() {
 									const currentLength = projectTextarea.value.length;
 									projectCount.textContent = `${currentLength} / 2000`;
-									
+
 									if (currentLength > 1800) {
 										projectCount.style.color = 'var(--accent-red)';
 									} else if (currentLength > 1500) {
@@ -890,12 +951,12 @@ templ Contact() {
 										projectCount.style.color = 'var(--text-muted)';
 									}
 								}
-								
+
 								// Show success message
 								function showMessage(message, type) {
 									messageDiv.classList.remove('hidden');
 									messageDiv.className = `form-message ${type}`;
-									
+
 									if (type === 'success') {
 										messageDiv.innerHTML = `
 											<svg class="w-5 h-5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
@@ -911,24 +972,24 @@ templ Contact() {
 											${message}
 										`;
 									}
-									
+
 									// Scroll to message
 									messageDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
 									messageDiv.focus();
 								}
-								
+
 								// Form submission
 								form.addEventListener('submit', async function(e) {
 									e.preventDefault();
-									
+
 									// Clear previous messages
 									messageDiv.classList.add('hidden');
-									
+
 									// Validate all fields
 									const nameValid = validateField(document.getElementById('name'));
 									const emailValid = validateField(document.getElementById('email'));
 									const projectValid = validateField(document.getElementById('project'));
-									
+
 									if (!nameValid || !emailValid || !projectValid) {
 										showMessage('Please correct the errors above before submitting.', 'error');
 										// Focus first invalid field
@@ -938,22 +999,22 @@ templ Contact() {
 										}
 										return;
 									}
-									
+
 									// Show loading state
 									submitBtn.disabled = true;
 									submitBtn.setAttribute('aria-busy', 'true');
 									submitText.classList.add('hidden');
 									submitLoading.classList.remove('hidden');
-									
+
 									try {
 										const formData = new FormData(form);
 										const response = await fetch('/contact', {
 											method: 'POST',
 											body: formData
 										});
-										
+
 										const result = await response.json();
-										
+
 										if (result.success) {
 											showMessage('Thank you! Your message has been sent successfully. We\'ll get back to you within 24 hours.', 'success');
 											form.reset();
@@ -976,7 +1037,7 @@ templ Contact() {
 										submitLoading.classList.add('hidden');
 									}
 								});
-								
+
 								// Real-time validation event listeners
 								['name', 'email', 'project'].forEach(fieldName => {
 									const field = document.getElementById(fieldName);
@@ -990,11 +1051,11 @@ templ Contact() {
 										}
 									});
 								});
-								
+
 								// Character counter
 								projectTextarea.addEventListener('input', updateCharacterCount);
 								updateCharacterCount(); // Initialize counter
-								
+
 								// Keyboard navigation enhancements
 								form.addEventListener('keydown', function(e) {
 									// Submit form with Ctrl/Cmd + Enter
@@ -1003,20 +1064,20 @@ templ Contact() {
 										form.requestSubmit();
 									}
 								});
-								
+
 								// Enhanced focus management
 								form.addEventListener('focusin', function(e) {
 									if (e.target.matches('.form-input')) {
 										e.target.closest('.form-group').classList.add('focused');
 									}
 								});
-								
+
 								form.addEventListener('focusout', function(e) {
 									if (e.target.matches('.form-input')) {
 										e.target.closest('.form-group').classList.remove('focused');
 									}
 								});
-								
+
 							})();
 						</script>
 
@@ -1056,7 +1117,7 @@ templ MetricProgressBar(label string, before, after float64, unit string) {
 		</div>
 		<div class="relative">
 			<div class="bg-gray-200 rounded-full h-3">
-				<div 
+				<div
 					class="bg-gradient-to-r from-blue-500 to-green-500 h-3 rounded-full transition-all duration-1000 ease-out"
 					style={ fmt.Sprintf("width: %.1f%%", (after/100)*100) }
 				></div>
@@ -1195,26 +1256,26 @@ templ MetricsGrid(metrics *domain.Metrics) {
 			</svg>
 			Quantified Business Impact
 		</h4>
-		
+
 		<div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
 			if metrics.TestCoverage != nil {
 				<div class="col-span-full">
 					@MetricProgressBar("Test Coverage", metrics.TestCoverage.Before, metrics.TestCoverage.After, metrics.TestCoverage.Unit)
 				</div>
 			}
-			
+
 			if metrics.DeploymentTime != nil {
 				@TimeMetricCard("Deployment Time", metrics.DeploymentTime.Before, metrics.DeploymentTime.After, metrics.DeploymentTime.Unit)
 			}
-			
+
 			if metrics.SystemReliability != nil {
 				@SystemReliabilityCard(metrics.SystemReliability.Uptime, metrics.SystemReliability.MTBF, metrics.SystemReliability.MTTR, metrics.SystemReliability.Incidents)
 			}
-			
+
 			if metrics.Productivity != nil {
 				@ProductivityMetricCard(metrics.Productivity.DeploymentFrequency, metrics.Productivity.LeadTime, metrics.Productivity.CycleTime, metrics.Productivity.Efficiency)
 			}
-			
+
 			if metrics.CostSavings != nil {
 				<div class="col-span-full md:col-span-2 lg:col-span-3">
 					@CostSavingsCard(metrics.CostSavings.MonthlySavings, metrics.CostSavings.AnnualSavings, metrics.CostSavings.ROI, metrics.CostSavings.PaybackPeriod)
@@ -1344,7 +1405,7 @@ templ Footer() {
 				<div class="md:col-span-2">
 					<h3 class="subsection-title component-margin-small">Holger M. Hahn</h3>
 					<p class="text-gray-300 mb-4 max-w-md">
-						Digital Assets Solutions Architect specializing in regulatory-compliant blockchain solutions 
+						Digital Assets Solutions Architect specializing in regulatory-compliant blockchain solutions
 						{ "for" } financial institutions and enterprises.
 					</p>
 					<div class="flex space-x-4">
