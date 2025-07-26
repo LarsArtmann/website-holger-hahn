@@ -123,7 +123,6 @@ func (r *InMemoryTechnologyRepository) List(ctx context.Context, filter reposito
 	return result, nil
 }
 
-
 // GetByCategory retrieves all technologies belonging to the specified category.
 func (r *InMemoryTechnologyRepository) GetByCategory(ctx context.Context, category string) ([]*domain.Technology, error) {
 	var result []*domain.Technology

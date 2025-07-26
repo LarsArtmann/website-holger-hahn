@@ -1,6 +1,7 @@
 package config
 
 import (
+	"fmt"
 	"os"
 	"testing"
 
@@ -12,19 +13,19 @@ func TestLoadConfig(t *testing.T) {
 	t.Run("LoadConfig with defaults", func(t *testing.T) {
 		// Clear environment variables to test defaults
 		testutil.WithEnv(t, map[string]string{
-			"SERVER_HOST":             "",
-			"SERVER_PORT":             "",
-			"SERVER_READ_TIMEOUT":     "",
-			"SERVER_WRITE_TIMEOUT":    "",
-			"ENVIRONMENT":             "",
-			"DB_TYPE":                 "",
-			"DB_CONNECTION_STRING":    "",
-			"DB_MAX_OPEN_CONNS":       "",
-			"DB_MAX_IDLE_CONNS":       "",
-			"DB_MIGRATIONS_PATH":      "",
-			"LOG_LEVEL":               "",
-			"LOG_FORMAT":              "",
-			"LOG_OUTPUT":              "",
+			"SERVER_HOST":          "",
+			"SERVER_PORT":          "",
+			"SERVER_READ_TIMEOUT":  "",
+			"SERVER_WRITE_TIMEOUT": "",
+			"ENVIRONMENT":          "",
+			"DB_TYPE":              "",
+			"DB_CONNECTION_STRING": "",
+			"DB_MAX_OPEN_CONNS":    "",
+			"DB_MAX_IDLE_CONNS":    "",
+			"DB_MIGRATIONS_PATH":   "",
+			"LOG_LEVEL":            "",
+			"LOG_FORMAT":           "",
+			"LOG_OUTPUT":           "",
 		}, func() {
 			config := LoadConfig()
 
@@ -51,19 +52,19 @@ func TestLoadConfig(t *testing.T) {
 
 	t.Run("LoadConfig with environment variables", func(t *testing.T) {
 		testutil.WithEnv(t, map[string]string{
-			"SERVER_HOST":             "0.0.0.0",
-			"SERVER_PORT":             "3000",
-			"SERVER_READ_TIMEOUT":     "45",
-			"SERVER_WRITE_TIMEOUT":    "60",
-			"ENVIRONMENT":             "production",
-			"DB_TYPE":                 "postgres",
-			"DB_CONNECTION_STRING":    "postgres://user:pass@localhost/db",
-			"DB_MAX_OPEN_CONNS":       "25",
-			"DB_MAX_IDLE_CONNS":       "10",
-			"DB_MIGRATIONS_PATH":      "./db/migrations",
-			"LOG_LEVEL":               "debug",
-			"LOG_FORMAT":              "text",
-			"LOG_OUTPUT":              "file",
+			"SERVER_HOST":          "0.0.0.0",
+			"SERVER_PORT":          "3000",
+			"SERVER_READ_TIMEOUT":  "45",
+			"SERVER_WRITE_TIMEOUT": "60",
+			"ENVIRONMENT":          "production",
+			"DB_TYPE":              "postgres",
+			"DB_CONNECTION_STRING": "postgres://user:pass@localhost/db",
+			"DB_MAX_OPEN_CONNS":    "25",
+			"DB_MAX_IDLE_CONNS":    "10",
+			"DB_MIGRATIONS_PATH":   "./db/migrations",
+			"LOG_LEVEL":            "debug",
+			"LOG_FORMAT":           "text",
+			"LOG_OUTPUT":           "file",
 		}, func() {
 			config := LoadConfig()
 
@@ -323,7 +324,7 @@ func TestConfig_Validate(t *testing.T) {
 
 	t.Run("valid log levels", func(t *testing.T) {
 		validLevels := []string{"debug", "info", "warn", "error"}
-		
+
 		for _, level := range validLevels {
 			t.Run("log level: "+level, func(t *testing.T) {
 				config := LoadConfig()
@@ -349,7 +350,7 @@ func TestGetEnv(t *testing.T) {
 	t.Run("non-existing environment variable", func(t *testing.T) {
 		// Make sure the variable doesn't exist
 		os.Unsetenv("NON_EXISTING_VAR")
-		
+
 		result := getEnv("NON_EXISTING_VAR", "default_value")
 		testutil.AssertEqual(t, "default_value", result)
 	})
@@ -386,7 +387,7 @@ func TestGetEnvAsInt(t *testing.T) {
 	t.Run("non-existing environment variable", func(t *testing.T) {
 		// Make sure the variable doesn't exist
 		os.Unsetenv("NON_EXISTING_INT_VAR")
-		
+
 		result := getEnvAsInt("NON_EXISTING_INT_VAR", 10)
 		testutil.AssertEqual(t, 10, result)
 	})
@@ -419,8 +420,6 @@ func TestGetEnvAsInt(t *testing.T) {
 	})
 }
 
-
-
 // BenchmarkLoadConfig benchmarks the config loading performance
 func BenchmarkLoadConfig(b *testing.B) {
 	// Set up some environment variables
@@ -428,9 +427,9 @@ func BenchmarkLoadConfig(b *testing.B) {
 	os.Setenv("SERVER_PORT", "8080")
 	os.Setenv("DB_TYPE", "sqlite")
 	os.Setenv("DB_CONNECTION_STRING", "./test.db")
-	
+
 	b.ResetTimer()
-	
+
 	for i := 0; i < b.N; i++ {
 		_ = LoadConfig()
 	}
@@ -439,9 +438,9 @@ func BenchmarkLoadConfig(b *testing.B) {
 // BenchmarkConfigValidate benchmarks the config validation performance
 func BenchmarkConfigValidate(b *testing.B) {
 	config := LoadConfig()
-	
+
 	b.ResetTimer()
-	
+
 	for i := 0; i < b.N; i++ {
 		_ = config.Validate()
 	}

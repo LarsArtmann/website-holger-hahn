@@ -59,22 +59,22 @@ func (s *StringFieldValidator) MaxLength(max int) *StringFieldValidator {
 func (s *StringFieldValidator) Validate() (string, error) {
 	// Normalize the value
 	normalized := strings.TrimSpace(s.value)
-	
+
 	// Check if required
 	if s.required && normalized == "" {
 		return "", domain.ErrInvalidInput(fmt.Sprintf("%s cannot be empty", s.fieldName))
 	}
-	
+
 	// Check minimum length
 	if s.minLength > 0 && len(normalized) > 0 && len(normalized) < s.minLength {
 		return "", domain.ErrInvalidInput(fmt.Sprintf("%s must be at least %d characters long", s.fieldName, s.minLength))
 	}
-	
+
 	// Check maximum length
 	if s.maxLength > 0 && len(normalized) > s.maxLength {
 		return "", domain.ErrInvalidInput(fmt.Sprintf("%s must be less than %d characters", s.fieldName, s.maxLength))
 	}
-	
+
 	return normalized, nil
 }
 
@@ -97,13 +97,13 @@ func (v *CommonRequestValidator) ValidateCreateRequest(name, description string)
 	if err != nil {
 		return "", "", err
 	}
-	
-	// Validate description  
+
+	// Validate description
 	normalizedDescription, err := NewStringField("description", description).MaxLength(2000).Validate()
 	if err != nil {
 		return "", "", err
 	}
-	
+
 	return normalizedName, normalizedDescription, nil
 }
 
@@ -118,24 +118,24 @@ func (v *CommonRequestValidator) ValidateListRequest(limit, offset *int, orderBy
 	if limit != nil && *limit < 0 {
 		return domain.ErrInvalidInput("limit cannot be negative")
 	}
-	
+
 	if limit != nil && *limit > 100 {
 		return domain.ErrInvalidInput("limit cannot exceed 100")
 	}
-	
+
 	if offset != nil && *offset < 0 {
 		return domain.ErrInvalidInput("offset cannot be negative")
 	}
-	
+
 	// Validate ordering
 	if orderDir != nil && *orderDir != "asc" && *orderDir != "desc" {
 		return domain.ErrInvalidInput("order direction must be 'asc' or 'desc'")
 	}
-	
+
 	if orderBy != nil && !ValidateOrderBy(entityType, *orderBy) {
 		return domain.ErrInvalidInput(fmt.Sprintf("invalid order by field '%s' for %s", *orderBy, entityType))
 	}
-	
+
 	return nil
 }
 
@@ -229,6 +229,6 @@ func NewCompoundValidator() *CompoundValidator {
 		CommonRequestValidator:   NewCommonRequestValidator(),
 		EntityExistenceValidator: NewEntityExistenceValidator(),
 		RelationshipValidator:    NewRelationshipValidator(),
-		DateValidator:           NewDateValidator(),
+		DateValidator:            NewDateValidator(),
 	}
 }

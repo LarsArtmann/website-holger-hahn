@@ -158,8 +158,8 @@ func (b *BusinessLogicErrorHandler) HandleRelationshipError(fromEntity, toEntity
 	if err == nil {
 		return nil
 	}
-	
-	return domain.ErrInternal(fmt.Sprintf("failed to establish %s relationship between %s and %s: %v", 
+
+	return domain.ErrInternal(fmt.Sprintf("failed to establish %s relationship between %s and %s: %v",
 		relationshipType, fromEntity, toEntity, err))
 }
 
@@ -203,18 +203,18 @@ func (f *ErrorHandlerFactory) CreateBusinessLogicErrorHandler(serviceName string
 
 // StandardServiceErrorHandlers provides all common error handlers for a service.
 type StandardServiceErrorHandlers struct {
-	Basic        *ErrorHandler
-	Contextual   *ContextualErrorHandler
-	Repository   *RepositoryErrorHandler
+	Basic         *ErrorHandler
+	Contextual    *ContextualErrorHandler
+	Repository    *RepositoryErrorHandler
 	BusinessLogic *BusinessLogicErrorHandler
 }
 
 // NewStandardServiceErrorHandlers creates a complete set of error handlers for a service.
 func NewStandardServiceErrorHandlers(serviceName string) *StandardServiceErrorHandlers {
 	return &StandardServiceErrorHandlers{
-		Basic:        NewErrorHandler(serviceName),
-		Contextual:   NewContextualErrorHandler(serviceName),
-		Repository:   NewRepositoryErrorHandler(serviceName),
+		Basic:         NewErrorHandler(serviceName),
+		Contextual:    NewContextualErrorHandler(serviceName),
+		Repository:    NewRepositoryErrorHandler(serviceName),
 		BusinessLogic: NewBusinessLogicErrorHandler(serviceName),
 	}
 }

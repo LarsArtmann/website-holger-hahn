@@ -5,7 +5,6 @@ package handler
 
 import (
 	"context"
-	"net/http"
 
 	"holger-hahn-website/internal/constants"
 	"holger-hahn-website/internal/service"

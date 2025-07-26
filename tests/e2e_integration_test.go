@@ -12,7 +12,6 @@ import (
 	"time"
 
 	"holger-hahn-website/internal/application"
-	"holger-hahn-website/internal/constants"
 	"holger-hahn-website/internal/infrastructure"
 	"holger-hahn-website/templates"
 

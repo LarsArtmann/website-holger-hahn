@@ -3,7 +3,6 @@ package infrastructure
 import (
 	"context"
 	"encoding/json"
-	"fmt"
 	"log"
 	"time"
 )
