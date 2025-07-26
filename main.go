@@ -11,13 +11,11 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
-	"github.com/samber/do"
 	"holger-hahn-website/internal/application"
 	"holger-hahn-website/internal/config"
 	"holger-hahn-website/internal/constants"
 	"holger-hahn-website/internal/container"
 	"holger-hahn-website/internal/handler"
-	"holger-hahn-website/internal/infrastructure"
 	"holger-hahn-website/internal/service"
 )
 
@@ -117,9 +115,8 @@ func main() {
 		portfolioService,
 	)
 
-	// Setup contact service using infrastructure container (temporary dual container approach)
-	contactInjector := infrastructure.SetupContainer()
-	contactService := do.MustInvoke[*application.ContactService](contactInjector)
+	// Get contact service from unified DI container
+	contactService := container.MustGet[*application.ContactService](di)
 	contactHandler := NewContactHandler(contactService)
 
 	// Setup all routes (portfolio + contact)

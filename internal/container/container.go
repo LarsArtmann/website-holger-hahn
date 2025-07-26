@@ -5,7 +5,10 @@ package container
 
 import (
 	"github.com/samber/do"
+	"holger-hahn-website/internal/application"
 	"holger-hahn-website/internal/config"
+	"holger-hahn-website/internal/domain"
+	"holger-hahn-website/internal/infrastructure"
 	"holger-hahn-website/internal/repository"
 	"holger-hahn-website/internal/service"
 )
@@ -94,6 +97,31 @@ func (c *Container) registerDependencies() {
 			Service:    do.MustInvoke[repository.ServiceRepository](i),
 			UnitOfWork: do.MustInvoke[repository.UnitOfWork](i),
 		}, nil
+	})
+
+	// Register contact-related dependencies
+	// Contact repository
+	do.Provide(c.injector, func(_ *do.Injector) (domain.ContactRepository, error) {
+		return infrastructure.NewMemoryContactRepository(), nil
+	})
+
+	// Email service
+	do.Provide(c.injector, func(_ *do.Injector) (domain.EmailService, error) {
+		return infrastructure.NewSMTPEmailService(), nil
+	})
+
+	// Logging service
+	do.Provide(c.injector, func(_ *do.Injector) (domain.LoggingService, error) {
+		return infrastructure.NewConsoleLoggingService("holger-hahn-website"), nil
+	})
+
+	// Contact application service
+	do.Provide(c.injector, func(i *do.Injector) (*application.ContactService, error) {
+		contactRepo := do.MustInvoke[domain.ContactRepository](i)
+		emailSvc := do.MustInvoke[domain.EmailService](i)
+		logger := do.MustInvoke[domain.LoggingService](i)
+
+		return application.NewContactService(contactRepo, emailSvc, logger), nil
 	})
 }
 
