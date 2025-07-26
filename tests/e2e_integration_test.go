@@ -14,12 +14,13 @@ import (
 	"testing"
 	"time"
 
-	"holger-hahn-website/internal/application"
-	"holger-hahn-website/internal/infrastructure"
-	"holger-hahn-website/templates"
-
 	"github.com/gin-gonic/gin"
 	"github.com/samber/do"
+
+	"holger-hahn-website/internal/application"
+	"holger-hahn-website/internal/constants"
+	"holger-hahn-website/internal/infrastructure"
+	"holger-hahn-website/templates"
 )
 
 // TestEndToEndContactFlow tests the complete contact form workflow

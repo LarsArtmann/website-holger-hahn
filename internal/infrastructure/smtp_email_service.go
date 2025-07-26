@@ -9,9 +9,9 @@ import (
 	"os"
 	"strconv"
 
-	"holger-hahn-website/internal/domain"
-
 	"gopkg.in/gomail.v2"
+
+	"holger-hahn-website/internal/domain"
 )
 
 // SMTPEmailService implements EmailService using SMTP.

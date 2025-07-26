@@ -28,7 +28,7 @@ func NewExperienceService(repo repository.ExperienceRepository, techRepo reposit
 	if techRepo == nil {
 		panic("technology repository cannot be nil")
 	}
-	
+
 	return &ExperienceService{
 		repo:         repo,
 		techRepo:     techRepo,

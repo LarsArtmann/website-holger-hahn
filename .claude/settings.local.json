@@ -54,7 +54,11 @@
       "Bash(./main build)",
       "Bash(./main)",
       "WebFetch(domain:www.hal-privatbank.com)",
-      "Bash(pre-commit:*)"
+      "Bash(pre-commit:*)",
+      "Bash(wsl:*)",
+      "Bash(revive:*)",
+      "WebFetch(domain:brandfetch.com)",
+      "WebFetch(domain:www.altalis.com)"
     ]
   },
   "enableAllProjectMcpServers": true,

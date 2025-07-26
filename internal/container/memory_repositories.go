@@ -315,7 +315,6 @@ func (r *InMemoryExperienceRepository) List(ctx context.Context, filter reposito
 	return result, nil
 }
 
-
 // GetCurrent retrieves all experiences that are currently active.
 func (r *InMemoryExperienceRepository) GetCurrent(ctx context.Context) ([]*domain.Experience, error) {
 	var result []*domain.Experience
@@ -414,7 +413,6 @@ func (r *InMemoryServiceRepository) List(ctx context.Context, filter repository.
 
 	return result, nil
 }
-
 
 // GetActive retrieves all services that are currently active.
 func (r *InMemoryServiceRepository) GetActive(ctx context.Context) ([]*domain.Service, error) {

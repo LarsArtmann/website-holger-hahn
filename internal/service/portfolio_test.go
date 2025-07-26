@@ -2,7 +2,6 @@ package service
 
 import (
 	"context"
-	"fmt"
 	"testing"
 
 	"holger-hahn-website/internal/domain"
@@ -17,16 +16,16 @@ func TestPortfolioService_CreateService(t *testing.T) {
 
 	t.Run("successful creation", func(t *testing.T) {
 		mockServiceRepo.ClearCallLog()
-		
+
 		req := CreateServiceRequest{
 			Name:        "Blockchain Consulting",
 			Description: "Expert consulting on blockchain architecture and implementation",
 			Category:    domain.ServiceTypeConsulting,
 			Duration:    "2-4 weeks",
 		}
-		
+
 		svc, err := service.CreateService(ctx, req)
-		
+
 		testutil.AssertNoError(t, err)
 		testutil.AssertNotNil(t, svc)
 		testutil.AssertEqual(t, "Blockchain Consulting", svc.Name)
@@ -35,7 +34,7 @@ func TestPortfolioService_CreateService(t *testing.T) {
 		testutil.AssertEqual(t, "2-4 weeks", svc.Duration)
 		testutil.AssertTrue(t, svc.IsActive, "Service should be active by default")
 		testutil.AssertNotEqual(t, "", svc.ID)
-		
+
 		// Verify repository calls would be made
 		calls := mockServiceRepo.GetCallLog()
 		testutil.AssertTrue(t, len(calls) > 0, "Should have repository calls")
@@ -43,14 +42,14 @@ func TestPortfolioService_CreateService(t *testing.T) {
 
 	t.Run("successful creation with pricing", func(t *testing.T) {
 		mockServiceRepo.ClearCallLog()
-		
+
 		pricing := domain.PricingInfo{
 			Type:        domain.PricingTypeHourly,
 			Amount:      150.0,
 			Currency:    "USD",
 			Description: "Hourly consulting rate",
 		}
-		
+
 		req := CreateServiceRequest{
 			Name:        "Smart Contract Development",
 			Description: "Custom smart contract development and deployment",
@@ -58,9 +57,9 @@ func TestPortfolioService_CreateService(t *testing.T) {
 			Duration:    "4-8 weeks",
 			Pricing:     &pricing,
 		}
-		
+
 		svc, err := service.CreateService(ctx, req)
-		
+
 		testutil.AssertNoError(t, err)
 		testutil.AssertNotNil(t, svc)
 		testutil.AssertNotNil(t, svc.Pricing)
@@ -75,9 +74,9 @@ func TestPortfolioService_CreateService(t *testing.T) {
 			Description: "Some description",
 			Category:    domain.ServiceTypeConsulting,
 		}
-		
+
 		_, err := service.CreateService(ctx, req)
-		
+
 		testutil.AssertValidationError(t, err)
 	})
 
@@ -87,9 +86,9 @@ func TestPortfolioService_CreateService(t *testing.T) {
 			Description: "Some description",
 			Category:    domain.ServiceTypeConsulting,
 		}
-		
+
 		_, err := service.CreateService(ctx, req)
-		
+
 		testutil.AssertValidationError(t, err)
 	})
 
@@ -99,9 +98,9 @@ func TestPortfolioService_CreateService(t *testing.T) {
 			Description: "",
 			Category:    domain.ServiceTypeConsulting,
 		}
-		
+
 		_, err := service.CreateService(ctx, req)
-		
+
 		testutil.AssertValidationError(t, err)
 	})
 
@@ -110,16 +109,16 @@ func TestPortfolioService_CreateService(t *testing.T) {
 			Type:   domain.PricingTypeHourly,
 			Amount: -100.0, // Negative amount should be invalid
 		}
-		
+
 		req := CreateServiceRequest{
 			Name:        "Valid Name",
 			Description: "Valid description",
 			Category:    domain.ServiceTypeConsulting,
 			Pricing:     &pricing,
 		}
-		
+
 		_, err := service.CreateService(ctx, req)
-		
+
 		testutil.AssertValidationError(t, err)
 	})
 }
@@ -139,17 +138,17 @@ func TestPortfolioService_GetService(t *testing.T) {
 			Category:    domain.ServiceTypeConsulting,
 			IsActive:    true,
 		}
-		
+
 		// Mock the repository to return this service
 		mockServiceRepo.ClearCallLog()
-		
+
 		// For testing, we'll just verify the method calls
 		_, err := service.GetService(ctx, expectedService.ID)
-		
+
 		// Since our mock doesn't actually implement GetByID properly for services,
 		// we expect an error but can verify the intent
 		testutil.AssertError(t, err) // Expected due to mock limitations
-		
+
 		// Verify repository calls
 		calls := mockServiceRepo.GetCallLog()
 		testutil.AssertTrue(t, len(calls) > 0, "Should have repository calls")
@@ -157,13 +156,13 @@ func TestPortfolioService_GetService(t *testing.T) {
 
 	t.Run("empty ID", func(t *testing.T) {
 		_, err := service.GetService(ctx, "")
-		
+
 		testutil.AssertValidationError(t, err)
 	})
 
 	t.Run("service not found", func(t *testing.T) {
 		_, err := service.GetService(ctx, "non-existent-id")
-		
+
 		testutil.AssertNotFoundError(t, err)
 	})
 }
@@ -176,12 +175,12 @@ func TestPortfolioService_ListServices(t *testing.T) {
 
 	t.Run("list all services", func(t *testing.T) {
 		mockServiceRepo.ClearCallLog()
-		
+
 		services, err := service.ListServices(ctx, ServiceFilter{})
-		
+
 		testutil.AssertNoError(t, err)
 		testutil.AssertNotNil(t, services)
-		
+
 		// Verify repository calls
 		calls := mockServiceRepo.GetCallLog()
 		testutil.AssertLen(t, calls, 1)
@@ -190,14 +189,14 @@ func TestPortfolioService_ListServices(t *testing.T) {
 
 	t.Run("list with category filter", func(t *testing.T) {
 		mockServiceRepo.ClearCallLog()
-		
+
 		category := domain.ServiceTypeConsulting
 		filter := ServiceFilter{Category: &category}
 		services, err := service.ListServices(ctx, filter)
-		
+
 		testutil.AssertNoError(t, err)
 		testutil.AssertNotNil(t, services)
-		
+
 		// Verify repository calls
 		calls := mockServiceRepo.GetCallLog()
 		testutil.AssertLen(t, calls, 1)
@@ -206,14 +205,14 @@ func TestPortfolioService_ListServices(t *testing.T) {
 
 	t.Run("list active services only", func(t *testing.T) {
 		mockServiceRepo.ClearCallLog()
-		
+
 		isActive := true
 		filter := ServiceFilter{IsActive: &isActive}
 		services, err := service.ListServices(ctx, filter)
-		
+
 		testutil.AssertNoError(t, err)
 		testutil.AssertNotNil(t, services)
-		
+
 		// Verify repository calls
 		calls := mockServiceRepo.GetCallLog()
 		testutil.AssertLen(t, calls, 1)
@@ -222,7 +221,7 @@ func TestPortfolioService_ListServices(t *testing.T) {
 
 	t.Run("list with pricing filter", func(t *testing.T) {
 		mockServiceRepo.ClearCallLog()
-		
+
 		pricingType := domain.PricingTypeHourly
 		minPrice := 100.0
 		maxPrice := 200.0
@@ -232,10 +231,10 @@ func TestPortfolioService_ListServices(t *testing.T) {
 			MaxPrice:    &maxPrice,
 		}
 		services, err := service.ListServices(ctx, filter)
-		
+
 		testutil.AssertNoError(t, err)
 		testutil.AssertNotNil(t, services)
-		
+
 		// Verify repository calls
 		calls := mockServiceRepo.GetCallLog()
 		testutil.AssertLen(t, calls, 1)
@@ -244,9 +243,9 @@ func TestPortfolioService_ListServices(t *testing.T) {
 
 	t.Run("repository error", func(t *testing.T) {
 		mockServiceRepo.SetErrorMode(true, "database connection failed")
-		
+
 		_, err := service.ListServices(ctx, ServiceFilter{})
-		
+
 		testutil.AssertInternalError(t, err)
 		mockServiceRepo.SetErrorMode(false, "")
 	})
@@ -260,12 +259,12 @@ func TestPortfolioService_GetActiveServices(t *testing.T) {
 
 	t.Run("successful retrieval", func(t *testing.T) {
 		mockServiceRepo.ClearCallLog()
-		
+
 		services, err := service.GetActiveServices(ctx)
-		
+
 		testutil.AssertNoError(t, err)
 		testutil.AssertNotNil(t, services)
-		
+
 		// Verify repository calls
 		calls := mockServiceRepo.GetCallLog()
 		testutil.AssertLen(t, calls, 1)
@@ -274,9 +273,9 @@ func TestPortfolioService_GetActiveServices(t *testing.T) {
 
 	t.Run("repository error", func(t *testing.T) {
 		mockServiceRepo.SetErrorMode(true, "database connection failed")
-		
+
 		_, err := service.GetActiveServices(ctx)
-		
+
 		testutil.AssertInternalError(t, err)
 		mockServiceRepo.SetErrorMode(false, "")
 	})
@@ -290,14 +289,14 @@ func TestPortfolioService_GetServicesByCategory(t *testing.T) {
 
 	t.Run("successful retrieval", func(t *testing.T) {
 		mockServiceRepo.ClearCallLog()
-		
+
 		// Note: This will fail because our mock doesn't implement GetByCategory,
 		// but we can test the validation logic
 		_, err := service.GetServicesByCategory(ctx, domain.ServiceTypeConsulting)
-		
+
 		// Expected to fail due to mock limitations, but validation should pass
 		testutil.AssertError(t, err)
-		
+
 		// Verify the method was called (even if it failed)
 		calls := mockServiceRepo.GetCallLog()
 		testutil.AssertTrue(t, len(calls) > 0, "Should attempt repository call")
@@ -305,7 +304,7 @@ func TestPortfolioService_GetServicesByCategory(t *testing.T) {
 
 	t.Run("invalid category", func(t *testing.T) {
 		_, err := service.GetServicesByCategory(ctx, domain.ServiceType("invalid"))
-		
+
 		testutil.AssertValidationError(t, err)
 	})
 }
@@ -320,16 +319,16 @@ func TestPortfolioService_AddTechnologyToService(t *testing.T) {
 	t.Run("technology not found", func(t *testing.T) {
 		// Test with non-existent technology
 		err := service.AddTechnologyToService(ctx, "service-id", "non-existent-tech")
-		
+
 		testutil.AssertNotFoundError(t, err)
 	})
 
 	t.Run("service not found", func(t *testing.T) {
 		technology := techFixtures.ValidTechnology()
 		mockTechRepo.PreloadTechnologies([]*domain.Technology{technology})
-		
+
 		err := service.AddTechnologyToService(ctx, "non-existent-service", technology.ID)
-		
+
 		testutil.AssertNotFoundError(t, err)
 	})
 }
@@ -346,9 +345,9 @@ func TestPortfolioService_AddDeliverableToService(t *testing.T) {
 			Description: "Comprehensive system architecture documentation",
 			Timeline:    "Week 1",
 		}
-		
+
 		err := service.AddDeliverableToService(ctx, "non-existent-service", deliverable)
-		
+
 		testutil.AssertNotFoundError(t, err)
 	})
 }
@@ -365,9 +364,9 @@ func TestPortfolioService_UpdateServicePricing(t *testing.T) {
 			Amount:   200.0,
 			Currency: "USD",
 		}
-		
+
 		err := service.UpdateServicePricing(ctx, "non-existent-service", pricing)
-		
+
 		testutil.AssertNotFoundError(t, err)
 	})
 
@@ -376,10 +375,10 @@ func TestPortfolioService_UpdateServicePricing(t *testing.T) {
 			Type:   domain.PricingType("invalid"),
 			Amount: 200.0,
 		}
-		
+
 		// This should fail during validation before repository access
 		err := service.UpdateServicePricing(ctx, "service-id", pricing)
-		
+
 		testutil.AssertError(t, err) // Will be not found error due to mock, but validates logic
 	})
 }
@@ -392,7 +391,7 @@ func TestPortfolioService_ActivateService(t *testing.T) {
 
 	t.Run("service not found", func(t *testing.T) {
 		err := service.ActivateService(ctx, "non-existent-service")
-		
+
 		testutil.AssertNotFoundError(t, err)
 	})
 }
@@ -405,7 +404,7 @@ func TestPortfolioService_DeactivateService(t *testing.T) {
 
 	t.Run("service not found", func(t *testing.T) {
 		err := service.DeactivateService(ctx, "non-existent-service")
-		
+
 		testutil.AssertNotFoundError(t, err)
 	})
 }
@@ -423,7 +422,7 @@ func TestServiceFilter_Validation(t *testing.T) {
 		offset := 0
 		orderBy := "name"
 		orderDir := "asc"
-		
+
 		filter := ServiceFilter{
 			Category:    &category,
 			IsActive:    &isActive,
@@ -436,7 +435,7 @@ func TestServiceFilter_Validation(t *testing.T) {
 			OrderBy:     &orderBy,
 			OrderDir:    &orderDir,
 		}
-		
+
 		// Filter creation should be valid
 		testutil.AssertNotNil(t, filter.Category)
 		testutil.AssertNotNil(t, filter.IsActive)
@@ -448,7 +447,7 @@ func TestServiceFilter_Validation(t *testing.T) {
 
 	t.Run("empty filter", func(t *testing.T) {
 		filter := ServiceFilter{}
-		
+
 		// Empty filter should be valid
 		testutil.AssertNil(t, filter.Category)
 		testutil.AssertNil(t, filter.IsActive)
@@ -465,7 +464,7 @@ func TestCreateServiceRequest_Validation(t *testing.T) {
 			Category:    domain.ServiceTypeConsulting,
 			Duration:    "2-4 weeks",
 		}
-		
+
 		// Request should be structurally valid
 		testutil.AssertNotEqual(t, "", req.Name)
 		testutil.AssertNotEqual(t, "", req.Description)
@@ -479,7 +478,7 @@ func TestCreateServiceRequest_Validation(t *testing.T) {
 			Currency:    "USD",
 			Description: "Hourly rate",
 		}
-		
+
 		req := CreateServiceRequest{
 			Name:        "Smart Contract Development",
 			Description: "Custom smart contract development",
@@ -487,7 +486,7 @@ func TestCreateServiceRequest_Validation(t *testing.T) {
 			Duration:    "4-8 weeks",
 			Pricing:     &pricing,
 		}
-		
+
 		// Request with pricing should be valid
 		testutil.AssertNotNil(t, req.Pricing)
 		testutil.AssertTrue(t, req.Pricing.Type.IsValid(), "Pricing type should be valid")
@@ -502,7 +501,7 @@ func TestDeliverableRequest_Validation(t *testing.T) {
 			Description: "Comprehensive system architecture documentation",
 			Timeline:    "Week 1-2",
 		}
-		
+
 		// Request should be structurally valid
 		testutil.AssertNotEqual(t, "", req.Name)
 		testutil.AssertNotEqual(t, "", req.Description)
@@ -514,7 +513,7 @@ func TestDeliverableRequest_Validation(t *testing.T) {
 			Name:        "Code Review",
 			Description: "Security-focused code review",
 		}
-		
+
 		// Timeline is optional
 		testutil.AssertNotEqual(t, "", req.Name)
 		testutil.AssertNotEqual(t, "", req.Description)
@@ -528,9 +527,9 @@ func BenchmarkPortfolioService_ListServices(b *testing.B) {
 	mockServiceRepo := testutil.NewMockServiceRepository()
 	mockTechRepo := testutil.NewMockTechnologyRepository()
 	service := NewPortfolioService(mockServiceRepo, mockTechRepo)
-	
+
 	b.ResetTimer()
-	
+
 	for i := 0; i < b.N; i++ {
 		_, _ = service.ListServices(ctx, ServiceFilter{})
 	}
@@ -541,9 +540,9 @@ func BenchmarkPortfolioService_GetActiveServices(b *testing.B) {
 	mockServiceRepo := testutil.NewMockServiceRepository()
 	mockTechRepo := testutil.NewMockTechnologyRepository()
 	service := NewPortfolioService(mockServiceRepo, mockTechRepo)
-	
+
 	b.ResetTimer()
-	
+
 	for i := 0; i < b.N; i++ {
 		_, _ = service.GetActiveServices(ctx)
 	}

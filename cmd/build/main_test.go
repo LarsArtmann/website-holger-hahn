@@ -8,6 +8,8 @@ import (
 	"path/filepath"
 	"strings"
 	"testing"
+
+	"holger-hahn-website/internal/security"
 )
 
 func TestValidatePath(t *testing.T) {
@@ -58,7 +60,7 @@ func TestValidatePath(t *testing.T) {
 			basePath:      tmpDir,
 			isDestination: false,
 			expectError:   true,
-			expectedError: ErrPathTraversal,
+			expectedError: security.ErrPathTraversal,
 		},
 		{
 			name:          "path traversal attempt destination",
@@ -66,7 +68,7 @@ func TestValidatePath(t *testing.T) {
 			basePath:      tmpDir,
 			isDestination: true,
 			expectError:   true,
-			expectedError: ErrDestinationPathTraversal,
+			expectedError: security.ErrDestinationPathTraversal,
 		},
 		{
 			name:        "base path equals path",
@@ -78,7 +80,13 @@ func TestValidatePath(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			cleanPath, err := validatePath(tt.path, tt.basePath, tt.isDestination)
+			var cleanPath string
+			var err error
+			if tt.isDestination {
+				cleanPath, err = security.ValidateDestinationPath(tt.path, tt.basePath)
+			} else {
+				cleanPath, err = security.ValidateFilePath(tt.path, tt.basePath)
+			}
 
 			if tt.expectError {
 				if err == nil {
@@ -409,20 +417,20 @@ func TestCopyDir(t *testing.T) {
 
 func TestStaticErrors(t *testing.T) {
 	// Test that our static errors are properly defined
-	if ErrPathTraversal == nil {
+	if security.ErrPathTraversal == nil {
 		t.Error("ErrPathTraversal should not be nil")
 	}
 
-	if ErrDestinationPathTraversal == nil {
+	if security.ErrDestinationPathTraversal == nil {
 		t.Error("ErrDestinationPathTraversal should not be nil")
 	}
 
 	// Test error messages
-	if !strings.Contains(ErrPathTraversal.Error(), "path traversal") {
-		t.Errorf("ErrPathTraversal should contain 'path traversal', got: %s", ErrPathTraversal.Error())
+	if !strings.Contains(security.ErrPathTraversal.Error(), "path traversal") {
+		t.Errorf("ErrPathTraversal should contain 'path traversal', got: %s", security.ErrPathTraversal.Error())
 	}
 
-	if !strings.Contains(ErrDestinationPathTraversal.Error(), "destination path traversal") {
-		t.Errorf("ErrDestinationPathTraversal should contain 'destination path traversal', got: %s", ErrDestinationPathTraversal.Error())
+	if !strings.Contains(security.ErrDestinationPathTraversal.Error(), "destination path traversal") {
+		t.Errorf("ErrDestinationPathTraversal should contain 'destination path traversal', got: %s", security.ErrDestinationPathTraversal.Error())
 	}
 }

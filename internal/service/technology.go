@@ -5,8 +5,6 @@ package service
 
 import (
 	"context"
-	"fmt"
-	"strings"
 	"time"
 
 	"holger-hahn-website/internal/domain"
@@ -15,8 +13,8 @@ import (
 
 // TechnologyService handles business logic for technologies.
 type TechnologyService struct {
-	repo       repository.TechnologyRepository
-	validator  *CompoundValidator
+	repo         repository.TechnologyRepository
+	validator    *CompoundValidator
 	errorHandler *StandardServiceErrorHandlers
 }
 
@@ -25,7 +23,7 @@ func NewTechnologyService(repo repository.TechnologyRepository) *TechnologyServi
 	if repo == nil {
 		panic("repository cannot be nil")
 	}
-	
+
 	return &TechnologyService{
 		repo:         repo,
 		validator:    NewCompoundValidator(),
@@ -40,7 +38,7 @@ func (s *TechnologyService) CreateTechnology(ctx context.Context, name, category
 	if err != nil {
 		return nil, err
 	}
-	
+
 	normalizedCategory, err := NewStringField("category", category).Required().MaxLength(50).Validate()
 	if err != nil {
 		return nil, err
