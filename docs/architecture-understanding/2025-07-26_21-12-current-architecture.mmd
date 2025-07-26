@@ -1,238 +1,138 @@
-```mermaid
+%% Current App Architecture - Holger Hahn Website
+%% Shows the actual current state with dual containers, in-memory repos, disconnected systems
+%% Created: 2025-07-26 21:12
+
 graph TB
-    %% Current Application Architecture - Showing Issues and Disconnected Systems
-
-    subgraph "HTTP Layer"
-        HTTP["`**HTTP Server**
-        *Gin Router*
-        - Single Entry Point
-        - Static File Serving
-        - Route Management`"]
+    %% External Systems
+    Client[fa:fa-laptop Client Browser]
+    
+    %% Main Application Layer
+    subgraph "Single HTTP Server (main.go)"
+        MainApp[fa:fa-server Main Application<br/>Gin Router]
+        ContactHandler[fa:fa-envelope Contact Handler]
+        PortfolioHandlers[fa:fa-briefcase Portfolio Handlers]
     end
-
-    subgraph "Handler Layer"
-        PH["`**Portfolio Handlers**
-        *Main Application*
-        - Home Page Rendering
-        - Technologies API
-        - Experiences API
-        - Services API
-        - Health Check`"]
-
-        CH["`**Contact Handler**
-        *Contact System*
-        - Form Submission
-        - Validation
-        - Response Building`"]
+    
+    %% Unified DI Container (Current State)
+    subgraph "Unified DI Container (container.go)"
+        DIContainer[fa:fa-cog DI Container<br/>samber/do]
+        ConfigService[fa:fa-gear Config Service]
     end
-
-    subgraph "⚠️ DUAL CONTAINER PROBLEM"
-        subgraph "Portfolio Container"
-            PC["`**Portfolio DI Container**
-            *samber/do*
-            - Configuration
-            - Portfolio Services
-            - In-Memory Repositories
-            - Repository Abstractions`"]
-        end
-
-        subgraph "Contact Container (Ghost System)"
-            CC["`**Contact DI Container**
-            *Independent System*
-            - Contact Service
-            - Email Service
-            - Logging Service
-            - Memory Contact Repository`"]
-        end
+    
+    %% Application Services Layer
+    subgraph "Application Services"
+        ContactService[fa:fa-envelope-o Contact Service<br/>Email + Persistence]
+        TechnologyService[fa:fa-code Technology Service]
+        ExperienceService[fa:fa-user-tie Experience Service]
+        PortfolioService[fa:fa-briefcase Portfolio Service]
     end
-
-    subgraph "Service Layer (Disconnected)"
-        subgraph "Portfolio Services"
-            TS["`**Technology Service**
-            *Business Logic*
-            - Technology Management
-            - Category Filtering
-            - Level Filtering`"]
-
-            ES["`**Experience Service**
-            *Business Logic*
-            - Experience Management
-            - Date Range Queries
-            - Technology Associations`"]
-
-            PS["`**Portfolio Service**
-            *Business Logic*
-            - Service Management
-            - Active Services
-            - Category Filtering`"]
-        end
-
-        subgraph "Contact Services (Isolated)"
-            CS["`**Contact Service**
-            *Application Layer*
-            - Form Processing
-            - Email Notifications
-            - Contact Management`"]
+    
+    %% Domain Layer
+    subgraph "Domain Layer"
+        ContactDomain[fa:fa-id-card Contact Domain<br/>Business Logic]
+        TechnologyDomain[fa:fa-laptop-code Technology Domain]
+        ExperienceDomain[fa:fa-timeline Experience Domain]
+        ServiceDomain[fa:fa-handshake Service Domain]
+    end
+    
+    %% Repository Layer (Current Problem: Mixed Implementation)
+    subgraph "Repository Layer - FRAGMENTED"
+        %% Database Repositories (Partially Used)
+        ContactRepo[fa:fa-database Contact Repository<br/>DATABASE - Working]
+        TechRepo[fa:fa-database Technology Repository<br/>DATABASE - Working]
+        
+        %% In-Memory Repositories (Default)
+        ExpRepoMem[fa:fa-memory Experience Repository<br/>IN-MEMORY - Default]
+        ServiceRepoMem[fa:fa-memory Service Repository<br/>IN-MEMORY - Default]
+        UnitOfWorkMem[fa:fa-memory Unit of Work<br/>IN-MEMORY - Not Used]
+    end
+    
+    %% Infrastructure Layer
+    subgraph "Infrastructure Layer"
+        SMTPService[fa:fa-paper-plane SMTP Email Service]
+        ConsoleLogger[fa:fa-terminal Console Logger]
+        MemoryContactRepo[fa:fa-memory Memory Contact Repo<br/>Fallback]
+    end
+    
+    %% Ghost Database System (Exists but Largely Unused)
+    subgraph "Ghost Database Infrastructure - LARGELY UNUSED"
+        DatabaseManager[fa:fa-server Database Manager<br/>SQLite + SQLC]
+        SQLiteDB[(fa:fa-database SQLite Database<br/>./data/holger-hahn.db)]
+        SQLCQueries[fa:fa-sql SQLC Generated Queries]
+        MigrationSystem[fa:fa-arrow-up Migrations<br/>001_initial.sql]
+        
+        %% Database Schema Tables
+        subgraph "Database Schema (Exists but Underutilized)"
+            ContactsTable[(fa:fa-table contacts)]
+            TechnologiesTable[(fa:fa-table technologies)]
+            ServicesTable[(fa:fa-table services)]
+            ExperiencesTable[(fa:fa-table experiences)]
+            AnalyticsTable[(fa:fa-table analytics_events)]
         end
     end
-
-    subgraph "Repository Layer (Fragmented)"
-        subgraph "In-Memory Repositories"
-            TMR["`**Technology Repository**
-            *Memory Implementation*
-            - CRUD Operations
-            - Filter Support
-            - No Persistence`"]
-
-            EMR["`**Experience Repository**
-            *Memory Implementation*
-            - Sample Data Loading
-            - Query Support
-            - No Persistence`"]
-
-            SMR["`**Service Repository**
-            *Memory Implementation*
-            - Sample Data Loading
-            - Category Filtering
-            - No Persistence`"]
-        end
-
-        subgraph "Contact Repository (Separate)"
-            CMR["`**Contact Repository**
-            *Memory Implementation*
-            - Contact Storage
-            - Basic Queries
-            - No Persistence`"]
-        end
-    end
-
-    subgraph "Infrastructure Layer (Partial)"
-        subgraph "Email System"
-            ES_SMTP["`**SMTP Email Service**
-            *Infrastructure*
-            - Contact Notifications
-            - Confirmation Emails
-            - Error Handling`"]
-        end
-
-        subgraph "Logging System"
-            LS["`**Console Logging**
-            *Infrastructure*
-            - Structured Logging
-            - Error Tracking
-            - Debug Information`"]
-        end
-    end
-
-    subgraph "❌ UNUSED DATABASE SYSTEM"
-        subgraph "Database Infrastructure (Ghost)"
-            DM["`**Database Manager**
-            *SQLite + sqlc*
-            - Connection Management
-            - Transaction Support
-            - Migration Support
-            - Health Checks`"]
-
-            DB[("`**SQLite Database**
-            *Persistent Storage*
-            - Contact Table
-            - Analytics Table
-            - Technologies Table
-            - Services Table
-            - Experiences Table`")]
-
-            SQLC["`**SQLC Generated**
-            *Type-Safe Queries*
-            - Contact Queries
-            - Analytics Queries
-            - Content Queries`"]
-        end
-    end
-
-    subgraph "Template System"
-        TEMPL["`**Templ Templates**
-        *Server-Side Rendering*
-        - Type-Safe HTML
-        - Component System
-        - Static Generation`"]
-    end
-
-    subgraph "Static Assets"
-        CSS["`**CSS Styles**
-        *TailwindCSS*
-        - Modern Theme
-        - Responsive Design
-        - Component Styling`"]
-
-        IMG["`**Images & Icons**
-        *Static Files*
-        - Profile Images
-        - Technology Icons
-        - Company Logos`"]
-    end
-
-    %% Connections - Current Flow
-    HTTP --> PH
-    HTTP --> CH
-
-    PH --> PC
-    CH --> CC
-
-    PC --> TS
-    PC --> ES
-    PC --> PS
-
-    CC --> CS
-
-    TS --> TMR
-    ES --> EMR
-    ES --> TMR
-    PS --> SMR
-    PS --> TMR
-
-    CS --> CMR
-    CS --> ES_SMTP
-    CS --> LS
-
-    PH --> TEMPL
-    HTTP --> CSS
-    HTTP --> IMG
-
-    %% Unused/Disconnected Systems (Dashed Lines)
-    DM -.-> DB
-    DM -.-> SQLC
-
+    
+    %% Static Assets
+    StaticFiles[fa:fa-file-code Static Files<br/>CSS, JS, Templates]
+    
+    %% Connection Flows
+    Client -->|HTTP Requests| MainApp
+    MainApp --> ContactHandler
+    MainApp --> PortfolioHandlers
+    MainApp --> StaticFiles
+    
+    %% DI Container Connections
+    ContactHandler --> DIContainer
+    PortfolioHandlers --> DIContainer
+    DIContainer --> ContactService
+    DIContainer --> TechnologyService
+    DIContainer --> ExperienceService
+    DIContainer --> PortfolioService
+    DIContainer --> ConfigService
+    
+    %% Service to Domain Connections
+    ContactService --> ContactDomain
+    TechnologyService --> TechnologyDomain
+    ExperienceService --> ExperienceDomain
+    PortfolioService --> ServiceDomain
+    
+    %% Repository Connections (Current Mixed State)
+    ContactService --> ContactRepo
+    TechnologyService --> TechRepo
+    ExperienceService --> ExpRepoMem
+    PortfolioService --> ServiceRepoMem
+    
+    %% Infrastructure Connections
+    ContactService --> SMTPService
+    ContactService --> ConsoleLogger
+    
+    %% Database Connections (Partial)
+    ContactRepo --> DatabaseManager
+    TechRepo --> DatabaseManager
+    DatabaseManager --> SQLiteDB
+    DatabaseManager --> SQLCQueries
+    DatabaseManager --> MigrationSystem
+    
+    %% Ghost System Connections (Unused Potential)
+    SQLCQueries -.->|Could Connect| TechnologiesTable
+    SQLCQueries -.->|Could Connect| ServicesTable
+    SQLCQueries -.->|Could Connect| ExperiencesTable
+    SQLCQueries -.->|Currently Used| ContactsTable
+    SQLCQueries -.->|Not Used| AnalyticsTable
+    
     %% Styling
-    classDef problem fill:#ffebee,stroke:#f44336,stroke-width:3px
-    classDef unused fill:#f3e5f5,stroke:#9c27b0,stroke-width:2px,stroke-dasharray: 5 5
-    classDef working fill:#e8f5e8,stroke:#4caf50,stroke-width:2px
-    classDef isolated fill:#fff3e0,stroke:#ff9800,stroke-width:2px
-
-    class PC,CC problem
-    class DM,DB,SQLC unused
-    class HTTP,PH,TS,ES,PS,TEMPL working
-    class CH,CS,CMR,ES_SMTP,LS isolated
-
-    %% Annotations
-    PC -.->|"Separate Container"| CC
-    TMR -.->|"No Database Connection"| DB
-    EMR -.->|"No Database Connection"| DB
-    SMR -.->|"No Database Connection"| DB
-    CMR -.->|"No Database Connection"| DB
-```
-
-**Current Architecture Issues:**
-
-1. **Dual Container Problem**: Portfolio and Contact systems use separate DI containers
-2. **Ghost Database**: Complete SQLite infrastructure exists but is unused
-3. **Disconnected Systems**: Contact and Portfolio systems operate independently
-4. **In-Memory Only**: All data lost on restart, no persistence
-5. **No Analytics**: Analytics infrastructure exists but no event tracking
-6. **Fragmented Repository Layer**: Multiple repository implementations for same data
-
-**Key Problems:**
-- Data persistence completely missing
-- Contact and portfolio data isolated
-- Database infrastructure investment wasted
-- No user analytics or insights
-- System state not recoverable
+    classDef current fill:#e1f5fe,stroke:#01579b,stroke-width:2px
+    classDef problem fill:#ffebee,stroke:#c62828,stroke-width:3px
+    classDef unused fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px,stroke-dasharray: 5 5
+    classDef infrastructure fill:#e8f5e8,stroke:#2e7d32,stroke-width:2px
+    classDef memory fill:#fff3e0,stroke:#ef6c00,stroke-width:2px
+    
+    class MainApp,ContactHandler,PortfolioHandlers,DIContainer current
+    class ExpRepoMem,ServiceRepoMem,UnitOfWorkMem problem
+    class DatabaseManager,SQLCQueries,MigrationSystem,TechnologiesTable,ServicesTable,ExperiencesTable,AnalyticsTable unused
+    class SMTPService,ConsoleLogger,MemoryContactRepo infrastructure
+    class ExpRepoMem,ServiceRepoMem,UnitOfWorkMem memory
+    
+    %% Problem Annotations
+    ExpRepoMem -.->|❌ Data Lost on Restart| ExperienceService
+    ServiceRepoMem -.->|❌ Data Lost on Restart| PortfolioService
+    UnitOfWorkMem -.->|❌ No Transactions| DIContainer
