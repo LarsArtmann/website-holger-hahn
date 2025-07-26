@@ -1,0 +1,363 @@
+```mermaid
+graph TB
+    %% Improved Events & Commands - CQRS with Event Sourcing
+    
+    subgraph "✅ COMMAND SIDE (Write Model)"
+        subgraph "Command Handlers"
+            CH_CONTACT["`**Contact Command Handler**
+            *Business Logic*
+            - SubmitContactForm
+            - UpdateContactStatus
+            - ArchiveContact
+            - Business Rule Validation
+            - Authorization Checks`"]
+            
+            CH_PORTFOLIO["`**Portfolio Command Handler**
+            *Content Management*
+            - UpdateTechnology
+            - AddExperience
+            - UpdateService
+            - PublishContent
+            - Version Management`"]
+            
+            CH_ANALYTICS["`**Analytics Command Handler**
+            *Event Processing*
+            - TrackPageView
+            - RecordInteraction
+            - ProcessMetrics
+            - GenerateReports
+            - Data Aggregation`"]
+        end
+        
+        subgraph "Commands"
+            CMD_CONTACT["`**Contact Commands**
+            *Write Operations*
+            - SubmitContactFormCommand
+            - UpdateContactStatusCommand
+            - ScheduleFollowUpCommand
+            - ArchiveContactCommand`"]
+            
+            CMD_PORTFOLIO["`**Portfolio Commands**
+            *Content Operations*
+            - UpdateTechnologyCommand
+            - AddExperienceCommand
+            - PublishServiceCommand
+            - UpdateSkillLevelCommand`"]
+            
+            CMD_ANALYTICS["`**Analytics Commands**
+            *Tracking Operations*
+            - TrackPageViewCommand
+            - RecordServiceClickCommand
+            - TrackFormInteractionCommand
+            - ProcessMetricsCommand`"]
+        end
+        
+        subgraph "Command Validation"
+            CV["`**Command Validators**
+            *Business Rules*
+            - Input Validation
+            - Business Rule Checks
+            - Authorization Validation
+            - Precondition Verification
+            - Rate Limiting`"]
+        end
+    end
+    
+    subgraph "✅ EVENT SOURCING SYSTEM"
+        subgraph "Domain Events"
+            DE_CONTACT["`**Contact Events**
+            *Domain State Changes*
+            - ContactFormSubmitted
+            - ContactStatusUpdated
+            - FollowUpScheduled
+            - ContactArchived
+            - EmailSent`"]
+            
+            DE_PORTFOLIO["`**Portfolio Events**
+            *Content Changes*
+            - TechnologyUpdated
+            - ExperienceAdded
+            - ServicePublished
+            - SkillLevelChanged
+            - ContentVersioned`"]
+            
+            DE_ANALYTICS["`**Analytics Events**
+            *User Behavior*
+            - PageViewed
+            - ServiceClicked
+            - FormInteracted
+            - FileDownloaded
+            - SessionStarted`"]
+            
+            DE_SYSTEM["`**System Events**
+            *Infrastructure*
+            - DatabaseConnected
+            - CacheWarmed
+            - EmailDelivered
+            - ErrorOccurred
+            - PerformanceMetric`"]
+        end
+        
+        subgraph "Event Store"
+            ES["`**Event Store**
+            *Persistent Event Log*
+            - Event Persistence
+            - Event Ordering
+            - Event Correlation
+            - Event Replay
+            - Snapshot Support
+            - Audit Trail`"]
+        end
+        
+        subgraph "Event Bus"
+            EB["`**Event Bus**
+            *Event Distribution*
+            - Event Publishing
+            - Subscriber Management
+            - Event Routing
+            - Error Handling
+            - Dead Letter Queue`"]
+        end
+    end
+    
+    subgraph "✅ QUERY SIDE (Read Model)"
+        subgraph "Query Handlers"
+            QH_PORTFOLIO["`**Portfolio Query Handler**
+            *Read Operations*
+            - GetTechnologies
+            - GetExperiences
+            - GetServices
+            - SearchContent
+            - GetPortfolioStats`"]
+            
+            QH_CONTACT["`**Contact Query Handler**
+            *Contact Queries*
+            - GetContacts
+            - GetContactStats
+            - SearchContacts
+            - GetFollowUps
+            - GetLeadMetrics`"]
+            
+            QH_ANALYTICS["`**Analytics Query Handler**
+            *Business Intelligence*
+            - GetPageViews
+            - GetConversionMetrics
+            - GetUserBehavior
+            - GetPerformanceMetrics
+            - GenerateDashboard`"]
+        end
+        
+        subgraph "Read Models"
+            RM_PORTFOLIO["`**Portfolio Read Models**
+            *Optimized Views*
+            - TechnologyCatalog
+            - ExperienceTimeline
+            - ServicePortfolio
+            - SkillMatrix
+            - ContentIndex`"]
+            
+            RM_CONTACT["`**Contact Read Models**
+            *Contact Views*
+            - ContactList
+            - LeadPipeline
+            - FollowUpQueue
+            - ContactStats
+            - CommunicationHistory`"]
+            
+            RM_ANALYTICS["`**Analytics Read Models**
+            *Analytics Views*
+            - PageViewStats
+            - ConversionFunnel
+            - UserJourney
+            - PerformanceDashboard
+            - BusinessMetrics`"]
+        end
+        
+        subgraph "Materialized Views"
+            MV["`**Materialized Views**
+            *Performance Optimization*
+            - Pre-computed Aggregates
+            - Cached Query Results
+            - Optimized Indexes
+            - Real-time Updates
+            - Performance Metrics`"]
+        end
+    end
+    
+    subgraph "✅ EVENT PROCESSING PIPELINE"
+        subgraph "Event Processors"
+            EP_EMAIL["`**Email Event Processor**
+            *Communication*
+            - ContactFormSubmitted → Send Email
+            - StatusUpdated → Notify User
+            - FollowUpScheduled → Send Reminder
+            - Async Processing
+            - Retry Logic`"]
+            
+            EP_ANALYTICS["`**Analytics Event Processor**
+            *Data Processing*
+            - Page Views → Update Stats
+            - Interactions → User Journey
+            - Errors → Alert System
+            - Real-time Processing
+            - Batch Processing`"]
+            
+            EP_CACHE["`**Cache Event Processor**
+            *Performance*
+            - Content Updated → Invalidate Cache
+            - User Action → Update Cache
+            - System Event → Cache Warming
+            - Cache Coherence
+            - TTL Management`"]
+        end
+        
+        subgraph "Saga Orchestration"
+            SAGA["`**Sagas**
+            *Long-running Processes*
+            - Contact Follow-up Process
+            - Content Publishing Workflow
+            - Analytics Report Generation
+            - Error Recovery Process
+            - State Management`"]
+        end
+    end
+    
+    subgraph "✅ INTEGRATION LAYER"
+        subgraph "API Gateway"
+            API["`**API Gateway**
+            *Request Routing*
+            - Command Routing
+            - Query Routing
+            - Rate Limiting
+            - Authentication
+            - Request Validation`"]
+        end
+        
+        subgraph "Event Adapters"
+            EA["`**Event Adapters**
+            *External Integration*
+            - External System Events
+            - Webhook Processing
+            - API Event Translation
+            - Event Formatting
+            - Error Handling`"]
+        end
+    end
+    
+    %% Command Flow
+    API --> CV
+    CV --> CMD_CONTACT
+    CV --> CMD_PORTFOLIO
+    CV --> CMD_ANALYTICS
+    
+    CMD_CONTACT --> CH_CONTACT
+    CMD_PORTFOLIO --> CH_PORTFOLIO
+    CMD_ANALYTICS --> CH_ANALYTICS
+    
+    CH_CONTACT --> DE_CONTACT
+    CH_PORTFOLIO --> DE_PORTFOLIO
+    CH_ANALYTICS --> DE_ANALYTICS
+    
+    %% Event Flow
+    DE_CONTACT --> ES
+    DE_PORTFOLIO --> ES
+    DE_ANALYTICS --> ES
+    DE_SYSTEM --> ES
+    
+    ES --> EB
+    
+    EB --> EP_EMAIL
+    EB --> EP_ANALYTICS
+    EB --> EP_CACHE
+    EB --> SAGA
+    
+    %% Query Flow
+    API --> QH_PORTFOLIO
+    API --> QH_CONTACT
+    API --> QH_ANALYTICS
+    
+    QH_PORTFOLIO --> RM_PORTFOLIO
+    QH_CONTACT --> RM_CONTACT
+    QH_ANALYTICS --> RM_ANALYTICS
+    
+    RM_PORTFOLIO --> MV
+    RM_CONTACT --> MV
+    RM_ANALYTICS --> MV
+    
+    %% Event Processing to Read Models
+    EP_ANALYTICS -.->|"Updates"| RM_ANALYTICS
+    EP_CACHE -.->|"Optimizes"| MV
+    SAGA -.->|"Coordinates"| RM_CONTACT
+    
+    %% External Integration
+    EA --> EB
+    EB --> EA
+    
+    %% Styling
+    classDef command fill:#e3f2fd,stroke:#2196f3,stroke-width:3px
+    classDef event fill:#e8f5e8,stroke:#4caf50,stroke-width:3px
+    classDef query fill:#fff3e0,stroke:#ff9800,stroke-width:3px
+    classDef processing fill:#f3e5f5,stroke:#9c27b0,stroke-width:2px
+    classDef infrastructure fill:#fce4ec,stroke:#e91e63,stroke-width:2px
+    
+    class CH_CONTACT,CH_PORTFOLIO,CH_ANALYTICS,CMD_CONTACT,CMD_PORTFOLIO,CMD_ANALYTICS,CV command
+    class DE_CONTACT,DE_PORTFOLIO,DE_ANALYTICS,DE_SYSTEM,ES,EB event
+    class QH_PORTFOLIO,QH_CONTACT,QH_ANALYTICS,RM_PORTFOLIO,RM_CONTACT,RM_ANALYTICS,MV query
+    class EP_EMAIL,EP_ANALYTICS,EP_CACHE,SAGA processing
+    class API,EA infrastructure
+    
+    %% Benefits Annotations
+    ES -.->|"Audit Trail & Replay"| DE_CONTACT
+    EB -.->|"Loose Coupling"| EP_EMAIL
+    MV -.->|"Performance"| QH_ANALYTICS
+    SAGA -.->|"Complex Workflows"| CH_CONTACT
+```
+
+**Improved Events & Commands Benefits:**
+
+1. **CQRS Implementation**: Clear separation of command and query responsibilities
+2. **Event Sourcing**: Complete audit trail with event replay capability
+3. **Event-Driven Architecture**: Loose coupling via event bus
+4. **Business Intelligence**: Comprehensive analytics and metrics
+5. **Async Processing**: Non-blocking operations with saga orchestration
+6. **Performance Optimization**: Materialized views and caching
+
+**Key Improvements:**
+
+**Command Side:**
+- Formal command pattern with validation
+- Business rule enforcement
+- Authorization and rate limiting
+- Command audit trail
+
+**Event System:**
+- Persistent event store for audit
+- Event correlation and replay
+- Real-time event processing
+- Dead letter queue for reliability
+
+**Query Side:**
+- Optimized read models
+- Materialized views for performance
+- Real-time analytics
+- Business intelligence dashboards
+
+**Processing Pipeline:**
+- Asynchronous event processing
+- Saga orchestration for workflows
+- Cache management
+- Error recovery
+
+**Integration:**
+- API gateway for routing
+- External system integration
+- Webhook support
+- Event translation
+
+**Business Value:**
+- **Complete Audit Trail**: Every action tracked and replayable
+- **Real-time Analytics**: Immediate insights into user behavior
+- **Performance**: Optimized queries and caching
+- **Scalability**: Event-driven architecture supports growth
+- **Reliability**: Error handling and recovery mechanisms
+- **Business Intelligence**: Data-driven decision making

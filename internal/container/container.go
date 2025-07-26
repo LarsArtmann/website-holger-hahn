@@ -4,9 +4,13 @@
 package container
 
 import (
+	"context"
+	"log"
+
 	"github.com/samber/do"
 	"holger-hahn-website/internal/application"
 	"holger-hahn-website/internal/config"
+	"holger-hahn-website/internal/database"
 	"holger-hahn-website/internal/domain"
 	"holger-hahn-website/internal/infrastructure"
 	"holger-hahn-website/internal/repository"
@@ -48,24 +52,42 @@ func (c *Container) registerDependencies() {
 		return cfg, nil
 	})
 
-	// Register repository implementations.
-	// Note: In a real application, you would register actual implementations.
-	// For now, we're registering placeholder providers that return nil.
-	// These would be replaced with actual database implementations.
+	// Register database manager and initialize database
+	do.Provide(c.injector, func(_ *do.Injector) (*database.DatabaseManager, error) {
+		dbConfig := database.DefaultConfig()
+		dbManager, err := database.NewDatabaseManager(dbConfig)
+		if err != nil {
+			return nil, err
+		}
 
-	do.Provide(c.injector, func(_ *do.Injector) (repository.TechnologyRepository, error) {
-		return NewInMemoryTechnologyRepository(), nil
+		// Run migrations on startup
+		ctx := context.Background()
+		if err := dbManager.Migrate(ctx); err != nil {
+			log.Printf("Warning: Database migration failed: %v", err)
+			// Don't fail startup, but log the warning
+		}
+
+		return dbManager, nil
+	})
+
+	// Register database repositories (replacing in-memory implementations)
+	do.Provide(c.injector, func(i *do.Injector) (repository.TechnologyRepository, error) {
+		dbManager := do.MustInvoke[*database.DatabaseManager](i)
+		return database.NewTechnologyRepository(dbManager.Queries()), nil
 	})
 
 	do.Provide(c.injector, func(_ *do.Injector) (repository.ExperienceRepository, error) {
+		// TODO: Implement database experience repository when available
 		return NewInMemoryExperienceRepository(), nil
 	})
 
 	do.Provide(c.injector, func(_ *do.Injector) (repository.ServiceRepository, error) {
+		// TODO: Implement database service repository when available  
 		return NewInMemoryServiceRepository(), nil
 	})
 
 	do.Provide(c.injector, func(_ *do.Injector) (repository.UnitOfWork, error) {
+		// TODO: Implement database unit of work when available
 		return NewInMemoryUnitOfWork(), nil
 	})
 

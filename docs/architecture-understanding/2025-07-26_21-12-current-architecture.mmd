@@ -1,0 +1,238 @@
+```mermaid
+graph TB
+    %% Current Application Architecture - Showing Issues and Disconnected Systems
+
+    subgraph "HTTP Layer"
+        HTTP["`**HTTP Server**
+        *Gin Router*
+        - Single Entry Point
+        - Static File Serving
+        - Route Management`"]
+    end
+
+    subgraph "Handler Layer"
+        PH["`**Portfolio Handlers**
+        *Main Application*
+        - Home Page Rendering
+        - Technologies API
+        - Experiences API
+        - Services API
+        - Health Check`"]
+
+        CH["`**Contact Handler**
+        *Contact System*
+        - Form Submission
+        - Validation
+        - Response Building`"]
+    end
+
+    subgraph "⚠️ DUAL CONTAINER PROBLEM"
+        subgraph "Portfolio Container"
+            PC["`**Portfolio DI Container**
+            *samber/do*
+            - Configuration
+            - Portfolio Services
+            - In-Memory Repositories
+            - Repository Abstractions`"]
+        end
+
+        subgraph "Contact Container (Ghost System)"
+            CC["`**Contact DI Container**
+            *Independent System*
+            - Contact Service
+            - Email Service
+            - Logging Service
+            - Memory Contact Repository`"]
+        end
+    end
+
+    subgraph "Service Layer (Disconnected)"
+        subgraph "Portfolio Services"
+            TS["`**Technology Service**
+            *Business Logic*
+            - Technology Management
+            - Category Filtering
+            - Level Filtering`"]
+
+            ES["`**Experience Service**
+            *Business Logic*
+            - Experience Management
+            - Date Range Queries
+            - Technology Associations`"]
+
+            PS["`**Portfolio Service**
+            *Business Logic*
+            - Service Management
+            - Active Services
+            - Category Filtering`"]
+        end
+
+        subgraph "Contact Services (Isolated)"
+            CS["`**Contact Service**
+            *Application Layer*
+            - Form Processing
+            - Email Notifications
+            - Contact Management`"]
+        end
+    end
+
+    subgraph "Repository Layer (Fragmented)"
+        subgraph "In-Memory Repositories"
+            TMR["`**Technology Repository**
+            *Memory Implementation*
+            - CRUD Operations
+            - Filter Support
+            - No Persistence`"]
+
+            EMR["`**Experience Repository**
+            *Memory Implementation*
+            - Sample Data Loading
+            - Query Support
+            - No Persistence`"]
+
+            SMR["`**Service Repository**
+            *Memory Implementation*
+            - Sample Data Loading
+            - Category Filtering
+            - No Persistence`"]
+        end
+
+        subgraph "Contact Repository (Separate)"
+            CMR["`**Contact Repository**
+            *Memory Implementation*
+            - Contact Storage
+            - Basic Queries
+            - No Persistence`"]
+        end
+    end
+
+    subgraph "Infrastructure Layer (Partial)"
+        subgraph "Email System"
+            ES_SMTP["`**SMTP Email Service**
+            *Infrastructure*
+            - Contact Notifications
+            - Confirmation Emails
+            - Error Handling`"]
+        end
+
+        subgraph "Logging System"
+            LS["`**Console Logging**
+            *Infrastructure*
+            - Structured Logging
+            - Error Tracking
+            - Debug Information`"]
+        end
+    end
+
+    subgraph "❌ UNUSED DATABASE SYSTEM"
+        subgraph "Database Infrastructure (Ghost)"
+            DM["`**Database Manager**
+            *SQLite + sqlc*
+            - Connection Management
+            - Transaction Support
+            - Migration Support
+            - Health Checks`"]
+
+            DB[("`**SQLite Database**
+            *Persistent Storage*
+            - Contact Table
+            - Analytics Table
+            - Technologies Table
+            - Services Table
+            - Experiences Table`")]
+
+            SQLC["`**SQLC Generated**
+            *Type-Safe Queries*
+            - Contact Queries
+            - Analytics Queries
+            - Content Queries`"]
+        end
+    end
+
+    subgraph "Template System"
+        TEMPL["`**Templ Templates**
+        *Server-Side Rendering*
+        - Type-Safe HTML
+        - Component System
+        - Static Generation`"]
+    end
+
+    subgraph "Static Assets"
+        CSS["`**CSS Styles**
+        *TailwindCSS*
+        - Modern Theme
+        - Responsive Design
+        - Component Styling`"]
+
+        IMG["`**Images & Icons**
+        *Static Files*
+        - Profile Images
+        - Technology Icons
+        - Company Logos`"]
+    end
+
+    %% Connections - Current Flow
+    HTTP --> PH
+    HTTP --> CH
+
+    PH --> PC
+    CH --> CC
+
+    PC --> TS
+    PC --> ES
+    PC --> PS
+
+    CC --> CS
+
+    TS --> TMR
+    ES --> EMR
+    ES --> TMR
+    PS --> SMR
+    PS --> TMR
+
+    CS --> CMR
+    CS --> ES_SMTP
+    CS --> LS
+
+    PH --> TEMPL
+    HTTP --> CSS
+    HTTP --> IMG
+
+    %% Unused/Disconnected Systems (Dashed Lines)
+    DM -.-> DB
+    DM -.-> SQLC
+
+    %% Styling
+    classDef problem fill:#ffebee,stroke:#f44336,stroke-width:3px
+    classDef unused fill:#f3e5f5,stroke:#9c27b0,stroke-width:2px,stroke-dasharray: 5 5
+    classDef working fill:#e8f5e8,stroke:#4caf50,stroke-width:2px
+    classDef isolated fill:#fff3e0,stroke:#ff9800,stroke-width:2px
+
+    class PC,CC problem
+    class DM,DB,SQLC unused
+    class HTTP,PH,TS,ES,PS,TEMPL working
+    class CH,CS,CMR,ES_SMTP,LS isolated
+
+    %% Annotations
+    PC -.->|"Separate Container"| CC
+    TMR -.->|"No Database Connection"| DB
+    EMR -.->|"No Database Connection"| DB
+    SMR -.->|"No Database Connection"| DB
+    CMR -.->|"No Database Connection"| DB
+```
+
+**Current Architecture Issues:**
+
+1. **Dual Container Problem**: Portfolio and Contact systems use separate DI containers
+2. **Ghost Database**: Complete SQLite infrastructure exists but is unused
+3. **Disconnected Systems**: Contact and Portfolio systems operate independently
+4. **In-Memory Only**: All data lost on restart, no persistence
+5. **No Analytics**: Analytics infrastructure exists but no event tracking
+6. **Fragmented Repository Layer**: Multiple repository implementations for same data
+
+**Key Problems:**
+- Data persistence completely missing
+- Contact and portfolio data isolated
+- Database infrastructure investment wasted
+- No user analytics or insights
+- System state not recoverable
