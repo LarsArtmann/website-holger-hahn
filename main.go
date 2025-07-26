@@ -12,7 +12,6 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/samber/do"
-
 	"holger-hahn-website/internal/application"
 	"holger-hahn-website/internal/config"
 	"holger-hahn-website/internal/constants"
