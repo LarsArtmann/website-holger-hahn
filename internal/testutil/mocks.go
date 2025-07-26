@@ -421,7 +421,7 @@ func (m *MockServiceRepository) Delete(ctx context.Context, id string) error {
 }
 
 func (m *MockServiceRepository) List(ctx context.Context, filter repository.ServiceFilter) ([]*domain.Service, error) {
-	m.callLog = append(m.callLog, "List(filter)")
+	m.callLog = append(m.callLog, "ListServices(filter)")
 	if m.errorMode {
 		return nil, errors.New(m.errorMsg)
 	}

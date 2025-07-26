@@ -58,7 +58,18 @@
       "Bash(wsl:*)",
       "Bash(revive:*)",
       "WebFetch(domain:brandfetch.com)",
-      "WebFetch(domain:www.altalis.com)"
+      "WebFetch(domain:www.altalis.com)",
+      "WebFetch(domain:www.c24.de)",
+      "Bash(for file in )",
+      "Bash(\"/Users/larsartmann/projects/holger-hahn/cmd/build/main.go\" )",
+      "Bash(\"/Users/larsartmann/projects/holger-hahn/main.go\" )",
+      "Bash(\"/Users/larsartmann/projects/holger-hahn/internal/application/contact_service.go\" )",
+      "Bash(\"/Users/larsartmann/projects/holger-hahn/internal/config/config.go\" )",
+      "Bash(\"/Users/larsartmann/projects/holger-hahn/internal/constants/constants.go\" )",
+      "Bash(\"/Users/larsartmann/projects/holger-hahn/internal/container/container.go\" )",
+      "Bash(\"/Users/larsartmann/projects/holger-hahn/internal/container/memory_repositories.go\")",
+      "Bash(do)",
+      "Bash(done)"
     ]
   },
   "enableAllProjectMcpServers": true,
