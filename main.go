@@ -1,13 +1,22 @@
+// Package main provides the unified HTTP server entry point for Holger Hahn's website.
+// It combines both portfolio display and contact form functionalities into a single application.
 package main
 
 import (
 	"context"
+	"errors"
 	"log"
 	"net/http"
 	"os"
+	"time"
 
 	"holger-hahn-website/internal/application"
+	"holger-hahn-website/internal/config"
+	"holger-hahn-website/internal/constants"
+	"holger-hahn-website/internal/container"
+	"holger-hahn-website/internal/handler"
 	"holger-hahn-website/internal/infrastructure"
+	"holger-hahn-website/internal/service"
 	"holger-hahn-website/templates"
 
 	"github.com/gin-gonic/gin"
@@ -38,7 +47,6 @@ func (h *ContactHandler) SubmitContactForm(c *gin.Context) {
 			"message": "Please check all required fields and try again.",
 			"error":   err.Error(),
 		})
-
 		return
 	}
 
@@ -52,40 +60,24 @@ func (h *ContactHandler) SubmitContactForm(c *gin.Context) {
 			"success": false,
 			"message": "Sorry, there was an error processing your request. Please try again later.",
 		})
-
 		return
 	}
 
 	log.Printf("Contact form submitted successfully - ID: %s", response.ID)
-
-	// Return success response
 	c.JSON(http.StatusOK, response)
 }
 
-func main() {
-	// Setup dependency injection container
-	injector := infrastructure.SetupContainer()
-
-	// Get contact service from container
-	contactService := do.MustInvoke[*application.ContactService](injector)
-
-	// Create handlers
-	contactHandler := NewContactHandler(contactService)
-
-	// Setup Gin router
-	r := gin.Default()
-
+// setupRoutes configures all application routes for both portfolio and contact functionality.
+func setupRoutes(r *gin.Engine, portfolioHandlers *handler.PortfolioHandlers, contactHandler *ContactHandler) {
 	// Serve static files
 	r.Static("/static", "./static")
 
-	// Routes
+	// Main portfolio page
 	r.GET("/", func(c *gin.Context) {
 		component := templates.Index()
-
 		c.Header("Content-Type", "text/html")
-
 		if err := component.Render(c.Request.Context(), c.Writer); err != nil {
-			c.JSON(500, gin.H{"error": "Failed to render template"})
+			c.JSON(constants.HTTPInternalServerError, gin.H{"error": "Failed to render template"})
 			return
 		}
 	})
@@ -94,21 +86,76 @@ func main() {
 	r.POST("/contact", contactHandler.SubmitContactForm)
 
 	// Health check endpoint
-	r.GET("/health", func(c *gin.Context) {
-		c.JSON(http.StatusOK, gin.H{"status": "healthy"})
-	})
+	r.GET("/health", portfolioHandlers.HealthHandler)
 
-	// Get port from environment (Cloud Run sets PORT)
-	port := os.Getenv("PORT")
-	if port == "" {
-		port = "8081" // Default for local development
+	// Portfolio API routes for dynamic data
+	api := r.Group("/api/v1")
+	{
+		api.GET("/technologies", portfolioHandlers.TechnologiesHandler)
+		api.GET("/experiences", portfolioHandlers.ExperiencesHandler)
+		api.GET("/services", portfolioHandlers.ServicesHandler)
+	}
+}
+
+func main() {
+	// Initialize unified DI container (using portfolio app's container system)
+	di := container.New()
+
+	// Get configuration
+	cfg := container.MustGet[*config.Config](di)
+
+	// Set Gin mode based on environment
+	if cfg.Server.IsProduction() {
+		gin.SetMode(gin.ReleaseMode)
 	}
 
-	log.Printf("Server starting on :%s", port)
-	log.Println("Contact form endpoint: POST /contact")
-	log.Println("Health check: GET /health")
+	// Initialize Gin router
+	r := gin.Default()
 
-	if err := r.Run(":" + port); err != nil {
-		log.Fatal("Failed to start server:", err)
+	// Get portfolio services from DI container
+	technologyService := container.MustGet[*service.TechnologyService](di)
+	experienceService := container.MustGet[*service.ExperienceService](di)
+	portfolioService := container.MustGet[*service.PortfolioService](di)
+
+	// Initialize portfolio handlers
+	portfolioHandlers := handler.NewPortfolioHandlers(
+		technologyService,
+		experienceService,
+		portfolioService,
+	)
+
+	// Setup contact service using infrastructure container (temporary dual container approach)
+	contactInjector := infrastructure.SetupContainer()
+	contactService := do.MustInvoke[*application.ContactService](contactInjector)
+	contactHandler := NewContactHandler(contactService)
+
+	// Setup all routes (portfolio + contact)
+	setupRoutes(r, portfolioHandlers, contactHandler)
+
+	// Create HTTP server with configured timeouts
+	server := &http.Server{
+		Addr:         cfg.Server.Address(),
+		Handler:      r,
+		ReadTimeout:  time.Duration(cfg.Server.ReadTimeout) * time.Second,
+		WriteTimeout: time.Duration(cfg.Server.WriteTimeout) * time.Second,
+	}
+
+	log.Printf("🚀 Unified Holger Hahn website server starting on %s in %s mode", cfg.Server.Address(), cfg.Server.Environment)
+	log.Println("📧 Contact form endpoint: POST /contact")
+	log.Println("🏥 Health check: GET /health")
+	log.Println("🔧 Portfolio API: GET /api/v1/technologies, /api/v1/experiences, /api/v1/services")
+
+	if err := server.ListenAndServe(); err != nil && !errors.Is(err, http.ErrServerClosed) {
+		log.Printf("Failed to start server: %v", err)
+		// Cleanup DI containers before exit
+		if shutdownErr := di.Shutdown(); shutdownErr != nil {
+			log.Printf("Error shutting down DI container: %v", shutdownErr)
+		}
+		os.Exit(1)
+	}
+
+	// Normal shutdown - cleanup DI containers
+	if err := di.Shutdown(); err != nil {
+		log.Printf("Error shutting down DI container: %v", err)
 	}
 }
