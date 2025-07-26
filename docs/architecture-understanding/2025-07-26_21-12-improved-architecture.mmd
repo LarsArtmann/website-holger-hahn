@@ -1,7 +1,7 @@
 ```mermaid
 graph TB
     %% Improved Application Architecture - Unified, Clean, and Persistent
-    
+
     subgraph "HTTP Layer"
         HTTP["`**HTTP Server**
         *Gin Router + Middleware*
@@ -11,7 +11,7 @@ graph TB
         - Static File Serving
         - Health Monitoring`"]
     end
-    
+
     subgraph "Handler Layer - Clean Separation"
         PH["`**Portfolio Handlers**
         *Presentation Layer*
@@ -20,21 +20,21 @@ graph TB
         - Experiences API
         - Services API
         - Health & Metrics`"]
-        
+
         CH["`**Contact Handler**
         *Presentation Layer*
         - Form Submission
         - Validation
         - Response Building
         - Rate Limiting`"]
-        
+
         AH["`**Analytics Handler**
         *NEW - Metrics Layer*
         - Event Tracking
         - Dashboard API
         - Performance Metrics`"]
     end
-    
+
     subgraph "✅ UNIFIED CONTAINER SYSTEM"
         UC["`**Unified DI Container**
         *Single Source of Truth*
@@ -44,7 +44,7 @@ graph TB
         - Infrastructure Registration
         - Lifecycle Management`"]
     end
-    
+
     subgraph "Application Layer - Use Cases"
         subgraph "Portfolio Use Cases"
             PUC["`**Portfolio Use Cases**
@@ -54,7 +54,7 @@ graph TB
             - Service Portfolio
             - Content Management`"]
         end
-        
+
         subgraph "Contact Use Cases"
             CUC["`**Contact Use Cases**
             *Application Services*
@@ -63,7 +63,7 @@ graph TB
             - Lead Management
             - CRM Integration`"]
         end
-        
+
         subgraph "Analytics Use Cases"
             AUC["`**Analytics Use Cases**
             *NEW - Business Intelligence*
@@ -73,7 +73,7 @@ graph TB
             - Business Insights`"]
         end
     end
-    
+
     subgraph "Domain Layer - Business Logic"
         subgraph "Domain Services"
             TDS["`**Technology Domain**
@@ -81,26 +81,26 @@ graph TB
             - Skill Assessment
             - Technology Evolution
             - Expertise Validation`"]
-            
+
             EDS["`**Experience Domain**
             *Business Logic*
             - Career Progression
             - Achievement Metrics
             - Impact Calculation`"]
-            
+
             SDS["`**Service Domain**
             *Business Logic*
             - Service Definition
             - Pricing Strategy
             - Delivery Planning`"]
-            
+
             CDS["`**Contact Domain**
             *Business Logic*
             - Lead Qualification
             - Communication Rules
             - Follow-up Logic`"]
         end
-        
+
         subgraph "Domain Events"
             DE["`**Domain Events**
             *Event-Driven Architecture*
@@ -110,7 +110,7 @@ graph TB
             - Experience Added`"]
         end
     end
-    
+
     subgraph "Repository Layer - Unified Data Access"
         subgraph "Database Repositories"
             TR["`**Technology Repository**
@@ -119,28 +119,28 @@ graph TB
             - Category Queries
             - Skill Level Filtering
             - Performance Optimized`"]
-            
+
             ER["`**Experience Repository**
             *SQLite + SQLC*
             - Career Timeline
             - Achievement Tracking
             - Technology Mapping
             - Metric Calculations`"]
-            
+
             SR["`**Service Repository**
             *SQLite + SQLC*
             - Service Catalog
             - Pricing Management
             - Availability Tracking
             - Category Organization`"]
-            
+
             CR["`**Contact Repository**
             *SQLite + SQLC*
             - Lead Management
             - Communication History
             - Status Tracking
             - Follow-up Scheduling`"]
-            
+
             AR["`**Analytics Repository**
             *SQLite + SQLC*
             - Event Storage
@@ -148,7 +148,7 @@ graph TB
             - Performance Tracking
             - Insight Generation`"]
         end
-        
+
         subgraph "Unit of Work Pattern"
             UOW["`**Unit of Work**
             *Transaction Management*
@@ -158,7 +158,7 @@ graph TB
             - Performance Optimization`"]
         end
     end
-    
+
     subgraph "Infrastructure Layer - External Services"
         subgraph "Database System"
             DM["`**Database Manager**
@@ -168,7 +168,7 @@ graph TB
             - Migration Support
             - Health Monitoring
             - Performance Metrics`"]
-            
+
             DB[("`**SQLite Database**
             *Persistent Storage*
             - ACID Transactions
@@ -177,7 +177,7 @@ graph TB
             - Backup Support
             - Analytics Tables`")]
         end
-        
+
         subgraph "External Services"
             ES_SMTP["`**Email Service**
             *SMTP + Templates*
@@ -185,14 +185,14 @@ graph TB
             - Template Management
             - Delivery Tracking
             - Error Handling`"]
-            
+
             LS["`**Logging Service**
             *Structured Logging*
             - Event Correlation
             - Error Tracking
             - Performance Monitoring
             - Alert Management`"]
-            
+
             CS_CACHE["`**Cache Service**
             *NEW - Performance*
             - Response Caching
@@ -200,7 +200,7 @@ graph TB
             - Static Asset Cache
             - CDN Integration`"]
         end
-        
+
         subgraph "Event System"
             EB["`**Event Bus**
             *NEW - Event Processing*
@@ -210,7 +210,7 @@ graph TB
             - Async Processing`"]
         end
     end
-    
+
     subgraph "Template & Asset System"
         TEMPL["`**Templ Templates**
         *Server-Side Rendering*
@@ -218,14 +218,14 @@ graph TB
         - Component System
         - Performance Optimized
         - SEO Friendly`"]
-        
+
         CSS["`**Optimized CSS**
         *TailwindCSS + Build*
         - Purged Styles
         - Minified Output
         - Component Classes
         - Responsive Design`"]
-        
+
         IMG["`**Asset Pipeline**
         *Optimized Delivery*
         - Image Optimization
@@ -233,72 +233,72 @@ graph TB
         - CDN Integration
         - Format Selection`"]
     end
-    
+
     %% Connections - Improved Flow
     HTTP --> PH
     HTTP --> CH
     HTTP --> AH
-    
+
     PH --> UC
     CH --> UC
     AH --> UC
-    
+
     UC --> PUC
     UC --> CUC
     UC --> AUC
-    
+
     PUC --> TDS
     PUC --> EDS
     PUC --> SDS
     CUC --> CDS
     AUC --> DE
-    
+
     TDS --> TR
     EDS --> ER
     SDS --> SR
     CDS --> CR
     AUC --> AR
-    
+
     TR --> UOW
     ER --> UOW
     SR --> UOW
     CR --> UOW
     AR --> UOW
-    
+
     UOW --> DM
     DM --> DB
-    
+
     CUC --> ES_SMTP
     PUC --> LS
     CUC --> LS
     AUC --> LS
-    
+
     DE --> EB
     EB --> AUC
-    
+
     PUC --> CS_CACHE
     AUC --> CS_CACHE
-    
+
     PH --> TEMPL
     HTTP --> CSS
     HTTP --> IMG
-    
+
     %% Analytics Flow
     HTTP -.->|"Event Tracking"| AUC
     PH -.->|"Page Views"| AUC
     CH -.->|"Form Events"| AUC
-    
+
     %% Styling
     classDef improved fill:#e8f5e8,stroke:#4caf50,stroke-width:3px
     classDef new fill:#e3f2fd,stroke:#2196f3,stroke-width:2px
     classDef unified fill:#fff3e0,stroke:#ff9800,stroke-width:2px
     classDef infrastructure fill:#f3e5f5,stroke:#9c27b0,stroke-width:2px
-    
+
     class UC,UOW,DM,DB improved
     class AH,AUC,AR,EB,CS_CACHE new
     class PUC,CUC,TDS,EDS,SDS,CDS unified
     class ES_SMTP,LS,TEMPL,CSS,IMG infrastructure
-    
+
     %% Annotations with Benefits
     UC -.->|"Single Source of Truth"| PUC
     UC -.->|"Consistent Configuration"| CUC

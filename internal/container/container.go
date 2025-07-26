@@ -82,7 +82,7 @@ func (c *Container) registerDependencies() {
 	})
 
 	do.Provide(c.injector, func(_ *do.Injector) (repository.ServiceRepository, error) {
-		// TODO: Implement database service repository when available  
+		// TODO: Implement database service repository when available
 		return NewInMemoryServiceRepository(), nil
 	})
 
@@ -122,9 +122,10 @@ func (c *Container) registerDependencies() {
 	})
 
 	// Register contact-related dependencies
-	// Contact repository
-	do.Provide(c.injector, func(_ *do.Injector) (domain.ContactRepository, error) {
-		return infrastructure.NewMemoryContactRepository(), nil
+	// Contact repository (using database implementation)
+	do.Provide(c.injector, func(i *do.Injector) (domain.ContactRepository, error) {
+		dbManager := do.MustInvoke[*database.DatabaseManager](i)
+		return database.NewContactRepository(dbManager.Queries()), nil
 	})
 
 	// Email service
@@ -149,6 +150,13 @@ func (c *Container) registerDependencies() {
 
 // Shutdown gracefully shuts down the container and cleans up resources.
 func (c *Container) Shutdown() error {
+	// Close database connection before shutting down injector
+	if dbManager, err := do.Invoke[*database.DatabaseManager](c.injector); err == nil {
+		if closeErr := dbManager.Close(); closeErr != nil {
+			log.Printf("Error closing database connection: %v", closeErr)
+		}
+	}
+	
 	return c.injector.Shutdown()
 }
 

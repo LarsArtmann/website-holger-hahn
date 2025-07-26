@@ -1,7 +1,7 @@
 ```mermaid
 graph TB
     %% Current Events & Commands - Limited and Disconnected
-    
+
     subgraph "❌ NO FORMAL COMMAND PATTERN"
         subgraph "HTTP Requests (Raw)"
             HR1["`**GET /**
@@ -9,13 +9,13 @@ graph TB
             - No command structure
             - Direct handler call
             - No validation layer`"]
-            
+
             HR2["`**POST /contact**
             *Contact Form*
             - Basic validation only
             - No command object
             - Direct service call`"]
-            
+
             HR3["`**GET /api/v1/***
             *API Requests*
             - No command validation
@@ -23,7 +23,7 @@ graph TB
             - Direct repository access`"]
         end
     end
-    
+
     subgraph "⚠️ MINIMAL EVENT HANDLING"
         subgraph "Contact Events (Basic)"
             CE1["`**Contact Created**
@@ -32,7 +32,7 @@ graph TB
             - Inline email sending
             - No event persistence
             - No event replay`"]
-            
+
             CE2["`**Email Sent**
             *Side Effect*
             - Not tracked as event
@@ -40,20 +40,20 @@ graph TB
             - No retry mechanism
             - No audit trail`"]
         end
-        
+
         subgraph "System Events (Missing)"
             SE1["`**❌ Page Views**
             *Not Tracked*
             - No analytics events
             - Lost user behavior
             - No conversion metrics`"]
-            
+
             SE2["`**❌ API Usage**
             *Not Tracked*
             - No performance metrics
             - No usage patterns
             - No rate limiting events`"]
-            
+
             SE3["`**❌ System Health**
             *Not Tracked*
             - No health events
@@ -61,7 +61,7 @@ graph TB
             - No error aggregation`"]
         end
     end
-    
+
     subgraph "Current Processing Flow"
         subgraph "Contact Processing"
             CP1["`**Form Validation**
@@ -69,33 +69,33 @@ graph TB
             - Basic field validation
             - No business rules
             - No command pattern`"]
-            
+
             CP2["`**Domain Creation**
             *Direct Instantiation*
             - No command handling
             - No event sourcing
             - Inline processing`"]
-            
+
             CP3["`**Repository Save**
             *Memory Only*
             - No persistence
             - No event store
             - No audit trail`"]
-            
+
             CP4["`**Email Processing**
             *Synchronous*
             - Blocking operation
             - No retry logic
             - No event tracking`"]
         end
-        
+
         subgraph "Portfolio Processing"
             PP1["`**Data Retrieval**
             *Memory Access*
             - No caching events
             - No performance tracking
             - No analytics`"]
-            
+
             PP2["`**Template Rendering**
             *Direct Execution*
             - No rendering events
@@ -103,7 +103,7 @@ graph TB
             - No error tracking`"]
         end
     end
-    
+
     subgraph "❌ MISSING EVENT STORE"
         ES["`**No Event Store**
         *Critical Gap*
@@ -113,7 +113,7 @@ graph TB
         - No business intelligence
         - No debugging support`"]
     end
-    
+
     subgraph "❌ MISSING COMMAND HANDLERS"
         CH["`**No Command Pattern**
         *Architecture Gap*
@@ -123,21 +123,21 @@ graph TB
         - No command replay
         - No authorization layer`"]
     end
-    
+
     subgraph "Current Data Flow (Limited)"
         DF1["`**HTTP Request**
         → Handler
         → Service
         → Repository
         → Memory`"]
-        
+
         DF2["`**No Event Flow**
         - No event publishing
         - No event subscription
         - No event correlation
         - No event analytics`"]
     end
-    
+
     %% Current Flow Connections
     HR1 --> PP1
     HR1 --> PP2
@@ -146,30 +146,30 @@ graph TB
     HR2 --> CP3
     HR2 --> CP4
     HR3 --> PP1
-    
+
     CP2 -.->|"Should Generate"| CE1
     CP4 -.->|"Should Generate"| CE2
-    
+
     %% Missing Connections (Dashed)
     HR1 -.->|"Missing"| SE1
     HR3 -.->|"Missing"| SE2
     CP4 -.->|"Missing"| SE3
-    
+
     CP3 -.->|"Should Store"| ES
     CE1 -.->|"Should Process"| CH
     CE2 -.->|"Should Process"| CH
-    
+
     %% Styling
     classDef missing fill:#ffebee,stroke:#f44336,stroke-width:3px
     classDef limited fill:#fff3e0,stroke:#ff9800,stroke-width:2px
     classDef basic fill:#f3e5f5,stroke:#9c27b0,stroke-width:2px
     classDef flow fill:#e8f5e8,stroke:#4caf50,stroke-width:1px
-    
+
     class ES,CH,SE1,SE2,SE3 missing
     class CE1,CE2,CP1,CP2,CP3,CP4 limited
     class HR1,HR2,HR3,PP1,PP2 basic
     class DF1,DF2 flow
-    
+
     %% Problem Annotations
     ES -.->|"No Audit Trail"| CP3
     CH -.->|"No Validation"| HR2
