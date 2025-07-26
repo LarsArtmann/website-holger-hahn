@@ -97,6 +97,34 @@ func validatePath(path, basePath string, isDestination bool) (string, error) {
 	return cleanPath, nil
 }
 
+// copyFile copies a single file from cleanSrcPath to cleanDstPath.
+// Paths must already be validated for security.
+func copyFile(cleanSrcPath, cleanDstPath string) error {
+	// Open source file.
+	srcFile, err := os.Open(cleanSrcPath) // #nosec G304 - Path validated by validatePath
+	if err != nil {
+		return err
+	}
+	defer srcFile.Close()
+
+	// Ensure destination directory exists.
+	err = os.MkdirAll(filepath.Dir(cleanDstPath), constants.DefaultDirectoryPerms)
+	if err != nil {
+		return err
+	}
+
+	// Create destination file.
+	dstFile, err := os.Create(cleanDstPath) // #nosec G304 - Path validated by validatePath
+	if err != nil {
+		return err
+	}
+	defer dstFile.Close()
+
+	// Copy file contents.
+	_, err = dstFile.ReadFrom(srcFile)
+	return err
+}
+
 func copyDir(src, dst string) error {
 	return filepath.Walk(src, func(path string, info os.FileInfo, err error) error {
 		if err != nil {
@@ -127,26 +155,7 @@ func copyDir(src, dst string) error {
 			return os.MkdirAll(cleanDstPath, info.Mode())
 		}
 
-		// Copy file using validated paths.
-		srcFile, err := os.Open(cleanPath) // #nosec G304 - Path validated by validatePath
-		if err != nil {
-			return err
-		}
-		defer srcFile.Close()
-
-		err = os.MkdirAll(filepath.Dir(cleanDstPath), constants.DefaultDirectoryPerms)
-		if err != nil {
-			return err
-		}
-
-		dstFile, err := os.Create(cleanDstPath) // #nosec G304 - Path validated by validatePath
-		if err != nil {
-			return err
-		}
-		defer dstFile.Close()
-
-		_, err = dstFile.ReadFrom(srcFile)
-
-		return err
+		// Copy file using the extracted copyFile function.
+		return copyFile(cleanPath, cleanDstPath)
 	})
 }
