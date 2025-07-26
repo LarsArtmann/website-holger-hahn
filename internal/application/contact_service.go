@@ -33,7 +33,7 @@ func NewContactService(
 // SubmitContactForm handles a new contact form submission.
 func (s *ContactService) SubmitContactForm(ctx context.Context, req ContactFormRequest) (*ContactFormResponse, error) {
 	// Create domain entity with validation.
-	contact, err := domain.NewContact(req.Name, req.Company, req.Email, req.Project)
+	contact, err := domain.NewContact(req.Name, req.Company, req.Email, req.Project, "")
 	if err != nil {
 		s.logger.Error(ctx, "Failed to create contact", err, map[string]interface{}{
 			"name":    req.Name,
