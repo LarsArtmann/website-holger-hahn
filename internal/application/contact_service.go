@@ -1,3 +1,6 @@
+// Package application contains the business logic and use cases for the portfolio website.
+// It orchestrates domain entities and coordinates with infrastructure services
+// to implement the core business workflows.
 package application
 
 import (
@@ -29,7 +32,7 @@ func NewContactService(
 
 // SubmitContactForm handles a new contact form submission.
 func (s *ContactService) SubmitContactForm(ctx context.Context, req ContactFormRequest) (*ContactFormResponse, error) {
-	// Create domain entity with validation
+	// Create domain entity with validation.
 	contact, err := domain.NewContact(req.Name, req.Company, req.Email, req.Project)
 	if err != nil {
 		s.logger.Error(ctx, "Failed to create contact", err, map[string]interface{}{
@@ -41,7 +44,7 @@ func (s *ContactService) SubmitContactForm(ctx context.Context, req ContactFormR
 		return nil, fmt.Errorf("validation failed: %w", err)
 	}
 
-	// Save to repository
+	// Save to repository.
 	if err := s.contactRepo.Save(ctx, contact); err != nil {
 		s.logger.Error(ctx, "Failed to save contact", err, map[string]interface{}{
 			"contact_id": contact.ID,
@@ -57,32 +60,32 @@ func (s *ContactService) SubmitContactForm(ctx context.Context, req ContactFormR
 		"company":    contact.Company,
 	})
 
-	// Send notification email (async in production)
+	// Send notification email (async in production).
 	if err := s.emailSvc.SendContactNotification(ctx, contact); err != nil {
 		s.logger.Error(ctx, "Failed to send notification email", err, map[string]interface{}{
 			"contact_id": contact.ID,
 			"email":      contact.Email,
 		})
-		// Don't fail the request if email fails - log and continue
+		// Don't fail the request if email fails - log and continue.
 	}
 
-	// Send confirmation email to contact
+	// Send confirmation email to contact.
 	if err := s.emailSvc.SendConfirmationEmail(ctx, contact); err != nil {
 		s.logger.Error(ctx, "Failed to send confirmation email", err, map[string]interface{}{
 			"contact_id": contact.ID,
 			"email":      contact.Email,
 		})
-		// Don't fail the request if email fails - log and continue
+		// Don't fail the request if email fails - log and continue.
 	}
 
-	// Mark as processed
+	// Mark as processed.
 	contact.MarkAsProcessed()
 
 	if err := s.contactRepo.Update(ctx, contact); err != nil {
 		s.logger.Error(ctx, "Failed to mark contact as processed", err, map[string]interface{}{
 			"contact_id": contact.ID,
 		})
-		// Don't fail the request - it's already saved
+		// Don't fail the request - it's already saved.
 	}
 
 	return &ContactFormResponse{
@@ -118,6 +121,7 @@ func (s *ContactService) ListContacts(ctx context.Context, status string, limit,
 	}
 
 	result := make([]*Contact, len(contacts))
+
 	for i, contact := range contacts {
 		result[i] = &Contact{
 			ID:          contact.ID,

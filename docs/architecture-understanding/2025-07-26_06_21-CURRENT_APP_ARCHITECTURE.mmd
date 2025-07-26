@@ -1,0 +1,71 @@
+graph TB
+    %% Current Application Architecture - Simple Static Website
+
+    subgraph "Client Browser"
+        Browser[Web Browser]
+        Mobile[Mobile Browser]
+    end
+
+    subgraph "Static Website Server"
+        Main[main.go<br/>Simple HTTP Server]
+        StaticFiles[Static Files<br/>CSS, JS, Images]
+        
+        subgraph "Templates"
+            IndexTempl[index.templ<br/>Main HTML Structure]
+            HeaderTempl[header.templ<br/>Navigation]
+            HeroTempl[hero.templ<br/>Hero Section]
+            AboutTempl[about.templ<br/>About Section]
+            ServicesTempl[services.templ<br/>Services Grid]
+            ExperienceTempl[experience.templ<br/>Experience Timeline]
+            EducationTempl[education.templ<br/>Education Section]
+            ContactTempl[contact.templ<br/>Contact Form]
+            FooterTempl[footer.templ<br/>Footer]
+        end
+
+        subgraph "CSS System"
+            ModernCSS[modern-theme.css<br/>Design System]
+            InputCSS[input.css<br/>Tailwind Base]
+            OutputCSS[styles.css<br/>Generated Output]
+        end
+    end
+
+    subgraph "External Dependencies"
+        TailwindCDN[Tailwind CSS CDN]
+        DevIconsCDN[DevIcons CDN]
+        InterFont[Google Fonts<br/>Inter Font]
+        HTMX[HTMX Library<br/>Client Interactions]
+    end
+
+    %% Connections
+    Browser --> Main
+    Mobile --> Main
+    Main --> IndexTempl
+    IndexTempl --> HeaderTempl
+    IndexTempl --> HeroTempl
+    IndexTempl --> AboutTempl
+    IndexTempl --> ServicesTempl
+    IndexTempl --> ExperienceTempl
+    IndexTempl --> EducationTempl
+    IndexTempl --> ContactTempl
+    IndexTempl --> FooterTempl
+    
+    Browser --> StaticFiles
+    Browser --> ModernCSS
+    Browser --> OutputCSS
+    Browser --> TailwindCDN
+    Browser --> DevIconsCDN
+    Browser --> InterFont
+    Browser --> HTMX
+
+    %% Styling
+    classDef server fill:#e1f5fe,stroke:#01579b,stroke-width:2px
+    classDef template fill:#f3e5f5,stroke:#4a148c,stroke-width:2px
+    classDef css fill:#e8f5e8,stroke:#1b5e20,stroke-width:2px
+    classDef external fill:#fff3e0,stroke:#e65100,stroke-width:2px
+    classDef client fill:#fce4ec,stroke:#880e4f,stroke-width:2px
+
+    class Main,StaticFiles server
+    class IndexTempl,HeaderTempl,HeroTempl,AboutTempl,ServicesTempl,ExperienceTempl,EducationTempl,ContactTempl,FooterTempl template
+    class ModernCSS,InputCSS,OutputCSS css
+    class TailwindCDN,DevIconsCDN,InterFont,HTMX external
+    class Browser,Mobile client

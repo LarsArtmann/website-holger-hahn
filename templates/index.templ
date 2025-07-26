@@ -9,6 +9,9 @@ templ Index() {
 		<title>Holger M. Hahn - Digital Assets & Blockchain Solutions Architect</title>
 		<meta name="description" content="Enterprise blockchain solutions, digital asset custody, and regulatory compliance expert. Trusted by banks and fintech companies."/>
 		<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏦</text></svg>"/>
+		<!-- Optimized font preload with swap display -->
+		<link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'"/>
+		<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"/></noscript>
 		<link href="/static/css/styles.css" rel="stylesheet"/>
 		<link href="/static/css/modern-theme.css" rel="stylesheet"/>
 		<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/devicon.min.css"/>
@@ -25,14 +28,66 @@ templ Index() {
 		</script>
 	</head>
 	<body class="bg-white text-primary">
+		<!-- Professional Loading Overlay -->
+		<div id="loading-overlay" class="loading-overlay">
+			<div class="loading-content">
+				<div class="loading-spinner"></div>
+				<p class="text-secondary font-medium">Loading...</p>
+			</div>
+		</div>
+		
+		<!-- Progressive Enhancement: Hide loading overlay without JS -->
+		<noscript>
+			<style>
+				#loading-overlay { display: none !important; }
+			</style>
+		</noscript>
+		
 		@Header()
-		@Hero()
-		@About()
-		@Services()
-		@Experience()
-		@Education()
-		@Contact()
+		
+		<main id="main" role="main">
+			@Hero()
+			@About()
+			@Services()
+			@Experience()
+			@Education()
+			@Contact()
+		</main>
+		
 		@Footer()
+		 
+		<!-- Professional Loading Script -->
+		<script>
+			(function() {
+				// Enable JavaScript enhancements
+				document.body.classList.add('js-enabled');
+				
+				const loadingOverlay = document.getElementById('loading-overlay');
+				
+				// Hide loading overlay when page is fully loaded
+				function hideLoading() {
+					if (loadingOverlay) {
+						loadingOverlay.classList.add('hidden');
+						// Remove from DOM after transition
+						setTimeout(() => {
+							if (loadingOverlay.parentNode) {
+								loadingOverlay.parentNode.removeChild(loadingOverlay);
+							}
+						}, 300);
+					}
+				}
+				
+				// Hide on DOM content loaded and all resources loaded
+				if (document.readyState === 'complete') {
+					hideLoading();
+				} else {
+					window.addEventListener('load', hideLoading);
+				}
+				
+				// Fallback: Hide after 3 seconds maximum
+				setTimeout(hideLoading, 3000);
+			})();
+		</script>
 	</body>
-	</html>
+</html>
 }

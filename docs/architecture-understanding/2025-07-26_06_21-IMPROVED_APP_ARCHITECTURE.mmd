@@ -1,0 +1,199 @@
+graph TB
+    %% Improved Application Architecture - Proper Go Enterprise Architecture
+
+    subgraph "Client Layer"
+        Browser[Web Browser]
+        Mobile[Mobile Browser]
+        API_Client[API Client<br/>Future Integration]
+    end
+
+    subgraph "Load Balancer & CDN"
+        CDN[Content Delivery Network<br/>Static Assets]
+        LB[Load Balancer<br/>nginx/traefik]
+    end
+
+    subgraph "Application Layer"
+        subgraph "HTTP Server (gin)"
+            Router[gin.Engine<br/>HTTP Router]
+            Middleware[Middleware Stack<br/>CORS, Auth, Logging]
+            HealthCheck[Health Check<br/>Endpoints]
+        end
+
+        subgraph "Handlers & Controllers"
+            WebHandler[Web Page Handler<br/>Template Rendering]
+            APIHandler[REST API Handler<br/>JSON Responses]
+            ExperienceHandler[Experience API<br/>Dynamic Content]
+            ContactHandler[Contact Form<br/>Submission Handler]
+        end
+
+        subgraph "Business Logic Layer"
+            ExperienceService[Experience Service<br/>Business Logic]
+            ContentService[Content Service<br/>CMS Operations]
+            NotificationService[Notification Service<br/>Email/Alerts]
+            ValidationService[Validation Service<br/>Input Sanitization]
+        end
+
+        subgraph "Repository Layer"
+            ExperienceRepo[Experience Repository<br/>Data Access]
+            ContentRepo[Content Repository<br/>CRUD Operations]
+            AuditRepo[Audit Repository<br/>Change Tracking]
+        end
+    end
+
+    subgraph "Template System (a-h/templ)"
+        TemplateEngine[Templ Engine<br/>Type-safe HTML]
+        ComponentLib[Component Library<br/>Reusable Templates]
+        LayoutSystem[Layout System<br/>Master Templates]
+    end
+
+    subgraph "Configuration (spf13/viper)"
+        ConfigManager[Configuration Manager<br/>Environment Variables]
+        SecretManager[Secret Manager<br/>Sensitive Data]
+        FeatureFlags[Feature Flags<br/>Dynamic Configuration]
+    end
+
+    subgraph "Database Layer (sqlc)"
+        Database[(PostgreSQL<br/>Primary Database)]
+        QueryLayer[SQLC Generated<br/>Type-safe Queries]
+        MigrationTool[Migration Tool<br/>Schema Versioning]
+        ConnectionPool[Connection Pool<br/>pgxpool]
+    end
+
+    subgraph "Observability (OpenTelemetry)"
+        Metrics[Metrics Collection<br/>Prometheus]
+        Tracing[Distributed Tracing<br/>Jaeger]
+        Logging[Structured Logging<br/>charmbracelet/log]
+        Alerts[Alert Manager<br/>Notification System]
+    end
+
+    subgraph "Error Handling (LarsArtmann/uniflow)"
+        ErrorHandler[Unified Error Handler<br/>Type-safe Errors]
+        ErrorContext[Error Context<br/>Rich Error Information]
+        ErrorReporting[Error Reporting<br/>External Services]
+    end
+
+    subgraph "Testing Framework (ginkgo/gomega)"
+        UnitTests[Unit Tests<br/>BDD Specifications]
+        IntegrationTests[Integration Tests<br/>API Testing]
+        E2ETests[E2E Tests<br/>Browser Automation]
+        TestHelpers[Test Helpers<br/>Fixtures & Mocks]
+    end
+
+    subgraph "Dependency Injection (samber/do)"
+        DIContainer[DI Container<br/>Service Registration]
+        ServiceLocator[Service Locator<br/>Dependency Resolution]
+        Lifecycle[Lifecycle Management<br/>Startup/Shutdown]
+    end
+
+    subgraph "Utility Libraries"
+        LoUtils[Lodash-style Utils<br/>samber/lo]
+        Monads[Functional Programming<br/>samber/mo]
+        Validation[Input Validation<br/>Custom Types]
+    end
+
+    subgraph "External Services"
+        EmailService[Email Service<br/>SMTP/SendGrid]
+        Analytics[Analytics Service<br/>Google Analytics]
+        Monitoring[Monitoring Service<br/>Uptime Checks]
+    end
+
+    %% Client Connections
+    Browser --> CDN
+    Mobile --> CDN
+    Browser --> LB
+    Mobile --> LB
+    API_Client --> LB
+
+    %% Load Balancer Connections
+    LB --> Router
+    CDN --> Router
+
+    %% HTTP Layer Connections
+    Router --> Middleware
+    Middleware --> WebHandler
+    Middleware --> APIHandler
+    Middleware --> ExperienceHandler
+    Middleware --> ContactHandler
+
+    %% Handler to Service Connections
+    WebHandler --> ExperienceService
+    APIHandler --> ContentService
+    ExperienceHandler --> ExperienceService
+    ContactHandler --> NotificationService
+
+    %% Service to Repository Connections
+    ExperienceService --> ExperienceRepo
+    ContentService --> ContentRepo
+    NotificationService --> AuditRepo
+
+    %% Repository to Database Connections
+    ExperienceRepo --> QueryLayer
+    ContentRepo --> QueryLayer
+    AuditRepo --> QueryLayer
+    QueryLayer --> Database
+
+    %% Template System Connections
+    WebHandler --> TemplateEngine
+    TemplateEngine --> ComponentLib
+    ComponentLib --> LayoutSystem
+
+    %% Configuration Connections
+    Router --> ConfigManager
+    ConfigManager --> SecretManager
+    ConfigManager --> FeatureFlags
+
+    %% Database Management
+    Database --> MigrationTool
+    QueryLayer --> ConnectionPool
+
+    %% Observability Connections
+    Middleware --> Metrics
+    Middleware --> Tracing
+    Middleware --> Logging
+    Metrics --> Alerts
+
+    %% Error Handling Connections
+    Middleware --> ErrorHandler
+    ExperienceService --> ErrorHandler
+    ErrorHandler --> ErrorContext
+    ErrorHandler --> ErrorReporting
+
+    %% Dependency Injection
+    DIContainer --> ServiceLocator
+    ServiceLocator --> ExperienceService
+    ServiceLocator --> ContentService
+    ServiceLocator --> NotificationService
+    DIContainer --> Lifecycle
+
+    %% Utility Integration
+    ExperienceService --> LoUtils
+    ContentService --> Monads
+    ValidationService --> Validation
+
+    %% External Service Integration
+    NotificationService --> EmailService
+    Middleware --> Analytics
+    HealthCheck --> Monitoring
+
+    %% Testing Integration
+    UnitTests --> ExperienceService
+    IntegrationTests --> APIHandler
+    E2ETests --> Browser
+    TestHelpers --> UnitTests
+
+    %% Styling
+    classDef server fill:#e1f5fe,stroke:#01579b,stroke-width:2px
+    classDef service fill:#f3e5f5,stroke:#4a148c,stroke-width:2px
+    classDef database fill:#e8f5e8,stroke:#1b5e20,stroke-width:2px
+    classDef external fill:#fff3e0,stroke:#e65100,stroke-width:2px
+    classDef client fill:#fce4ec,stroke:#880e4f,stroke-width:2px
+    classDef config fill:#f1f8e9,stroke:#33691e,stroke-width:2px
+    classDef observability fill:#fef7e0,stroke:#f57f17,stroke-width:2px
+
+    class Router,Middleware,HealthCheck,WebHandler,APIHandler,ExperienceHandler,ContactHandler server
+    class ExperienceService,ContentService,NotificationService,ValidationService,ExperienceRepo,ContentRepo,AuditRepo service
+    class Database,QueryLayer,MigrationTool,ConnectionPool database
+    class EmailService,Analytics,Monitoring external
+    class Browser,Mobile,API_Client client
+    class ConfigManager,SecretManager,FeatureFlags config
+    class Metrics,Tracing,Logging,Alerts observability

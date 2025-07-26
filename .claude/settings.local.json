@@ -43,7 +43,10 @@
       "Bash(time:*)",
       "WebFetch(domain:golangci-lint.run)",
       "Bash(air:*)",
-      "Bash(docker build:*)"
+      "Bash(docker build:*)",
+      "WebFetch(domain:www.isaqb.org)",
+      "mcp__filesystem__move_file",
+      "Bash(gci write:*)"
     ]
   },
   "enableAllProjectMcpServers": true,

@@ -2,8 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
-
 @layer base {
   html {
     scroll-behavior: smooth;
@@ -12,22 +10,83 @@
   body {
     font-family: 'Inter', sans-serif;
   }
+
+  /* 
+   * FLAT DESIGN ENFORCEMENT - PROFESSIONAL POLISH
+   * Remove ALL border-radius and box-shadows globally for serious business appearance
+   */
+  *, *::before, *::after {
+    border-radius: 0 !important;
+    box-shadow: none !important;
+  }
 }
 
 @layer components {
-  .btn-primary {
-    @apply bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors;
-  }
-  
-  .btn-secondary {
-    @apply border border-gray-300 text-gray-700 px-6 py-3 rounded-lg font-semibold hover:bg-gray-50 transition-colors;
-  }
-  
   .section-padding {
     @apply py-16 lg:py-20;
   }
   
   .container-padding {
     @apply px-4 sm:px-6 lg:px-8;
+  }
+
+  /* 
+   * PROFESSIONAL HOVER STATES - ENTERPRISE GRADE
+   * Subtle, professional interactions that build trust
+   */
+
+  /* Professional Button Hover States */
+  .btn-primary {
+    @apply transition-all duration-200 ease-in-out;
+  }
+
+  .btn-primary:hover {
+    @apply bg-[#0f1a4a] border-[#0f1a4a];
+  }
+
+  .btn-primary:active {
+    @apply bg-[#0c1640] border-[#0c1640];
+  }
+
+  /* Professional Navigation Hover States */
+  nav a {
+    @apply transition-colors duration-200 ease-in-out;
+  }
+
+  nav a:hover {
+    @apply text-[#0f1a4a];
+  }
+
+  /* Professional Tech Badge Hover States */
+  .tech-badge {
+    @apply transition-all duration-200 ease-in-out;
+  }
+
+  .tech-badge:hover {
+    @apply bg-[#f1f5f9] border-[#0f1a4a] text-[#0f1a4a];
+    transform: translateY(-1px);
+  }
+
+  .tech-badge:active {
+    @apply bg-[#e2e8f0] border-[#0c1640] text-[#0c1640];
+    transform: translateY(0);
+  }
+
+  /* Professional Service Card Hover States */
+  .service-card {
+    @apply transition-all duration-200 ease-in-out;
+  }
+
+  .service-card:hover {
+    @apply border-[#0f1a4a];
+    transform: translateY(-2px);
+  }
+
+  .service-card:hover .service-icon {
+    @apply text-[#0f1a4a];
+  }
+
+  .service-card:hover .service-title {
+    @apply text-[#0f1a4a];
   }
 }

@@ -4,9 +4,10 @@ import (
 	"context"
 	"net/http"
 
-	"github.com/gin-gonic/gin"
 	"holger-hahn-website/internal/service"
 	"holger-hahn-website/templates"
+
+	"github.com/gin-gonic/gin"
 )
 
 // PortfolioHandlers contains all HTTP handlers for the portfolio application.

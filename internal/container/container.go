@@ -1,10 +1,14 @@
+// Package container provides dependency injection setup for the portfolio website.
+// It configures and manages the dependency injection container with all required
+// services, repositories, and infrastructure components.
 package container
 
 import (
-	"github.com/samber/do"
 	"holger-hahn-website/internal/config"
 	"holger-hahn-website/internal/repository"
 	"holger-hahn-website/internal/service"
+
+	"github.com/samber/do"
 )
 
 // Container wraps the DI container with our application-specific setup.
@@ -32,8 +36,8 @@ func (c *Container) GetInjector() *do.Injector {
 
 // registerDependencies registers all application dependencies.
 func (c *Container) registerDependencies() {
-	// Register configuration
-	do.Provide(c.injector, func(i *do.Injector) (*config.Config, error) {
+	// Register configuration.
+	do.Provide(c.injector, func(_ *do.Injector) (*config.Config, error) {
 		cfg := config.LoadConfig()
 		if err := cfg.Validate(); err != nil {
 			return nil, err
@@ -42,32 +46,28 @@ func (c *Container) registerDependencies() {
 		return cfg, nil
 	})
 
-	// Register repository implementations
-	// Note: In a real application, you would register actual implementations
-	// For now, we're registering placeholder providers that return nil
-	// These would be replaced with actual database implementations
+	// Register repository implementations.
+	// Note: In a real application, you would register actual implementations.
+	// For now, we're registering placeholder providers that return nil.
+	// These would be replaced with actual database implementations.
 
-	do.Provide(c.injector, func(i *do.Injector) (repository.TechnologyRepository, error) {
-		// TODO: Replace with actual implementation (e.g., SQLite, PostgreSQL)
+	do.Provide(c.injector, func(_ *do.Injector) (repository.TechnologyRepository, error) {
 		return NewInMemoryTechnologyRepository(), nil
 	})
 
-	do.Provide(c.injector, func(i *do.Injector) (repository.ExperienceRepository, error) {
-		// TODO: Replace with actual implementation
+	do.Provide(c.injector, func(_ *do.Injector) (repository.ExperienceRepository, error) {
 		return NewInMemoryExperienceRepository(), nil
 	})
 
-	do.Provide(c.injector, func(i *do.Injector) (repository.ServiceRepository, error) {
-		// TODO: Replace with actual implementation
+	do.Provide(c.injector, func(_ *do.Injector) (repository.ServiceRepository, error) {
 		return NewInMemoryServiceRepository(), nil
 	})
 
-	do.Provide(c.injector, func(i *do.Injector) (repository.UnitOfWork, error) {
-		// TODO: Replace with actual implementation
+	do.Provide(c.injector, func(_ *do.Injector) (repository.UnitOfWork, error) {
 		return NewInMemoryUnitOfWork(), nil
 	})
 
-	// Register services
+	// Register services.
 	do.Provide(c.injector, func(i *do.Injector) (*service.TechnologyService, error) {
 		techRepo := do.MustInvoke[repository.TechnologyRepository](i)
 		return service.NewTechnologyService(techRepo), nil
@@ -87,7 +87,7 @@ func (c *Container) registerDependencies() {
 		return service.NewPortfolioService(serviceRepo, techRepo), nil
 	})
 
-	// Register aggregated repositories struct
+	// Register aggregated repositories struct.
 	do.Provide(c.injector, func(i *do.Injector) (*repository.Repositories, error) {
 		return &repository.Repositories{
 			Technology: do.MustInvoke[repository.TechnologyRepository](i),

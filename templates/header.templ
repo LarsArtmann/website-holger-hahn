@@ -1,22 +1,150 @@
 package templates
 
 templ Header() {
-	<header class="bg-white border-b border-default sticky top-0 z-50">
-		<nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-			<div class="flex justify-between items-center py-5">
+	<!-- Skip to content link for accessibility -->
+	<a href="#main" class="skip-to-content">Skip to main content</a>
+	
+	<header class="bg-white border-b border-default sticky top-0 z-50" role="banner">
+		<nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" role="navigation" aria-label="Main navigation">
+			<div class="flex justify-between items-center py-4 lg:py-5">
 				<div class="flex items-center">
 					<div>
-						<h1 class="text-xl font-bold text-primary leading-tight">Holger M. Hahn</h1>
+						<h1 class="text-lg lg:text-xl font-bold text-primary leading-tight">Holger M. Hahn</h1>
 						<p class="text-xs text-muted mt-0.5">Digital Assets Solutions Architect</p>
 					</div>
 				</div>
-				<div class="hidden md:flex items-center space-x-8">
-					<a href="#about" class="nav-link">About</a>
-					<a href="#services" class="nav-link">Services</a>
-					<a href="#experience" class="nav-link">Experience</a>
-					<a href="#contact" class="btn-primary">Contact</a>
+				
+				<!-- Desktop Navigation -->
+				<div class="hidden md:flex items-center space-x-6 lg:space-x-8" role="menubar">
+					<a href="#about" class="nav-link" role="menuitem">About</a>
+					<a href="#services" class="nav-link" role="menuitem">Services</a>
+					<a href="#experience" class="nav-link" role="menuitem">Experience</a>
+					<a href="#contact" class="btn-primary px-4 py-3 text-sm" role="menuitem">Contact</a>
+				</div>
+				
+				<!-- Mobile Menu Button -->
+				<button 
+					id="mobile-menu-button" 
+					class="md:hidden flex items-center justify-center w-12 h-12 text-primary" 
+					aria-label="Toggle mobile menu"
+					aria-expanded="false"
+					aria-controls="mobile-menu"
+				>
+					<svg id="menu-icon" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+					</svg>
+					<svg id="close-icon" class="w-6 h-6 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+					</svg>
+				</button>
+			</div>
+			
+			<!-- Mobile Navigation Menu -->
+			<div id="mobile-menu" class="md:hidden hidden border-t border-default" aria-hidden="true">
+				<div class="py-4 space-y-2" role="menu">
+					<a href="#about" class="mobile-nav-link block px-4 py-3 text-primary font-medium text-base" role="menuitem">About</a>
+					<a href="#services" class="mobile-nav-link block px-4 py-3 text-primary font-medium text-base" role="menuitem">Services</a>
+					<a href="#experience" class="mobile-nav-link block px-4 py-3 text-primary font-medium text-base" role="menuitem">Experience</a>
+					<a href="#contact" class="mobile-nav-link block px-4 py-3 bg-primary text-white font-semibold text-base text-center mx-4 mb-2" role="menuitem">Contact</a>
 				</div>
 			</div>
 		</nav>
+		
+		<!-- Mobile Menu JavaScript with Accessibility -->
+		<script>
+			document.addEventListener('DOMContentLoaded', function() {
+				const menuButton = document.getElementById('mobile-menu-button');
+				const mobileMenu = document.getElementById('mobile-menu');
+				const menuIcon = document.getElementById('menu-icon');
+				const closeIcon = document.getElementById('close-icon');
+				const mobileNavLinks = document.querySelectorAll('.mobile-nav-link');
+				
+				function closeMenu() {
+					mobileMenu.classList.add('hidden');
+					mobileMenu.setAttribute('aria-hidden', 'true');
+					menuButton.setAttribute('aria-expanded', 'false');
+					menuIcon.classList.remove('hidden');
+					closeIcon.classList.add('hidden');
+				}
+				
+				function openMenu() {
+					mobileMenu.classList.remove('hidden');
+					mobileMenu.setAttribute('aria-hidden', 'false');
+					menuButton.setAttribute('aria-expanded', 'true');
+					menuIcon.classList.add('hidden');
+					closeIcon.classList.remove('hidden');
+					// Focus first menu item
+					mobileNavLinks[0]?.focus();
+				}
+				
+				// Toggle mobile menu
+				menuButton.addEventListener('click', function() {
+					const isOpen = menuButton.getAttribute('aria-expanded') === 'true';
+					
+					if (isOpen) {
+						closeMenu();
+					} else {
+						openMenu();
+					}
+				});
+				
+				// Keyboard navigation for menu button
+				menuButton.addEventListener('keydown', function(e) {
+					if (e.key === 'Enter' || e.key === ' ') {
+						e.preventDefault();
+						menuButton.click();
+					}
+					if (e.key === 'Escape') {
+						closeMenu();
+					}
+				});
+				
+				// Keyboard navigation for menu items
+				mobileNavLinks.forEach((link, index) => {
+					link.addEventListener('keydown', function(e) {
+						if (e.key === 'Escape') {
+							closeMenu();
+							menuButton.focus();
+						}
+						if (e.key === 'ArrowDown') {
+							e.preventDefault();
+							const nextLink = mobileNavLinks[index + 1];
+							if (nextLink) {
+								nextLink.focus();
+							}
+						}
+						if (e.key === 'ArrowUp') {
+							e.preventDefault();
+							const prevLink = mobileNavLinks[index - 1];
+							if (prevLink) {
+								prevLink.focus();
+							}
+						}
+					});
+				});
+				
+				// Close menu when clicking nav links
+				mobileNavLinks.forEach(link => {
+					link.addEventListener('click', function() {
+						closeMenu();
+					});
+				});
+				
+				// Close menu when clicking outside
+				document.addEventListener('click', function(event) {
+					if (!menuButton.contains(event.target) && !mobileMenu.contains(event.target)) {
+						closeMenu();
+					}
+				});
+				
+				// Close menu with Escape key
+				document.addEventListener('keydown', function(e) {
+					if (e.key === 'Escape' && menuButton.getAttribute('aria-expanded') === 'true') {
+						closeMenu();
+						menuButton.focus();
+					}
+				});
+			});
+		</script>
 	</header>
 }

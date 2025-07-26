@@ -1,25 +1,27 @@
 package templates
 
 templ Hero() {
-	<section class="bg-white py-24 lg:py-32">
+	<section class="bg-white section-padding" aria-labelledby="hero-heading">
 		<div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
 			<div class="lg:grid lg:grid-cols-2 lg:gap-16 items-center mb-16">
 				<div class="text-center lg:text-left lg:order-2">
-					<h1 class="hero-title">
+					<h1 id="hero-heading" class="hero-title">
 						Secure Digital Asset<br/>
 						<span class="text-accent">Solutions</span>
 					</h1>
-					<p class="hero-subtitle">
+					<p class="hero-subtitle text-spacing-comfortable">
 						Transform fragmented workflows into compliant, automated platforms with 15+ years 
 						of expertise in regulated financial environments.
 					</p>
-					<div class="flex flex-col sm:flex-row justify-center lg:justify-start gap-6">
-						<a href="#contact" class="modern-button-primary text-center">
+					<div class="flex flex-col sm:flex-row justify-center lg:justify-start gap-6" role="group" aria-label="Primary actions">
+						<a href="#contact" class="modern-button-primary text-center" aria-describedby="contact-action-desc">
 							Start Your Project
 						</a>
-						<a href="#services" class="modern-button-secondary text-center">
+						<span id="contact-action-desc" class="sr-only">Contact us to begin your digital asset project</span>
+						<a href="#services" class="modern-button-secondary text-center" aria-describedby="services-action-desc">
 							View Services
 						</a>
+						<span id="services-action-desc" class="sr-only">Learn about our comprehensive digital asset services</span>
 					</div>
 				</div>
 				<div class="mt-12 lg:mt-0 flex justify-center lg:order-1">
@@ -27,36 +29,36 @@ templ Hero() {
 						<picture>
 							<source media="(max-width: 640px)" srcset="/static/images/Holger-Hahn-small.webp" />
 							<source media="(max-width: 1024px)" srcset="/static/images/Holger-Hahn-medium.webp" />
-							<img src="/static/images/Holger-Hahn.webp" alt="Holger M. Hahn - Digital Assets Solutions Architect" 
+							<img src="/static/images/Holger-Hahn.webp" alt="Professional headshot of Holger M. Hahn, Digital Assets Solutions Architect, wearing business attire and smiling confidently" 
 								 class="w-64 h-64 sm:w-72 sm:h-72 lg:w-96 lg:h-96 xl:w-[28rem] xl:h-[28rem] object-cover"
 								 loading="eager" fetchpriority="high" decoding="async"/>
 						</picture>
-						<div class="absolute -bottom-4 -right-4 bg-primary text-white px-3 py-2 sm:px-4">
-							<div class="text-sm font-semibold">15+ Years</div>
-							<div class="text-xs">Experience</div>
+						<div class="absolute -bottom-4 -right-4 bg-primary text-white px-3 py-2 sm:px-4" role="img" aria-label="15 plus years of experience badge">
+							<div class="text-sm font-semibold" aria-hidden="true">15+ Years</div>
+							<div class="text-xs" aria-hidden="true">Experience</div>
 						</div>
 					</div>
 				</div>
 			</div>
 			
 			<!-- Client Logos Section -->
-			<div class="modern-card p-8 lg:p-12">
-				<p class="text-center text-muted text-sm uppercase tracking-wide mb-8">Trusted by Leading Organizations</p>
-				<div class="grid grid-cols-2 lg:grid-cols-4 gap-8 items-center justify-items-center">
-					<div class="text-center">
-						<div class="text-2xl font-bold text-primary">15+</div>
+			<div class="modern-card p-8 lg:p-12" role="region" aria-labelledby="credentials-heading">
+				<h2 id="credentials-heading" class="text-center text-muted text-sm uppercase tracking-wide mb-8">Trusted by Leading Organizations</h2>
+				<div class="grid grid-cols-2 lg:grid-cols-4 gap-8 items-center justify-items-center" role="list">
+					<div class="text-center" role="listitem">
+						<div class="text-2xl font-bold text-primary" aria-label="15 plus years">15+</div>
 						<div class="text-sm text-secondary">Years Experience</div>
 					</div>
-					<div class="text-center">
-						<div class="text-2xl font-bold text-primary">5</div>
+					<div class="text-center" role="listitem">
+						<div class="text-2xl font-bold text-primary" aria-label="5 years">5</div>
 						<div class="text-sm text-secondary">Years in Digital Assets</div>
 					</div>
-					<div class="text-center">
-						<div class="text-2xl font-bold text-primary">100%</div>
+					<div class="text-center" role="listitem">
+						<div class="text-2xl font-bold text-primary" aria-label="100 percent">100%</div>
 						<div class="text-sm text-secondary">Regulatory Compliant</div>
 					</div>
-					<div class="text-center">
-						<div class="text-2xl font-bold text-primary">4+</div>
+					<div class="text-center" role="listitem">
+						<div class="text-2xl font-bold text-primary" aria-label="4 plus institutions">4+</div>
 						<div class="text-sm text-secondary">Major Institutions</div>
 					</div>
 				</div>

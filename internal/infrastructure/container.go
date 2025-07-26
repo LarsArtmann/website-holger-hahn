@@ -1,9 +1,10 @@
 package infrastructure
 
 import (
-	"github.com/samber/do"
 	"holger-hahn-website/internal/application"
 	"holger-hahn-website/internal/domain"
+
+	"github.com/samber/do"
 )
 
 // SetupContainer configures the dependency injection container.

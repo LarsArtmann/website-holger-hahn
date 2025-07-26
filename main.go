@@ -6,11 +6,12 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/gin-gonic/gin"
-	"github.com/samber/do"
 	"holger-hahn-website/internal/application"
 	"holger-hahn-website/internal/infrastructure"
 	"holger-hahn-website/templates"
+
+	"github.com/gin-gonic/gin"
+	"github.com/samber/do"
 )
 
 // ContactHandler handles HTTP requests for contact operations.
