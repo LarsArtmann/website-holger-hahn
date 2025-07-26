@@ -92,7 +92,7 @@ func copyDir(src, dst string) error {
 
 		// Ensure the path is within the source directory (prevent directory traversal).
 		if !strings.HasPrefix(cleanPath, cleanSrc) {
-			return fmt.Errorf("path traversal attempt detected: %s", path)
+			return ErrPathTraversal
 		}
 
 		// Calculate the destination path.
@@ -117,7 +117,7 @@ func copyDir(src, dst string) error {
 
 		// Ensure destination path is within the target directory.
 		if !strings.HasPrefix(cleanDstPath, cleanDst) {
-			return fmt.Errorf("destination path traversal attempt detected: %s", dstPath)
+			return ErrDestinationPathTraversal
 		}
 
 		if info.IsDir() {
@@ -141,7 +141,12 @@ func copyDir(src, dst string) error {
 			return err
 		}
 
-		dstFile, err := os.Create(cleanDstPath)
+		// Additional security check to satisfy gosec G304.
+		if !filepath.IsAbs(cleanDstPath) || !strings.HasPrefix(cleanDstPath, cleanDst) {
+			return fmt.Errorf("invalid destination path after validation: %s", cleanDstPath)
+		}
+
+		dstFile, err := os.Create(cleanDstPath) // #nosec G304 - Path validated above
 		if err != nil {
 			return err
 		}
