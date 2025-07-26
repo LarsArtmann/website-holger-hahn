@@ -7,6 +7,7 @@ import (
 	"errors"
 	"log"
 	"net/http"
+	"os"
 	"time"
 
 	"holger-hahn-website/internal/config"
@@ -68,7 +69,12 @@ func main() {
 	log.Printf("Starting DDD architecture server on %s in %s mode", cfg.Server.Address(), cfg.Server.Environment)
 
 	if err := server.ListenAndServe(); err != nil && !errors.Is(err, http.ErrServerClosed) {
-		log.Fatalf("Failed to start server: %v", err)
+		log.Printf("Failed to start server: %v", err)
+		// Ensure deferred cleanup runs before exit
+		if shutdownErr := di.Shutdown(); shutdownErr != nil {
+			log.Printf("Error shutting down DI container: %v", shutdownErr)
+		}
+		os.Exit(1)
 	}
 }
 
