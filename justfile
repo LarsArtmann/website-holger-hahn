@@ -159,3 +159,20 @@ status:
     @echo "Node/Bun version: $(bun --version)"
     @echo "Files count: $(find . -name '*.go' | wc -l) Go files, $(find . -name '*.templ' | wc -l) template files"
     @echo "Build status: $(if [ -f holger-hahn-website ]; then echo 'Built'; else echo 'Not built'; fi)"
+
+# Quality monitoring commands (Group G8)
+monitor:
+    @echo "🔍 Running comprehensive quality monitoring..."
+    ./scripts/monitor-quality.sh
+
+quick-check:
+    @echo "⚡ Quick quality status check..."
+    ./scripts/quick-status.sh
+
+quality-baseline:
+    @echo "📊 Establishing quality baseline..."
+    @echo "Baseline established on $(date)" >> docs/quality-baseline.log
+    just test || echo "Tests failing"
+    just build || echo "Build failing" 
+    just lint || echo "Linting failing"
+    just fd || echo "Duplicates detected"

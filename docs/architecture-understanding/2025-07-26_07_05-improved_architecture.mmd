@@ -1,0 +1,151 @@
+graph TB
+    subgraph "🌐 HTTP Layer - Unified Application"
+        A1[main.go - Single Entry Point]
+        A1 --> B1[gin.Engine - HTTP Router]
+        B1 --> C1[Portfolio Handlers]
+        B1 --> C2[Contact Handlers] 
+        B1 --> C3[API Handlers]
+        B1 --> C4[Static File Serving]
+    end
+    
+    subgraph "🔧 Middleware Layer"
+        B1 --> D1[Logging Middleware]
+        B1 --> D2[Recovery Middleware]
+        B1 --> D3[CORS Middleware]
+        B1 --> D4[Security Headers]
+        B1 --> D5[Rate Limiting]
+    end
+    
+    subgraph "🎛️ Configuration Layer"
+        E1[viper.Config]
+        E1 --> E2[Environment Variables]
+        E1 --> E3[Config Files]
+        E1 --> E4[Default Values]
+        A1 --> E1
+    end
+    
+    subgraph "🏗️ Application Layer"
+        C1 --> F1[Portfolio Service]
+        C2 --> F2[Contact Service]
+        C3 --> F3[User Service]
+        
+        F1 --> G1[Business Logic]
+        F2 --> G2[Email Processing]
+        F3 --> G3[User Management]
+    end
+    
+    subgraph "🏛️ Domain Layer - DDD"
+        G1 --> H1[Portfolio Aggregate]
+        G2 --> H2[Contact Aggregate]
+        G3 --> H3[User Aggregate]
+        
+        H1 --> I1[Experience Value Objects]
+        H1 --> I2[Achievement Value Objects]
+        H2 --> I3[Email Value Objects]
+        H2 --> I4[Contact Events]
+        H3 --> I5[User Value Objects]
+    end
+    
+    subgraph "🗃️ Repository Layer"
+        H1 --> J1[ExperienceRepository Interface]
+        H2 --> J2[ContactRepository Interface]
+        H3 --> J3[UserRepository Interface]
+        
+        J1 --> K1[SQLc Experience Repo]
+        J2 --> K2[SQLc Contact Repo]
+        J3 --> K3[SQLc User Repo]
+    end
+    
+    subgraph "🗄️ Database Layer - Connected SQLc"
+        K1 --> L1[database/queries.sql.go]
+        K2 --> L1
+        K3 --> L1
+        
+        L1 --> L2[database/models.go]
+        L1 --> L3[database/db.go]
+        L3 --> L4[SQLite Database]
+    end
+    
+    subgraph "🎨 Presentation Layer"
+        C1 --> M1[templ Templates]
+        C2 --> M1
+        
+        M1 --> N1[templates/hero.templ]
+        M1 --> N2[templates/about.templ]
+        M1 --> N3[templates/contact.templ]
+        M1 --> N4[templates/portfolio.templ]
+        
+        N1 --> O1[HTMX Enhanced HTML]
+        N2 --> O1
+        N3 --> O1
+        N4 --> O1
+    end
+    
+    subgraph "💉 Dependency Injection - samber/do"
+        P1[do.Injector Container]
+        P1 --> P2[Repository Registrations]
+        P1 --> P3[Service Registrations]
+        P1 --> P4[Configuration Registrations]
+        
+        A1 --> P1
+        F1 --> P1
+        F2 --> P1
+        F3 --> P1
+    end
+    
+    subgraph "🧪 Testing Layer - Ginkgo BDD"
+        Q1[BDD Test Suites]
+        Q1 --> Q2[Domain Logic Tests]
+        Q1 --> Q3[Integration Tests]
+        Q1 --> Q4[API Endpoint Tests]
+        Q1 --> Q5[Template Rendering Tests]
+        
+        Q2 --> H1
+        Q3 --> K1
+        Q4 --> C1
+        Q5 --> M1
+    end
+    
+    subgraph "📊 Observability Layer"
+        R1[LarsArtmann/uniflow Errors]
+        R2[OpenTelemetry Tracing]
+        R3[Structured Logging]
+        R4[Health Checks]
+        
+        D1 --> R3
+        F1 --> R1
+        F2 --> R1
+        F3 --> R1
+        B1 --> R2
+        B1 --> R4
+    end
+    
+    subgraph "🔒 Security Layer"
+        S1[Input Validation]
+        S2[CSRF Protection]
+        S3[Rate Limiting]
+        S4[Security Headers]
+        
+        D4 --> S4
+        D5 --> S3
+        C2 --> S1
+        C2 --> S2
+    end
+    
+    %% Styling for clarity
+    style A1 fill:#99ff99,stroke:#006600,stroke-width:3px
+    style L4 fill:#99ccff,stroke:#0066cc,stroke-width:2px
+    style P1 fill:#ffcc99,stroke:#cc6600,stroke-width:2px
+    style Q1 fill:#cc99ff,stroke:#6600cc,stroke-width:2px
+    
+    %% Integration indicators
+    style L1 fill:#99ff99,stroke:#006600,stroke-width:2px
+    style L2 fill:#99ff99,stroke:#006600,stroke-width:2px
+    style L3 fill:#99ff99,stroke:#006600,stroke-width:2px
+    
+    %% Library integrations
+    style B1 fill:#99ccff,stroke:#0066cc,stroke-width:2px
+    style E1 fill:#99ccff,stroke:#0066cc,stroke-width:2px
+    style P1 fill:#99ccff,stroke:#0066cc,stroke-width:2px
+    style R1 fill:#99ccff,stroke:#0066cc,stroke-width:2px
+    style R2 fill:#99ccff,stroke:#0066cc,stroke-width:2px

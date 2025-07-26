@@ -157,7 +157,12 @@ func (s *ExperienceService) AddAchievementToExperience(ctx context.Context, expe
 	}
 
 	// Create achievement
-	ach := domain.NewAchievement(achievement.Title, achievement.Description, achievement.Impact)
+	var ach *domain.Achievement
+	if achievement.Metrics != nil {
+		ach = domain.NewAchievementWithMetrics(achievement.Title, achievement.Description, achievement.Impact, achievement.Metrics)
+	} else {
+		ach = domain.NewAchievement(achievement.Title, achievement.Description, achievement.Impact)
+	}
 	ach.ID = generateID()
 
 	// Add achievement
@@ -246,7 +251,8 @@ type ExperienceFilter struct {
 
 // AchievementRequest represents a request to add an achievement.
 type AchievementRequest struct {
-	Title       string `json:"title"`
-	Description string `json:"description"`
-	Impact      string `json:"impact,omitempty"`
+	Title       string          `json:"title"`
+	Description string          `json:"description"`
+	Impact      string          `json:"impact,omitempty"`
+	Metrics     *domain.Metrics `json:"metrics,omitempty"`
 }

@@ -27,6 +27,59 @@ type Achievement struct {
 	Title       string    `json:"title"`
 	Description string    `json:"description"`
 	Impact      string    `json:"impact,omitempty"`
+	Metrics     *Metrics  `json:"metrics,omitempty"`
+}
+
+// Metrics represents quantified business impact metrics for achievements.
+type Metrics struct {
+	TestCoverage     *CoverageMetric     `json:"test_coverage,omitempty"`
+	DeploymentTime   *TimeMetric         `json:"deployment_time,omitempty"`
+	SystemReliability *ReliabilityMetric `json:"system_reliability,omitempty"`
+	Productivity     *ProductivityMetric `json:"productivity,omitempty"`
+	CostSavings      *CostMetric         `json:"cost_savings,omitempty"`
+}
+
+// CoverageMetric represents test coverage improvements.
+type CoverageMetric struct {
+	Before      float64 `json:"before"`      // Previous coverage percentage
+	After       float64 `json:"after"`       // Improved coverage percentage
+	Improvement float64 `json:"improvement"` // Percentage point improvement
+	Unit        string  `json:"unit"`        // e.g., "%"
+}
+
+// TimeMetric represents time-based improvements.
+type TimeMetric struct {
+	Before      int     `json:"before"`      // Previous time in minutes
+	After       int     `json:"after"`       // Improved time in minutes
+	Improvement float64 `json:"improvement"` // Percentage improvement
+	Unit        string  `json:"unit"`        // e.g., "minutes", "hours"
+}
+
+// ReliabilityMetric represents system reliability improvements.
+type ReliabilityMetric struct {
+	Uptime       float64 `json:"uptime"`       // Uptime percentage
+	MTBF         int     `json:"mtbf"`         // Mean time between failures (hours)
+	MTTR         int     `json:"mttr"`         // Mean time to recovery (minutes)
+	Incidents    int     `json:"incidents"`    // Number of incidents per month
+	Unit         string  `json:"unit"`         // e.g., "%", "hours", "minutes"
+}
+
+// ProductivityMetric represents team productivity improvements.
+type ProductivityMetric struct {
+	DeploymentFrequency int     `json:"deployment_frequency"` // Deployments per week
+	LeadTime           int     `json:"lead_time"`             // Lead time in hours
+	CycleTime          int     `json:"cycle_time"`            // Cycle time in hours
+	Efficiency         float64 `json:"efficiency"`            // Team efficiency improvement %
+	Unit               string  `json:"unit"`                  // e.g., "per week", "hours", "%"
+}
+
+// CostMetric represents cost savings and ROI.
+type CostMetric struct {
+	MonthlySavings   float64 `json:"monthly_savings"`   // Monthly cost savings in USD
+	AnnualSavings    float64 `json:"annual_savings"`    // Annual cost savings in USD
+	ROI              float64 `json:"roi"`               // Return on investment %
+	PaybackPeriod    int     `json:"payback_period"`    // Payback period in months
+	Unit             string  `json:"unit"`              // e.g., "USD", "%", "months"
 }
 
 // NewExperience creates a new Experience instance.
@@ -54,6 +107,72 @@ func NewAchievement(title, description, impact string) *Achievement {
 		Description: description,
 		Impact:      impact,
 		CreatedAt:   time.Now(),
+	}
+}
+
+// NewAchievementWithMetrics creates a new Achievement instance with metrics.
+func NewAchievementWithMetrics(title, description, impact string, metrics *Metrics) *Achievement {
+	return &Achievement{
+		Title:       title,
+		Description: description,
+		Impact:      impact,
+		Metrics:     metrics,
+		CreatedAt:   time.Now(),
+	}
+}
+
+// NewTestCoverageMetric creates a test coverage improvement metric.
+func NewTestCoverageMetric(before, after float64) *CoverageMetric {
+	improvement := after - before
+	return &CoverageMetric{
+		Before:      before,
+		After:       after,
+		Improvement: improvement,
+		Unit:        "%",
+	}
+}
+
+// NewDeploymentTimeMetric creates a deployment time improvement metric.
+func NewDeploymentTimeMetric(beforeMinutes, afterMinutes int) *TimeMetric {
+	improvement := float64(beforeMinutes-afterMinutes) / float64(beforeMinutes) * 100
+	return &TimeMetric{
+		Before:      beforeMinutes,
+		After:       afterMinutes,
+		Improvement: improvement,
+		Unit:        "minutes",
+	}
+}
+
+// NewReliabilityMetric creates a system reliability metric.
+func NewReliabilityMetric(uptime float64, mtbf, mttr, incidents int) *ReliabilityMetric {
+	return &ReliabilityMetric{
+		Uptime:    uptime,
+		MTBF:      mtbf,
+		MTTR:      mttr,
+		Incidents: incidents,
+		Unit:      "%",
+	}
+}
+
+// NewProductivityMetric creates a team productivity metric.
+func NewProductivityMetric(deploymentFreq, leadTime, cycleTime int, efficiency float64) *ProductivityMetric {
+	return &ProductivityMetric{
+		DeploymentFrequency: deploymentFreq,
+		LeadTime:           leadTime,
+		CycleTime:          cycleTime,
+		Efficiency:         efficiency,
+		Unit:               "per week",
+	}
+}
+
+// NewCostMetric creates a cost savings metric.
+func NewCostMetric(monthlySavings, annualSavings, roi float64, paybackPeriod int) *CostMetric {
+	return &CostMetric{
+		MonthlySavings: monthlySavings,
+		AnnualSavings:  annualSavings,
+		ROI:            roi,
+		PaybackPeriod:  paybackPeriod,
+		Unit:           "USD",
 	}
 }
 

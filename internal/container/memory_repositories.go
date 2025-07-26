@@ -141,9 +141,142 @@ type InMemoryExperienceRepository struct {
 
 // NewInMemoryExperienceRepository creates a new in-memory experience repository.
 func NewInMemoryExperienceRepository() repository.ExperienceRepository {
-	return &InMemoryExperienceRepository{
+	repo := &InMemoryExperienceRepository{
 		exps: make(map[string]*domain.Experience),
 	}
+	repo.populateSampleData()
+	return repo
+}
+
+// populateSampleData adds sample experiences with quantified metrics.
+func (r *InMemoryExperienceRepository) populateSampleData() {
+	// Fireblocks experience with comprehensive metrics
+	fireblocksStart := time.Date(2021, 6, 1, 0, 0, 0, 0, time.UTC)
+	fireblocksEnd := time.Date(2023, 12, 31, 0, 0, 0, 0, time.UTC)
+	fireblocks := domain.NewExperience(
+		"Fireblocks",
+		"Senior Software Engineer",
+		"Led development of digital asset custody solutions for institutional clients",
+		"Tel Aviv, Israel",
+		fireblocksStart,
+		true,
+	)
+	fireblocks.ID = "fireblocks-001"
+	fireblocks.SetEndDate(fireblocksEnd)
+
+	// Add achievements with quantified metrics
+	testCoverageAchievement := domain.NewAchievementWithMetrics(
+		"Improved Test Coverage by 25%",
+		"Implemented comprehensive test automation strategy across critical financial systems",
+		"Reduced production incidents by 60% and improved deployment confidence",
+		&domain.Metrics{
+			TestCoverage: domain.NewTestCoverageMetric(70.0, 95.0),
+		},
+	)
+	testCoverageAchievement.ID = "achievement-001"
+
+	deploymentAchievement := domain.NewAchievementWithMetrics(
+		"Reduced Deployment Time by 87%",
+		"Automated CI/CD pipeline with zero-downtime deployments and comprehensive testing",
+		"Enabled daily deployments and faster time-to-market for critical features",
+		&domain.Metrics{
+			DeploymentTime: domain.NewDeploymentTimeMetric(120, 15), // 2h to 15min
+		},
+	)
+	deploymentAchievement.ID = "achievement-002"
+
+	systemReliabilityAchievement := domain.NewAchievementWithMetrics(
+		"Achieved 99.9% System Uptime",
+		"Implemented robust monitoring, alerting, and automated failover mechanisms",
+		"Met enterprise SLA requirements and eliminated manual intervention incidents",
+		&domain.Metrics{
+			SystemReliability: domain.NewReliabilityMetric(99.9, 720, 5, 2), // 99.9%, 720h MTBF, 5min MTTR, 2 incidents/month
+		},
+	)
+	systemReliabilityAchievement.ID = "achievement-003"
+
+	productivityAchievement := domain.NewAchievementWithMetrics(
+		"Increased Team Productivity by 40%",
+		"Streamlined development processes and introduced modern DevOps practices",
+		"Reduced lead time and improved team velocity while maintaining quality",
+		&domain.Metrics{
+			Productivity: domain.NewProductivityMetric(12, 48, 24, 40.0), // 12 deploys/week, 48h lead time, 24h cycle time, 40% efficiency gain
+		},
+	)
+	productivityAchievement.ID = "achievement-004"
+
+	costSavingsAchievement := domain.NewAchievementWithMetrics(
+		"Generated $2.4M Annual Cost Savings",
+		"Optimized infrastructure costs and eliminated operational inefficiencies",
+		"Achieved 300% ROI through automation and process improvements",
+		&domain.Metrics{
+			CostSavings: domain.NewCostMetric(200000, 2400000, 300.0, 4), // $200k monthly, $2.4M annual, 300% ROI, 4 months payback
+		},
+	)
+	costSavingsAchievement.ID = "achievement-005"
+
+	fireblocks.AddAchievement(*testCoverageAchievement)
+	fireblocks.AddAchievement(*deploymentAchievement)
+	fireblocks.AddAchievement(*systemReliabilityAchievement)
+	fireblocks.AddAchievement(*productivityAchievement)
+	fireblocks.AddAchievement(*costSavingsAchievement)
+
+	r.exps[fireblocks.ID] = fireblocks
+
+	// Current Consulting experience with metrics
+	consultingStart := time.Date(2024, 1, 1, 0, 0, 0, 0, time.UTC)
+	consulting := domain.NewExperience(
+		"Independent Consultant",
+		"Senior Software Engineer & Technical Consultant",
+		"Providing specialized expertise in digital asset infrastructure and secure financial systems",
+		"Remote",
+		consultingStart,
+		true,
+	)
+	consulting.ID = "consulting-001"
+
+	consultingAchievement := domain.NewAchievementWithMetrics(
+		"Accelerated Client Deployment by 75%",
+		"Implemented standardized development practices and automated testing frameworks",
+		"Enabled faster time-to-market and reduced technical risk for financial product launches",
+		&domain.Metrics{
+			DeploymentTime: domain.NewDeploymentTimeMetric(480, 120), // 8h to 2h
+			TestCoverage:   domain.NewTestCoverageMetric(60.0, 85.0),
+			Productivity:   domain.NewProductivityMetric(8, 72, 36, 35.0), // 8 deploys/week, 72h lead time, 36h cycle time, 35% improvement
+		},
+	)
+	consultingAchievement.ID = "achievement-006"
+
+	consulting.AddAchievement(*consultingAchievement)
+	r.exps[consulting.ID] = consulting
+
+	// Previous Banking experience with legacy system metrics
+	bankingStart := time.Date(2018, 3, 1, 0, 0, 0, 0, time.UTC)
+	bankingEnd := time.Date(2021, 5, 31, 0, 0, 0, 0, time.UTC)
+	banking := domain.NewExperience(
+		"Major European Bank",
+		"Software Engineer",
+		"Developed and maintained critical banking infrastructure and customer-facing applications",
+		"Frankfurt, Germany",
+		bankingStart,
+		false,
+	)
+	banking.ID = "banking-001"
+	banking.SetEndDate(bankingEnd)
+
+	legacyModernizationAchievement := domain.NewAchievementWithMetrics(
+		"Modernized Legacy Systems with 50% Performance Gain",
+		"Refactored critical payment processing systems to improve reliability and performance",
+		"Reduced transaction processing time and improved customer experience",
+		&domain.Metrics{
+			SystemReliability: domain.NewReliabilityMetric(99.5, 480, 15, 5), // 99.5%, 480h MTBF, 15min MTTR, 5 incidents/month
+			CostSavings:       domain.NewCostMetric(150000, 1800000, 250.0, 6), // $150k monthly, $1.8M annual, 250% ROI, 6 months payback
+		},
+	)
+	legacyModernizationAchievement.ID = "achievement-007"
+
+	banking.AddAchievement(*legacyModernizationAchievement)
+	r.exps[banking.ID] = banking
 }
 
 // Create stores a new experience in the in-memory repository.

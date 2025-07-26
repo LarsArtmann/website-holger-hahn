@@ -1,0 +1,93 @@
+graph TB
+    subgraph "🚨 DUAL APPLICATIONS PROBLEM"
+        A1[main.go - Contact Form App]
+        A2[cmd/server/main.go - Portfolio App]
+    end
+    
+    subgraph "🔧 Contact Form Application Stack"
+        A1 --> B1[internal/infrastructure/container.go]
+        B1 --> C1[domain.ContactRepository]
+        B1 --> C2[domain.EmailService]
+        B1 --> C3[domain.LoggingService]
+        B1 --> C4[application.ContactService]
+        
+        C1 --> D1[Memory Implementation]
+        C2 --> D2[SMTP Service]
+        C3 --> D3[Console Logging]
+    end
+    
+    subgraph "📁 Portfolio Application Stack"
+        A2 --> B2[internal/container/container.go]
+        B2 --> C5[Memory Repositories]
+        C5 --> D4[InMemoryContactRepository]
+        C5 --> D5[InMemoryUserRepository]
+        C5 --> D6[InMemoryProjectRepository]
+        C5 --> D7[InMemoryExperienceRepository]
+    end
+    
+    subgraph "👻 GHOST SYSTEMS - Unused Code"
+        E1[internal/database/ - Complete SQLc Generated Layer]
+        E1 --> E2[queries.sql.go - All DB Operations]
+        E1 --> E3[models.go - All Data Models]
+        E1 --> E4[db.go - Connection Logic]
+        
+        F1[Missing Libraries in go.mod]
+        F1 --> F2[gin-gonic/gin - HTTP Framework]
+        F1 --> F3[spf13/viper - Configuration]
+        F1 --> F4[samber/do - Dependency Injection]
+        F1 --> F5[onsi/ginkgo - BDD Testing]
+        F1 --> F6[LarsArtmann/uniflow - Error Handling]
+        
+        G1[Generated Templates]
+        G1 --> G2[templates/hero_templ.go]
+        G1 --> G3[templates/about_templ.go]
+        G1 --> G4[Other templ generated files]
+    end
+    
+    subgraph "🌐 Frontend Layer"
+        H1[Static Files]
+        H2[CSS Styles]
+        H3[HTMX Templates]
+        
+        H1 --> I1[/static/css/]
+        H1 --> I2[/static/images/]
+        H2 --> I3[TailwindCSS]
+        H3 --> I4[Template Rendering]
+    end
+    
+    subgraph "📦 Current Libraries Actually Used"
+        J1[a-h/templ - Template Generation]
+        J2[Standard Library HTTP]
+        J3[Basic Error Handling]
+        J4[File System Operations]
+    end
+    
+    %% Connections showing disconnection
+    E1 -.->|UNUSED| D1
+    E1 -.->|UNUSED| D4
+    E1 -.->|UNUSED| D5
+    E1 -.->|UNUSED| D6
+    
+    F2 -.->|MISSING| A1
+    F2 -.->|MISSING| A2
+    F3 -.->|MISSING| B1
+    F3 -.->|MISSING| B2
+    
+    G1 -.->|DISCONNECTED| H3
+    
+    %% Problem indicators
+    style A1 fill:#ff9999,stroke:#cc0000,stroke-width:3px
+    style A2 fill:#ff9999,stroke:#cc0000,stroke-width:3px
+    style E1 fill:#ffcc99,stroke:#ff6600,stroke-width:2px
+    style F1 fill:#ffcc99,stroke:#ff6600,stroke-width:2px
+    style G1 fill:#ffcc99,stroke:#ff6600,stroke-width:2px
+    
+    %% Ghost system indicators
+    style E2 fill:#cccccc,stroke:#666666,stroke-dasharray: 5 5
+    style E3 fill:#cccccc,stroke:#666666,stroke-dasharray: 5 5
+    style E4 fill:#cccccc,stroke:#666666,stroke-dasharray: 5 5
+    style F2 fill:#cccccc,stroke:#666666,stroke-dasharray: 5 5
+    style F3 fill:#cccccc,stroke:#666666,stroke-dasharray: 5 5
+    style F4 fill:#cccccc,stroke:#666666,stroke-dasharray: 5 5
+    style F5 fill:#cccccc,stroke:#666666,stroke-dasharray: 5 5
+    style F6 fill:#cccccc,stroke:#666666,stroke-dasharray: 5 5
