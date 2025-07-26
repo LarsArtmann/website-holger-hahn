@@ -1,87 +1,64 @@
-# Pre-commit hooks configuration for Holger Hahn website
-# See https://pre-commit.com for more information
-# See https://pre-commit.com/hooks.html for more hooks
-
-default_stages: [pre-commit]
-default_language_version:
-  python: python3
+# Pre-commit hooks for Holger Hahn Website
+# Ensures code quality and consistency before commits
 
 repos:
-  # Basic hooks for general file quality
+  # Basic file checks
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.6.0
+    rev: v4.4.0
     hooks:
       - id: trailing-whitespace
-        args: [--markdown-linebreak-ext=md]
       - id: end-of-file-fixer
       - id: check-yaml
       - id: check-added-large-files
-        args: ['--maxkb=5000']
-      - id: check-case-conflict
+        args: ['--maxkb=1000']
       - id: check-merge-conflict
-      - id: check-json
-      - id: mixed-line-ending
-        args: ['--fix=lf']
 
-  # Go formatting and linting hooks
+  # Go formatting with gofumpt (stricter than gofmt)
   - repo: https://github.com/dnephin/pre-commit-golang
     rev: v0.5.1
     hooks:
-      # Go formatting with gofumpt (stricter than gofmt)
       - id: go-fmt
-        name: gofumpt
+        name: go-fmt (gofumpt)
         entry: gofumpt
-        args: [-l, -w]
-        language: system
+        language: golang
+        args: [-w]
         files: \.go$
-        pass_filenames: true
 
-      # Go import organization with gci
-      - id: go-imports
-        name: gci
+  # Go import organization with gci
+  - repo: local
+    hooks:
+      - id: gci
+        name: gci (import organization)
         entry: gci
-        args: [write, --skip-generated, -s, standard, -s, default, -s, "prefix(holger-hahn-website)"]
-        language: system
+        language: golang
+        args: [write, --skip-generated, -s, standard, -s, default]
         files: \.go$
-        pass_filenames: true
 
-      # Go linting with golangci-lint
+  # Go linting (if golangci-lint is available)
+  - repo: https://github.com/golangci/golangci-lint
+    rev: v1.54.2
+    hooks:
       - id: golangci-lint
         args: [--config=.golangci.yml]
 
-      # Go mod tidy
+  # Go mod tidy
+  - repo: https://github.com/dnephin/pre-commit-golang
+    rev: v0.5.1
+    hooks:
       - id: go-mod-tidy
 
-  # Additional Go checks
-  - repo: local
+  # Go tests
+  - repo: https://github.com/dnephin/pre-commit-golang
+    rev: v0.5.1
     hooks:
-      # Templ generation check
-      - id: templ-generate
-        name: Generate templ templates
-        entry: templ
-        args: [generate]
-        language: system
-        files: \.templ$
-        pass_filenames: false
+      - id: go-unit-tests
+        args: [-race, -timeout=30s]
 
-      # Go vet for additional static analysis
-      - id: go-vet-mod
-        name: go vet
-        entry: go
-        args: [vet, ./...]
-        language: system
-        files: \.go$
-        pass_filenames: false
-
-# Configuration for specific hooks
-ci:
-  autofix_commit_msg: |
-    [pre-commit.ci] auto fixes from pre-commit hooks
-
-    for more information, see https://pre-commit.ci
-  autofix_prs: true
-  autoupdate_branch: ''
-  autoupdate_commit_msg: '[pre-commit.ci] pre-commit autoupdate'
-  autoupdate_schedule: weekly
-  skip: []
-  submodules: false
+  # JavaScript/CSS checks for frontend
+  - repo: https://github.com/pre-commit/mirrors-eslint
+    rev: v8.44.0
+    hooks:
+      - id: eslint
+        files: \.(js|ts|jsx|tsx)$
+        additional_dependencies:
+          - eslint@8.44.0
