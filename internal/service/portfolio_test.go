@@ -290,14 +290,13 @@ func TestPortfolioService_GetServicesByCategory(t *testing.T) {
 	t.Run("successful retrieval", func(t *testing.T) {
 		mockServiceRepo.ClearCallLog()
 
-		// Note: This will fail because our mock doesn't implement GetByCategory,
-		// but we can test the validation logic
-		_, err := service.GetServicesByCategory(ctx, domain.ServiceTypeConsulting)
+		services, err := service.GetServicesByCategory(ctx, domain.ServiceTypeConsulting)
 
-		// Expected to fail due to mock limitations, but validation should pass
-		testutil.AssertError(t, err)
+		// Should succeed with mock implementation
+		testutil.AssertNoError(t, err)
+		testutil.AssertNotNil(t, services)
 
-		// Verify the method was called (even if it failed)
+		// Verify the method was called
 		calls := mockServiceRepo.GetCallLog()
 		testutil.AssertTrue(t, len(calls) > 0, "Should attempt repository call")
 	})
