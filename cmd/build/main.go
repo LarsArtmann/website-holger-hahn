@@ -124,8 +124,13 @@ func copyDir(src, dst string) error {
 			return os.MkdirAll(cleanDstPath, info.Mode())
 		}
 
-		// Copy file - now using validated cleanPath.
-		srcFile, err := os.Open(cleanPath)
+		// Copy file - double-check path is safe before opening.
+		// Additional security check to satisfy gosec G304.
+		if !filepath.IsAbs(cleanPath) || !strings.HasPrefix(cleanPath, cleanSrc) {
+			return fmt.Errorf("invalid source path after validation: %s", cleanPath)
+		}
+
+		srcFile, err := os.Open(cleanPath) // #nosec G304 - Path validated above
 		if err != nil {
 			return err
 		}
