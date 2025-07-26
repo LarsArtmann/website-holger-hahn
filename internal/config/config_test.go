@@ -255,7 +255,7 @@ func TestConfig_Validate(t *testing.T) {
 
 		err := config.Validate()
 		testutil.AssertError(t, err)
-		testutil.AssertEqual(t, ErrInvalidServerPort, err.(*DomainError).Err)
+		testutil.AssertTrue(t, err.Error() == fmt.Sprintf("%s: %d", ErrInvalidServerPort, 0), "Expected invalid server port error")
 	})
 
 	t.Run("invalid server port - negative", func(t *testing.T) {
@@ -264,7 +264,7 @@ func TestConfig_Validate(t *testing.T) {
 
 		err := config.Validate()
 		testutil.AssertError(t, err)
-		testutil.AssertEqual(t, ErrInvalidServerPort, err.(*DomainError).Err)
+		testutil.AssertTrue(t, err.Error() == fmt.Sprintf("%s: %d", ErrInvalidServerPort, -1), "Expected invalid server port error")
 	})
 
 	t.Run("invalid server port - too high", func(t *testing.T) {
@@ -273,7 +273,7 @@ func TestConfig_Validate(t *testing.T) {
 
 		err := config.Validate()
 		testutil.AssertError(t, err)
-		testutil.AssertEqual(t, ErrInvalidServerPort, err.(*DomainError).Err)
+		testutil.AssertTrue(t, err.Error() == fmt.Sprintf("%s: %d", ErrInvalidServerPort, 70000), "Expected invalid server port error")
 	})
 
 	t.Run("invalid read timeout", func(t *testing.T) {
@@ -282,7 +282,7 @@ func TestConfig_Validate(t *testing.T) {
 
 		err := config.Validate()
 		testutil.AssertError(t, err)
-		testutil.AssertEqual(t, ErrInvalidReadTimeout, err.(*DomainError).Err)
+		testutil.AssertTrue(t, err.Error() == fmt.Sprintf("%s: %d", ErrInvalidReadTimeout, 0), "Expected invalid read timeout error")
 	})
 
 	t.Run("invalid write timeout", func(t *testing.T) {
@@ -291,7 +291,7 @@ func TestConfig_Validate(t *testing.T) {
 
 		err := config.Validate()
 		testutil.AssertError(t, err)
-		testutil.AssertEqual(t, ErrInvalidWriteTimeout, err.(*DomainError).Err)
+		testutil.AssertTrue(t, err.Error() == fmt.Sprintf("%s: %d", ErrInvalidWriteTimeout, -5), "Expected invalid write timeout error")
 	})
 
 	t.Run("empty database type", func(t *testing.T) {
@@ -318,7 +318,7 @@ func TestConfig_Validate(t *testing.T) {
 
 		err := config.Validate()
 		testutil.AssertError(t, err)
-		testutil.AssertEqual(t, ErrInvalidLogLevel, err.(*DomainError).Err)
+		testutil.AssertTrue(t, err.Error() == fmt.Sprintf("%s: %s", ErrInvalidLogLevel, "invalid"), "Expected invalid log level error")
 	})
 
 	t.Run("valid log levels", func(t *testing.T) {
@@ -419,18 +419,7 @@ func TestGetEnvAsInt(t *testing.T) {
 	})
 }
 
-// Fix: Create a simple error type for testing
-type DomainError struct {
-	Err error
-}
 
-func (e *DomainError) Error() string {
-	return e.Err.Error()
-}
-
-func (e *DomainError) Unwrap() error {
-	return e.Err
-}
 
 // BenchmarkLoadConfig benchmarks the config loading performance
 func BenchmarkLoadConfig(b *testing.B) {

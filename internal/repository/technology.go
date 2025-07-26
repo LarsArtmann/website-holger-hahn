@@ -7,24 +7,12 @@ import (
 )
 
 // TechnologyRepository defines the interface for technology data access.
+// It extends the base Filterable interface with technology-specific operations.
 type TechnologyRepository interface {
-	// Create creates a new technology
-	Create(ctx context.Context, technology *domain.Technology) error
-
-	// GetByID retrieves a technology by its ID
-	GetByID(ctx context.Context, id string) (*domain.Technology, error)
+	Filterable[*domain.Technology, TechnologyFilter]
 
 	// GetByName retrieves a technology by its name
 	GetByName(ctx context.Context, name string) (*domain.Technology, error)
-
-	// List retrieves all technologies with optional filtering
-	List(ctx context.Context, filter TechnologyFilter) ([]*domain.Technology, error)
-
-	// Update updates an existing technology
-	Update(ctx context.Context, technology *domain.Technology) error
-
-	// Delete removes a technology by ID
-	Delete(ctx context.Context, id string) error
 
 	// GetByCategory retrieves technologies by category
 	GetByCategory(ctx context.Context, category string) ([]*domain.Technology, error)

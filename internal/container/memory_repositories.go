@@ -106,12 +106,9 @@ func (r *InMemoryTechnologyRepository) GetByName(ctx context.Context, name strin
 
 // List retrieves technologies matching the provided filter criteria.
 func (r *InMemoryTechnologyRepository) List(ctx context.Context, filter repository.TechnologyFilter) ([]*domain.Technology, error) {
-	r.mu.RLock()
-	defer r.mu.RUnlock()
-
 	var result []*domain.Technology
 
-	for _, tech := range r.techs {
+	for _, tech := range r.GetAll() {
 		if filter.Category != nil && tech.Category != *filter.Category {
 			continue
 		}
@@ -126,32 +123,12 @@ func (r *InMemoryTechnologyRepository) List(ctx context.Context, filter reposito
 	return result, nil
 }
 
-// Update modifies an existing technology in the in-memory repository.
-func (r *InMemoryTechnologyRepository) Update(ctx context.Context, technology *domain.Technology) error {
-	r.mu.Lock()
-	defer r.mu.Unlock()
-	r.techs[technology.ID] = technology
-
-	return nil
-}
-
-// Delete removes a technology from the in-memory repository by its ID.
-func (r *InMemoryTechnologyRepository) Delete(ctx context.Context, id string) error {
-	r.mu.Lock()
-	defer r.mu.Unlock()
-	delete(r.techs, id)
-
-	return nil
-}
 
 // GetByCategory retrieves all technologies belonging to the specified category.
 func (r *InMemoryTechnologyRepository) GetByCategory(ctx context.Context, category string) ([]*domain.Technology, error) {
-	r.mu.RLock()
-	defer r.mu.RUnlock()
-
 	var result []*domain.Technology
 
-	for _, tech := range r.techs {
+	for _, tech := range r.GetAll() {
 		if tech.Category == category {
 			result = append(result, tech)
 		}
@@ -162,12 +139,9 @@ func (r *InMemoryTechnologyRepository) GetByCategory(ctx context.Context, catego
 
 // GetByLevel retrieves all technologies at the specified proficiency level.
 func (r *InMemoryTechnologyRepository) GetByLevel(ctx context.Context, level domain.Level) ([]*domain.Technology, error) {
-	r.mu.RLock()
-	defer r.mu.RUnlock()
-
 	var result []*domain.Technology
 
-	for _, tech := range r.techs {
+	for _, tech := range r.GetAll() {
 		if tech.Level == level {
 			result = append(result, tech)
 		}
