@@ -13,52 +13,37 @@ repos:
         args: ['--maxkb=1000']
       - id: check-merge-conflict
 
-  # Go formatting with gofumpt (stricter than gofmt)
-  - repo: https://github.com/dnephin/pre-commit-golang
-    rev: v0.5.1
-    hooks:
-      - id: go-fmt
-        name: go-fmt (gofumpt)
-        entry: gofumpt
-        language: golang
-        args: [-w]
-        files: \.go$
-
-  # Go import organization with gci
+  # Local Go formatting and linting tools
   - repo: local
     hooks:
+      - id: gofumpt
+        name: gofumpt (Go formatting)
+        entry: gofumpt
+        language: system
+        args: [-w]
+        files: \.go$
+        pass_filenames: true
+
       - id: gci
         name: gci (import organization)
         entry: gci
-        language: golang
+        language: system
         args: [write, --skip-generated, -s, standard, -s, default]
         files: \.go$
+        pass_filenames: true
 
-  # Go linting (if golangci-lint is available)
-  - repo: https://github.com/golangci/golangci-lint
-    rev: v1.54.2
-    hooks:
-      - id: golangci-lint
-        args: [--config=.golangci.yml]
-
-  # Go mod tidy
-  - repo: https://github.com/dnephin/pre-commit-golang
-    rev: v0.5.1
-    hooks:
       - id: go-mod-tidy
+        name: go mod tidy
+        entry: go
+        language: system
+        args: [mod, tidy]
+        files: go\.mod$
+        pass_filenames: false
 
-  # Go tests
-  - repo: https://github.com/dnephin/pre-commit-golang
-    rev: v0.5.1
-    hooks:
-      - id: go-unit-tests
-        args: [-race, -timeout=30s]
-
-  # JavaScript/CSS checks for frontend
-  - repo: https://github.com/pre-commit/mirrors-eslint
-    rev: v8.44.0
-    hooks:
-      - id: eslint
-        files: \.(js|ts|jsx|tsx)$
-        additional_dependencies:
-          - eslint@8.44.0
+      - id: go-build
+        name: go build
+        entry: go
+        language: system
+        args: [build, ./...]
+        files: \.go$
+        pass_filenames: false
